@@ -1,0 +1,35 @@
+name: "Publish C4 Model"
+
+on:
+  push:
+    paths:
+    - 'docs/*.dsl'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Generate C4 Model
+      uses: university-of-york/generate-c4-model-action@1.0.0
+      with:
+        source-path: docs/c4-model.dsl
+        target-path: .github/actions/dist/images/c4
+
+    - name: Upload C4 Model Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: C4 Model
+        path: .github/actions/dist/images/c4/*.png
+
+    - name: Publish C4 Model to Wiki
+      uses: university-of-york/github-wiki-publish-action@2.0.0
+      with:
+        source-path: ./.github/actions/dist/images
+        target-path: ./images
+        delete-existing: true
+      env:
+        GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
