@@ -1,0 +1,87 @@
+openapi: 3.0.1
+info:
+  title: Courses API
+  description: 'This defines the University of York Courses API. This is used by the course search API'
+  contact:
+    email: esg-teaching-and-learning-group@york.ac.uk
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.1.0
+tags:
+  - name: courses
+    description: Querying for courses
+paths:
+  /courses:
+    get:
+      tags:
+        - courses
+      summary: Search for a course
+      operationId: search
+      parameters:
+        - name: search
+          in: query
+          description: name of course to search for
+          required: true
+          explode: true
+          schema:
+            type: string
+            example: History
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        400:
+          description: Invalid value
+          content: {}
+components:
+  schemas:
+    Course:
+      type: object
+      properties:
+        title:
+          type: string
+          example: History (BA) - Undergraduate
+        liveUrl:
+          type: string
+          example: https://www.york.ac.uk/study/undergraduate/courses/ba-history/
+        award:
+          type: string
+          example: BA (Hons)
+        department:
+          type: array
+          items:
+            type: string
+            example: ["Department of Economics and Related Studies", "Department of History"]
+        level:
+          type: string
+          example: undergraduate
+          enum:
+            - undergraduate
+            - postgraduate
+        length:
+          type: string
+          example: 3 years full-time
+        typicalOffer:
+          type: string
+          example: AAA
+        yearOfEntry:
+          type: string
+          example: 2021/22
+        distanceLearning:
+          type: boolean
+          example: true
+        summary:
+          type: string
+          example: Learn how studying the past can help us predict market futures
+        imageUrl:
+          type: string
+          example: https://www.york.ac.uk/media/study/courses/undergraduate/history/hero-history-economics-ba-1160.jpg
+        ucasCode:
+          type: string
+          example: VL11
