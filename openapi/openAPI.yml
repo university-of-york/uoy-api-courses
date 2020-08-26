@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Courses API
-  description: 'This defines the University of York Courses API. This is used by the course search API'
+  description: 'This defines the University of York Courses API. This is used by the course search app on the University website.'
   contact:
     email: esg-teaching-and-learning-group@york.ac.uk
   license:
