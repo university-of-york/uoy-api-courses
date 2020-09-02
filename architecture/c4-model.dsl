@@ -4,7 +4,7 @@ workspace "Course Search" "A system to search for courses available at the Unive
         prospectiveStudent = person "Prospective Student" "A prospective student, searching for one or more courses"
 
         courseSearch = softwareSystem "Course Search System" "Allows anyone to search for details of courses available at the University of York" {
-            webApplication = container "Web Application" "Provides functionality for users to search for courses in their web browser" "React on AWS S3" "Web Browser"
+            webApplication = container "Web Application" "Provides functionality for users to search for courses in their web browser" "Next.js on AWS Lambda" "Web Browser"
             apiApplication = container "API" "Provides course search functionality via a JSON/HTTPS API" "AWS API Gateway and AWS Lambda"
         }
 
