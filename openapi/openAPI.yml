@@ -39,6 +39,18 @@ paths:
         400:
           description: Invalid value
           content: {}
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ':lambda:path/2015-03-31/functions/'
+              - Fn::GetAtt: ["CoursesLambdaFunction", "Arn"]
+              - '/invocations'
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST" #This HAS to be POST for lambda integrations
+        type: "aws_proxy"
 components:
   schemas:
     Course:

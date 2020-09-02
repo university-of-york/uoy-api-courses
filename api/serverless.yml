@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: serverless-app
+service: courses-api
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -23,9 +23,7 @@ service: serverless-app
 provider:
   name: aws
   runtime: nodejs12.x
-
-# you can overwrite defaults here
-#  stage: dev
+  stage: dev
   region: eu-west-1
 
 # you can add statements to the Lambda function's IAM Role here
@@ -63,10 +61,15 @@ functions:
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
-    events:
-      - http:
-          path: courses
-          method: get
+
+
+#    events:
+#      - http:
+#          path: courses
+#          method: get
+
+
+
 #      - http:
 #          path: users/create
 #          method: get
@@ -114,3 +117,45 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+resources:
+  Resources:
+
+    # The following would be done magically by Serverless if we were defining
+    # the API in the "normal" way, i.e., associating endpoints with functions
+    # in the "functions" section above. However, because we're using an
+    # OpenAPI specification to define our API, we lose the Serverless magic,
+    # and have to define a number of things ourselves in Cloudformation
+
+    # Create the API based on the OpenAPI specification
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        Body:
+          ${file(../openapi/openAPI.yml)}
+
+    # Deploy the API
+    ApiGatewayDeployment:
+      Type: AWS::ApiGateway::Deployment
+      Properties:
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StageName: ${self:provider.stage}
+
+    # Grant permission for the API to call the lambda - note that lambda name "courses"
+    # earlier in this file becomes "CoursesLambdaFunction" in Cloudformation
+    Permission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName:
+          Fn::GetAtt:
+            - CoursesLambdaFunction
+            - Arn
+        Action: lambda:InvokeFunction
+        Principal: apigateway.amazonaws.com
+
+  Outputs:
+    ApiUrl:
+      Description: "API URL"
+      Value: !Join ['', [ "https://", Ref: ApiGatewayRestApi, ".execute-api.", Ref: AWS::Region, ".amazonaws.com/${self:provider.stage}/" ]]
+
