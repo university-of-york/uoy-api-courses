@@ -1,0 +1,31 @@
+name: Deploy to AWS
+
+on: push
+
+jobs:
+  deploy_to_aws:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Check out the application's source code
+        uses: actions/checkout@v2
+
+      - name: Install Serverless
+        run: npm install -g serverless
+
+      - name: Install application dependencies
+        working-directory: api
+        run: npm ci
+
+      - name: Deploy to serverless
+        working-directory: api
+        run: serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: eu-west-1
