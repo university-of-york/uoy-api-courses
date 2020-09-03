@@ -13,8 +13,6 @@
 
 service: serverless-app
 
-plugins:
-  - serverless-pseudo-parameters
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -26,7 +24,7 @@ plugins:
 provider:
   name: aws
   runtime: nodejs12.x
-  cfnRole: arn:aws:iam::#{AWS::AccountId}:role/GithubActionsDeploymentRole
+  cfnRole: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/GithubActionsDeploymentRole
 
 # you can overwrite defaults here
 #  stage: dev
