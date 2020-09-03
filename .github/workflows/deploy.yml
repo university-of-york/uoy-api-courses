@@ -1,6 +1,10 @@
 name: Deploy to AWS
 
-on: push
+on:
+  push:
+    branches:
+      - staging
+      - master
 
 jobs:
   deploy_to_aws:
@@ -22,10 +26,20 @@ jobs:
         working-directory: api
         run: npm ci
 
-      - name: Deploy to serverless
+      - name: Deploy - staging
+        if: github.ref == 'refs/heads/staging'
         working-directory: api
         run: serverless deploy
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCOUNT_ID: ${{ secrets.STAGING_AWS_ACCOUNT_ID }}
+
+      - name: Deploy - production
+        if: github.ref == 'refs/heads/master'
+        working-directory: api
+        run: serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCOUNT_ID: ${{ secrets.PRODUCTION_AWS_ACCOUNT_ID }}
