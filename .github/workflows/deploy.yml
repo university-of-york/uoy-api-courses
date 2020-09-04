@@ -1,0 +1,45 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - staging
+      - master
+
+jobs:
+  deploy_to_aws:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Check out the application's source code
+        uses: actions/checkout@v2
+
+      - name: Install Serverless
+        run: npm install -g serverless
+
+      - name: Install application dependencies
+        working-directory: api
+        run: npm ci
+
+      - name: Deploy - staging
+        if: github.ref == 'refs/heads/staging'
+        working-directory: api
+        run: serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCOUNT_ID: ${{ secrets.STAGING_AWS_ACCOUNT_ID }}
+
+      - name: Deploy - production
+        if: github.ref == 'refs/heads/master'
+        working-directory: api
+        run: serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCOUNT_ID: ${{ secrets.PRODUCTION_AWS_ACCOUNT_ID }}
