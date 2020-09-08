@@ -23,7 +23,7 @@ service: courses-api
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
+  stage: v1
 # This role is required to deploy an application to AWS with an ESG Account. See https://wiki.york.ac.uk/display/AWS/AWS%3A+Github+Actions for details.
   cfnRole: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/GithubActionsDeploymentRole
   region: eu-west-1
