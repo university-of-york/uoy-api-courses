@@ -1,1 +1,1 @@
-# uoy-app-course-search
+# uoy-api-courses

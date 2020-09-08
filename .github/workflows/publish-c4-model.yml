@@ -3,7 +3,7 @@ name: "Publish C4 Model"
 on:
   push:
     paths:
-    - 'docs/*.dsl'
+    - 'architecture/*.dsl'
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
     - name: Generate C4 Model
       uses: university-of-york/generate-c4-model-action@1.0.0
       with:
-        source-path: docs/c4-model.dsl
+        source-path: architecture/c4-model.dsl
         target-path: .github/actions/dist/images/c4
 
     - name: Upload C4 Model Artifacts
