@@ -125,7 +125,7 @@ resources:
       Type: AWS::ApiGateway::RestApi
       Properties:
         Body:
-          ${file(openapi/openAPI.yml)}
+          ${file(spec/openAPI.yml)}
 
     # Deploy the API
     ApiGatewayDeployment:
