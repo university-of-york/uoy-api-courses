@@ -59,7 +59,7 @@ provider:
 
 functions:
   courses:
-    handler: handler.courses
+    handler: handler/handler.courses
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -125,7 +125,7 @@ resources:
       Type: AWS::ApiGateway::RestApi
       Properties:
         Body:
-          ${file(../openapi/openAPI.yml)}
+          ${file(openapi/openAPI.yml)}
 
     # Deploy the API
     ApiGatewayDeployment:
