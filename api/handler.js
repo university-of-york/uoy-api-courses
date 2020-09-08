@@ -4,21 +4,29 @@ const BASE_URL = 'https://www.york.ac.uk/search/?collection=york-uni-courses&for
 
 module.exports.courses = async event => {
 
-  let params = event.queryStringParameters;
+  const {query, max, offset} = event.queryStringParameters;
 
-  let url = `${BASE_URL}${params.query}`
+  let url = `${BASE_URL}${query}`;
 
-  let response = await fetch(url, {
+  if (max) {
+    url += `&num_ranks=${max}`;
+  }
+  if (offset) {
+    url += `&start_rank=${offset}`;
+  }
+
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       'Content-Type': 'application/json'
     }
   });
 
-  let json = await response.json();
+  const json = await response.json();
 
   return {
     statusCode: 200,
     body: JSON.stringify(json),
   };
 };
+
