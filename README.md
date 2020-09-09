@@ -15,7 +15,7 @@ The API has been primarily written as a data source for the [Course Search](http
 
 ## Consuming the API
 
-The Courses API is available at [https://api.courses.app.york.ac.uk](https://api.courses.app.york.ac.uk).
+The Courses API is available at [https://api.courses.app.york.ac.uk/v1/courses](https://api.courses.app.york.ac.uk/v1/courses).
 
 You can view the [API specification](https://university-of-york.github.io/uoy-api-courses/) for a description of endpoints and parameters.
 
@@ -30,6 +30,8 @@ You will need the following installed on your machine:
 - [Node.js](https://nodejs.org/en/download/) (LTS version)
 - [Serverless](https://www.serverless.com/framework/docs/providers/aws/guide/installation/) installed and configured against your own AWS (sandbox) account. We recommend using `saml2aws` to authenticate, check [our wiki page](https://wiki.york.ac.uk/display/AWS/2.+Command+Line+Access) for more details.
 
+You will also need to add an `AWS_ACCOUNT_ID` environment variable with the value set as the ID of your AWS account.
+
 ### Setup
 
 To set up the project for local development, at the root directory run:
@@ -38,13 +40,13 @@ To set up the project for local development, at the root directory run:
 npm install
 ```
 
-To deploy the application to your sandbox run:
+To deploy the application to your account run:
 
 ```
 serverless deploy
 ```
 
-Then find the Courses API URL in AWS API Gateway.
+Then find the API's URL in AWS API Gateway under the appropriate Stage to try it out.
 
 ### Testing
 
@@ -58,7 +60,7 @@ npm test
 
 Deployment to the staging and production environments happen through GitHub actions that trigger automatically when new code is merged into the `staging` and `main` branches.
 
-The staging version of the Courses API is available at [https://api.courses.staging.app.york.ac.uk](https://api.courses.staging.app.york.ac.uk).
+The staging version of the Courses API is available at [https://api.courses.staging.app.york.ac.uk/v1/courses](https://api.courses.staging.app.york.ac.uk/v1/courses).
 
 ## Documentation
 
