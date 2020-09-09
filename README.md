@@ -13,7 +13,6 @@ The API has been primarily written as a data source for the [Course Search](http
 - [Course Search](https://github.com/university-of-york/uoy-app-course-search) - the user-facing Course Search application on the University of York website.
 - [Funnelback Courses API](https://github.com/university-of-york/uoy-config-funnelback-courses) - the underlying Funnelback data collection and API template configuration.
 
-
 ## Consuming the API
 
 The Courses API is available at [https://api.courses.app.york.ac.uk](https://api.courses.app.york.ac.uk).
@@ -21,7 +20,6 @@ The Courses API is available at [https://api.courses.app.york.ac.uk](https://api
 You can view the [API specification](https://university-of-york.github.io/uoy-api-courses/) for a description of endpoints and parameters.
 
 The latest version of the Courses API specification is published and kept up-to-date automatically. It is defined using the [OpenAPI specification](https://swagger.io/docs/specification/about/) and is served as a static site using a distribution of [Swagger-UI](https://github.com/swagger-api/swagger-ui/tree/master/dist).
-
 
 ## Development
 
@@ -47,7 +45,6 @@ serverless deploy
 ```
 
 Then find the Courses API URL in AWS API Gateway.
-
 
 ### Testing
 
