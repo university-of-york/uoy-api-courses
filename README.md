@@ -40,7 +40,7 @@ To set up the project for local development, at the root directory run:
 npm install
 ```
 
-To deploy the application to your account run:
+To deploy the application to your account, login to AWS (e.g. `saml2aws login`) then run:
 
 ```
 serverless deploy
