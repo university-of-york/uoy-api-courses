@@ -28,13 +28,13 @@ provider:
   cfnRole: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/GithubActionsDeploymentRole
   region: eu-west-1
   tags:
-    name: courses api,
-    group: ESG,
-    project: course-search,
+    name: courses api
+    group: ESG
+    project: course-search
     status: ${env:DEPLOY_ENVIRONMENT, 'dev'}
-    pushed_by: github,
-    defined_in: serverless,
-    repo_name: uoy-api-courses,
+    pushed_by: github
+    defined_in: serverless
+    repo_name: uoy-api-courses
     team: "ESG Teaching and Learning"
 
 # you can add statements to the Lambda function's IAM Role here
