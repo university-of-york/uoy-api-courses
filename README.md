@@ -4,14 +4,14 @@ This is the University of York Courses API. Consumers can search for and retriev
 
 The data is sourced from the University's instance of [Funnelback](https://www.funnelback.com/home), a search provider which handles the indexing of the course web pages into a data collection and the subsequent querying of this collection. See the [related repo](https://github.com/university-of-york/uoy-config-funnelback-courses) for more information.
 
-### Course Search
+## Course Search
 
 The API has been primarily written as a data source for the [Course Search](https://github.com/university-of-york/uoy-app-course-search) application. For more context on this system, you can view the [system architecture and architecture decision log](https://github.com/university-of-york/uoy-app-course-search/wiki).
 
-### Related Repos
+## Related Repos
 
 - [Course Search](https://github.com/university-of-york/uoy-app-course-search) - the user-facing Course Search application on the University of York website.
-- [Funnelback Courses API](https://github.com/university-of-york/uoy-config-funnelback-courses) - the underlying Funnelback data collection and API template configuration.
+- [Funnelback Courses API](https://github.com/university-of-york/uoy-config-funnelback-courses) - the underlying Funnelback search provider configuration that powers searches.
 
 ## Consuming the API
 
@@ -32,7 +32,7 @@ You will need the following installed on your machine:
 
 You will also need to add an `AWS_ACCOUNT_ID` environment variable with the value set as the ID of your AWS account.
 
-### Setup
+### Local Development
 
 To set up the project for local development, at the root directory run:
 
