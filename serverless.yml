@@ -1,6 +1,12 @@
 
 service: uoy-courses-api
 
+plugins:
+  - serverless-pseudo-parameters
+
+custom:
+  domainName: api.courses.dev.app.york.ac.uk
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -46,6 +52,57 @@ resources:
             - Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
+
+    # SSL certificate for the application's domain name (see https://wiki.york.ac.uk/display/ittechdocs/HTTPS+for+apps)
+    # Note that Serverless will try to evaluate anything that looks like a variable - ${...} including Cloudformation
+    # variables - so use "serverless-pseudo-parameters" which will understand "#{AWS::Region}" as a Cloudformation variable
+    SSLCertificate:
+      Type: Custom::Certificate
+      Properties:
+        DomainName: ${self:custom.domainName}
+        ValidationMethod: DNS
+        ServiceToken: !Sub 'arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:binxio-cfn-certificate-provider'
+    SSLCertificateDNSRecord:
+      Type: Custom::CertificateDNSRecord
+      Properties:
+        CertificateArn: !Ref SSLCertificate
+        DomainName: ${self:custom.domainName}
+        ServiceToken: !Sub 'arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:binxio-cfn-certificate-provider'
+    SSLCertificateValidationDomainRecord:
+      Type: Custom::CNAME
+      Properties:
+        ServiceToken: 'arn:aws:sns:eu-west-1:230504789214:RequestRecordSet'
+        Source: !GetAtt SSLCertificateDNSRecord.Name
+        Target: !GetAtt SSLCertificateDNSRecord.Value
+    IssuedSSLCertificate:
+      Type: Custom::IssuedCertificate
+      Properties:
+        CertificateArn: !Ref SSLCertificate
+        ServiceToken: !Sub 'arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:binxio-cfn-certificate-provider'
+    # Setup the application's domain name as a custom domain name for API Gateway, then map it to the application's API
+    ApiGatewayCustomDomainName:
+      Type: AWS::ApiGateway::DomainName
+      Properties:
+        RegionalCertificateArn: !Ref IssuedSSLCertificate
+        DomainName: ${self:custom.domainName}
+        EndpointConfiguration:
+          Types:
+            - REGIONAL
+    BasePathMapping:
+      Type: AWS::ApiGateway::BasePathMapping
+      DependsOn: [ApiGatewayDeployment]
+      Properties:
+        BasePath: ''
+        DomainName: !Ref ApiGatewayCustomDomainName
+        RestApiId: !Ref ApiGatewayRestApi
+        Stage: ${self:provider.stage}
+    # DNS CNAME mapping the application's domain name to the behind-the-scenes domain name for the API
+    AppCNAME:
+      Type: Custom::CNAME
+      Properties:
+        ServiceToken: "arn:aws:sns:eu-west-1:230504789214:RequestRecordSet"
+        Source: ${self:custom.domainName}.
+        Target: !Join [ '', [ !GetAtt ApiGatewayCustomDomainName.RegionalDomainName, '.' ] ]
 
   Outputs:
     ApiUrl:
