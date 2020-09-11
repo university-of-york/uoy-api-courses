@@ -92,11 +92,14 @@ test('Response with 200 code is returned correctly', async () => {
     expect(result.body).toEqual('{"results":[]}');
 });
 
-test('Request without any parameters returns an empty list', async () => {
+test('Request without any parameters returns an appropriate error', async () => {
     const result = await courses({});
 
-    expect(result.statusCode).toBe(200);
-    expect(result.body).toEqual('{"results":[]}');
+    expect(result.statusCode).toBe(400);
+    expect(result.body).toContain('\"status\":400');
+    expect(result.body).toContain('\"error\":\"Bad Request\"');
+    expect(result.body).toContain('\"message\":\"The search parameter is required.\"');
+    expect(result.body).toContain('\"timestamp\":');
 });
 
 test('Response with 400 code returns an error', async () => {
@@ -110,8 +113,11 @@ test('Response with 400 code returns an error', async () => {
 
     const result = await courses(event);
 
-    expect(result.statusCode).toBe(500);
-    expect(result.body).toEqual('{"error":"An error has occurred."}');
+    expect(result.statusCode).toBe(400);
+    expect(result.body).toContain('\"status\":400');
+    expect(result.body).toContain('\"error\":\"Bad Request\"');
+    expect(result.body).toContain('\"message\":\"An error has occurred.\"');
+    expect(result.body).toContain('\"timestamp\":');
 });
 
 test('Response with 500 code returns an error', async () => {
@@ -126,7 +132,10 @@ test('Response with 500 code returns an error', async () => {
     const result = await courses(event);
 
     expect(result.statusCode).toBe(500);
-    expect(result.body).toEqual('{"error":"An error has occurred."}');
+    expect(result.body).toContain('\"status\":500');
+    expect(result.body).toContain('\"error\":\"Internal Server Error\"');
+    expect(result.body).toContain('\"message\":\"An error has occurred.\"');
+    expect(result.body).toContain('\"timestamp\":');
 });
 
 test('Response with malformed JSON returns an error', async () => {
@@ -141,5 +150,8 @@ test('Response with malformed JSON returns an error', async () => {
     const result = await courses(event);
 
     expect(result.statusCode).toBe(500);
-    expect(result.body).toEqual('{"error":"An error has occurred."}');
+    expect(result.body).toContain('\"status\":500');
+    expect(result.body).toContain('\"error\":\"Internal Server Error\"');
+    expect(result.body).toContain('\"message\":\"An error has occurred.\"');
+    expect(result.body).toContain('\"timestamp\":');
 });

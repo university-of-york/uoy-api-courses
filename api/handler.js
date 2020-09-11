@@ -1,8 +1,8 @@
 'use strict';
 const fetch = require('node-fetch');
-const generateUrl = require('utils/generateUrl');
-const {success, error} = require('utils/format');
-const ClientError = require('api/errors/ClientError');
+const generateUrl = require('./utils/generateUrl');
+const {success, error} = require('./utils/format');
+const ClientError = require('./errors/ClientError');
 
 module.exports.courses = async event => {
   try {
