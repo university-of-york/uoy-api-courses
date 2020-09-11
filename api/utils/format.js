@@ -1,4 +1,11 @@
-module.exports = (message, status, error, path) => {
+module.exports.success = (body) => {
+    return {
+        statusCode: 200,
+        body: JSON.stringify(body)
+    }
+}
+
+module.exports.error = (message, status, error, path) => {
     return {
         statusCode: status,
         body: JSON.stringify({

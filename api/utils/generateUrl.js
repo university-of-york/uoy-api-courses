@@ -1,5 +1,5 @@
 const {URLSearchParams} = require('url');
-const ClientError = require('../error/ClientError');
+const ClientError = require('../errors/ClientError');
 const BASE_URL = 'https://www.york.ac.uk/search/';
 
 module.exports = parameters => {

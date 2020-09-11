@@ -1,8 +1,8 @@
 'use strict';
 const fetch = require('node-fetch');
 const generateUrl = require('utils/generateUrl');
-const formatError = require('utils/formatError');
-const ClientError = require('error/ClientError');
+const {success, error} = require('utils/format');
+const ClientError = require('api/errors/ClientError');
 
 module.exports.courses = async event => {
   try {
@@ -15,25 +15,21 @@ module.exports.courses = async event => {
       }
     });
 
-    checkResponse(response);
+    if (!response.ok) {
+      return error('An error has occurred.', response.status, response.statusText, event.path);
+    }
 
     const body = await response.json();
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(body)
-    }
+    return success(body);
   } catch (e) {
     if (e instanceof ClientError) {
-      return formatError(e.message, 400, 'Bad Request', event.path);
+      return error(e.message, 400, 'Bad Request', event.path);
     } else {
-      return formatError('An error has occurred.', 500, 'Internal Server Error', event.path);
+      return error('An error has occurred.', 500, 'Internal Server Error', event.path);
     }
   }
 };
 
-const checkResponse = response => {
-  if (!response.ok) {
-    throw Error(response.statusText);
-  }
-};
+
+
