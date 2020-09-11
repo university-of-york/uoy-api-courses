@@ -1,11 +1,10 @@
 'use strict';
 const fetch = require('node-fetch');
-const {URLSearchParams} = require('url');
-const BASE_URL = 'https://www.york.ac.uk/search/';
+const generateUrl = require('utils/generateUrl');
+const formatError = require('utils/formatError');
+const ClientError = require('error/ClientError');
 
 module.exports.courses = async event => {
-  let result = {statusCode: 200, body: null};
-
   try {
     const url = generateUrl(event.queryStringParameters);
 
@@ -20,38 +19,21 @@ module.exports.courses = async event => {
 
     const body = await response.json();
 
-    result.body = JSON.stringify(body);
+    return {
+      statusCode: 200,
+      body: JSON.stringify(body)
+    }
   } catch (e) {
-    result.statusCode = 500;
-    result.body = JSON.stringify({
-        error: 'An error has occurred.'
-    });
+    if (e instanceof ClientError) {
+      return formatError(e.message, 400, 'Bad Request', event.path);
+    } else {
+      return formatError('An error has occurred.', 500, 'Internal Server Error', event.path);
+    }
   }
-
-  return result;
-};
-
-const generateUrl = parameters => {
-  if (!parameters || !parameters.search) {
-    throw Error();
-  }
-
-  const queryParams = new URLSearchParams("collection=york-uni-courses&form=course-search&profile=_default");
-
-  queryParams.append("query", parameters.search);
-
-  if (parameters.max) {
-    queryParams.append("num_ranks", parameters.max);
-  }
-  if (parameters.offset) {
-    queryParams.append("start_rank", parameters.offset);
-  }
-
-  return `${BASE_URL}?${queryParams.toString()}`;
 };
 
 const checkResponse = response => {
   if (!response.ok) {
     throw Error(response.statusText);
-  }S
+  }
 };
