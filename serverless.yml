@@ -1,10 +1,6 @@
 
 service: uoy-courses-api
 
-custom:
-  domainName: api.v1.courses.dev.app.york.ac.uk
-  sslCertificateArn: arn:aws:acm:eu-west-1:098107509664:certificate/2c51a56d-faeb-48bc-b7be-ccaeab7a065d
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -64,8 +60,8 @@ resources:
     ApiGatewayCustomDomainName:
       Type: AWS::ApiGateway::DomainName
       Properties:
-        RegionalCertificateArn: ${self:custom.sslCertificateArn}
-        DomainName: ${self:custom.domainName}
+        RegionalCertificateArn: ${env:SSL_CERTIFICATE_ARN}
+        DomainName: ${env:DOMAIN_NAME}
         EndpointConfiguration:
           Types:
             - REGIONAL
@@ -84,5 +80,5 @@ resources:
       Type: Custom::CNAME
       Properties:
         ServiceToken: arn:aws:sns:eu-west-1:230504789214:RequestRecordSet
-        Source: ${self:custom.domainName}.
+        Source: ${env:DOMAIN_NAME}.
         Target: !Join [ '', [ !GetAtt ApiGatewayCustomDomainName.RegionalDomainName, '.' ] ]
