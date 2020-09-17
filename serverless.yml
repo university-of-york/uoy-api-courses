@@ -16,7 +16,7 @@ provider:
     pushed_by: github
     defined_in: serverless
     repo_name: uoy-api-courses
-    team: "ESG Teaching and Learning"
+    team: ESG Teaching and Learning
 
 functions:
   courses:
