@@ -33,13 +33,17 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
           AWS_ACCOUNT_ID: ${{ secrets.DEV_AWS_ACCOUNT_ID }}
+          SSL_CERTIFICATE_ARN: ${{ secrets.DEV_SSL_CERTIFICATE_ARN }}
           DEPLOY_ENVIRONMENT: dev
+          DOMAIN_NAME: api.v1.courses.dev.app.york.ac.uk
 
       - name: Deploy - production
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         run: serverless deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
           AWS_ACCOUNT_ID: ${{ secrets.PRODUCTION_AWS_ACCOUNT_ID }}
+          SSL_CERTIFICATE_ARN: ${{ secrets.PRODUCTION_SSL_CERTIFICATE_ARN }}
           DEPLOY_ENVIRONMENT: prod
+          DOMAIN_NAME: api.v1.courses.app.york.ac.uk
