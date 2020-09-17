@@ -76,6 +76,7 @@ resources:
         Stage: ${self:provider.stage}
 
     # DNS CNAME mapping the application's domain name to the behind-the-scenes domain name for the API
+    # See https://wiki.york.ac.uk/display/AWS/AWS%3A+Application+DNS+Records
     AppCNAME:
       Type: Custom::CNAME
       Properties:
