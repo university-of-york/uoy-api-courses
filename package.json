@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "handler.js",
   "scripts": {
+    "start": "serverless invoke local --function courses",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "serverless deploy",
     "undeploy": "serverless remove"
