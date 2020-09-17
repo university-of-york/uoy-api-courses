@@ -20,15 +20,12 @@ jobs:
         with:
           node-version: 12
 
-      - name: Install Serverless
-        run: npm install -g serverless
-
       - name: Install application dependencies
         run: npm ci
 
       - name: Deploy - dev
         if: github.ref == 'refs/heads/dev'
-        run: serverless deploy
+        run: npm run deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
@@ -39,7 +36,7 @@ jobs:
 
       - name: Deploy - production
         if: github.ref == 'refs/heads/main'
-        run: serverless deploy
+        run: npm run deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
