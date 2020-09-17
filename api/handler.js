@@ -1,12 +1,12 @@
 'use strict';
 const fetch = require('node-fetch');
-const generateUrl = require('./utils/generateUrl');
+const {coursesUrl} = require('./utils/constructFunnelbackUrls');
 const {success, error} = require('./utils/format');
 const ClientError = require('./errors/ClientError');
 
 module.exports.courses = async event => {
   try {
-    const url = generateUrl(event.queryStringParameters);
+    const url = coursesUrl(event.queryStringParameters);
 
     const response = await fetch(url, {
       method: "GET",
@@ -23,10 +23,11 @@ module.exports.courses = async event => {
 
     return success(body);
   } catch (e) {
-    if (e instanceof ClientError) {
-      return error(e.message, 400, 'Bad Request', event.path);
-    } else {
-      return error('An error has occurred.', 500, 'Internal Server Error', event.path);
+    switch (e.constructor.name) {
+      case ClientError.name:
+        return error(e.message, 400, 'Bad Request', event.path);
+      default:
+        return error('An error has occurred.', 500, 'Internal Server Error', event.path);
     }
   }
 };
