@@ -70,3 +70,7 @@ The [customised Swagger-UI](https://university-of-york.github.io/uoy-config-funn
 
 - [Digital Platforms and Developments Team](mailto:marketing-support@york.ac.uk)
 - [Enterprise Systems Teaching and Learning Team](mailto:esg-teaching-and-learning-group@york.ac.uk)
+
+## Licence
+
+MIT
