@@ -22,7 +22,18 @@ functions:
   courses:
     handler: src/handler.courses
 
+custom:
+  domainName: ${env:DOMAIN_NAME, ''}
+  sslCertificateArn: ${env:SSL_CERTIFICATE_ARN, ''}
+
 resources:
+
+  Conditions:
+    UseCustomDomainName: !Not
+      - !Equals
+        - ${self:custom.domainName}
+        - ''
+
   Resources:
     # The following would be done magically by Serverless if we were defining
     # the API in the "normal" way, i.e., associating endpoints with functions
@@ -59,15 +70,17 @@ resources:
     # Setup the application's domain name as a custom domain name for API Gateway, then map it to the application's API
     ApiGatewayCustomDomainName:
       Type: AWS::ApiGateway::DomainName
+      Condition: UseCustomDomainName
       Properties:
-        RegionalCertificateArn: ${env:SSL_CERTIFICATE_ARN}
-        DomainName: ${env:DOMAIN_NAME}
+        RegionalCertificateArn: ${self:custom.sslCertificateArn}
+        DomainName: ${self:custom.domainName}
         EndpointConfiguration:
           Types:
             - REGIONAL
 
     BasePathMapping:
       Type: AWS::ApiGateway::BasePathMapping
+      Condition: UseCustomDomainName
       DependsOn: [ApiGatewayDeployment]
       Properties:
         BasePath: ''
@@ -79,7 +92,8 @@ resources:
     # See https://wiki.york.ac.uk/display/AWS/AWS%3A+Application+DNS+Records
     AppCNAME:
       Type: Custom::CNAME
+      Condition: UseCustomDomainName
       Properties:
         ServiceToken: arn:aws:sns:eu-west-1:230504789214:RequestRecordSet
-        Source: ${env:DOMAIN_NAME}.
+        Source: ${self:custom.domainName}.
         Target: !Join [ '', [ !GetAtt ApiGatewayCustomDomainName.RegionalDomainName, '.' ] ]
