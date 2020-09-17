@@ -1,0 +1,62 @@
+
+service: uoy-courses-api
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: v1
+  # This role is required to deploy an application to AWS with an ESG Account. See https://wiki.york.ac.uk/display/AWS/AWS%3A+Github+Actions for details.
+  cfnRole: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/GithubActionsDeploymentRole
+  region: eu-west-1
+  stackTags:
+    name: courses api
+    group: ESG
+    project: course-search
+    status: ${env:DEPLOY_ENVIRONMENT, 'dev'}
+    pushed_by: github
+    defined_in: serverless
+    repo_name: uoy-api-courses
+    team: "ESG Teaching and Learning"
+
+functions:
+  courses:
+    handler: src/handler.courses
+
+resources:
+  Resources:
+    # The following would be done magically by Serverless if we were defining
+    # the API in the "normal" way, i.e., associating endpoints with functions
+    # in the "functions" section above. However, because we're using an
+    # OpenAPI specification to define our API, we lose the Serverless magic,
+    # and have to define a number of things ourselves in Cloudformation
+
+    # Create the API based on the OpenAPI specification
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        Body: ${file(spec/openAPI.yml)}
+
+    # Deploy the API
+    ApiGatewayDeployment:
+      Type: AWS::ApiGateway::Deployment
+      Properties:
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StageName: ${self:provider.stage}
+
+    # Grant permission for the API to call the lambda - note that lambda name "courses"
+    # earlier in this file becomes "CoursesLambdaFunction" in Cloudformation
+    Permission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName:
+          Fn::GetAtt:
+            - CoursesLambdaFunction
+            - Arn
+        Action: lambda:InvokeFunction
+        Principal: apigateway.amazonaws.com
+
+  Outputs:
+    ApiUrl:
+      Description: "API URL"
+      Value: !Join ['', [ "https://", Ref: ApiGatewayRestApi, ".execute-api.", Ref: AWS::Region, ".amazonaws.com/${self:provider.stage}/" ]]

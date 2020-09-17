@@ -8,9 +8,6 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 0.1.0
-tags:
-  - name: courses
-    description: Querying for courses
 paths:
   /courses:
     get:
@@ -39,6 +36,18 @@ paths:
         400:
           description: Invalid value
           content: {}
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ':lambda:path/2015-03-31/functions/'
+              - Fn::GetAtt: ["CoursesLambdaFunction", "Arn"]
+              - '/invocations'
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST" #This HAS to be POST for lambda integrations
+        type: "aws_proxy"
 components:
   schemas:
     Course:
