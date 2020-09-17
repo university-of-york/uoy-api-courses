@@ -18,6 +18,11 @@ provider:
     repo_name: uoy-api-courses
     team: ESG Teaching and Learning
 
+package:
+  exclude:
+    - docs/**
+    - spec/**
+
 functions:
   courses:
     handler: src/handler.courses
