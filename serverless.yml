@@ -46,7 +46,7 @@ resources:
     # OpenAPI specification to define our API, we lose the Serverless magic,
     # and have to define a number of things ourselves in CloudFormation
 
-    # Create the API based on the OpenAPI specification.
+    # Create the API based on the OpenAPI specification
     ApiGatewayRestApi:
       Type: AWS::ApiGateway::RestApi
       Properties:
