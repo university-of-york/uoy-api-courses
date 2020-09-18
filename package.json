@@ -2,7 +2,7 @@
   "name": "serverless-app",
   "version": "1.0.0",
   "description": "",
-  "main": "handler.js",
+  "main": "src/handler.js",
   "scripts": {
     "test": "jest"
   },
@@ -18,7 +18,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "<rootDir>/setupTests.js"
+      "<rootDir>/src/setupTests.js"
     ]
   }
 }
