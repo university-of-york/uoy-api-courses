@@ -1,15 +1,17 @@
 {
-  "name": "serverless-app",
+  "name": "uoy-api-courses",
   "version": "1.0.0",
-  "description": "",
   "main": "src/handler.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "deploy": "serverless deploy",
+    "undeploy": "serverless remove"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "University of York",
+  "license": "MIT",
   "devDependencies": {
+    "serverless": "^2.1.1",
     "jest": "^26.4.2",
     "jest-fetch-mock": "^3.0.3"
   },
