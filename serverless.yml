@@ -65,10 +65,7 @@ resources:
     Permission:
       Type: AWS::Lambda::Permission
       Properties:
-        FunctionName:
-          Fn::GetAtt:
-            - CoursesLambdaFunction
-            - Arn
+        FunctionName: !GetAtt CoursesLambdaFunction.Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
 
