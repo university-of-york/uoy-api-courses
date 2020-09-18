@@ -27,7 +27,10 @@ The API is hosted in AWS API Gateway, and deployed using the [Serverless](https:
 
 ### Prerequisites
 
-You will need [Node.js](https://nodejs.org/en/download/) (LTS version) installed on your machine.
+You will need:
+
+- [Node.js](https://nodejs.org/en/download/) (LTS version) installed on your machine
+- An AWS account (we recommend using `saml2aws` to authenticate locally, check [our wiki page](https://wiki.york.ac.uk/display/AWS/2.+Command+Line+Access) for more details)
 
 You will also need to add an `AWS_ACCOUNT_ID` environment variable with the value set as the ID of your AWS account.
 
