@@ -18,15 +18,31 @@ paths:
       parameters:
         - name: search
           in: query
-          description: name of course to search for
+          description: Search term to be matched against course properties. Results are ordered by relevance.
           required: true
           explode: true
           schema:
             type: string
             example: History
+        - name: max
+          in: query
+          description: Maximum number of results to be returned
+          required: false
+          explode: true
+          schema:
+            type: integer
+            example: 20
+        - name: offset
+          in: query
+          description: Starting rank of results that should be included. The most relevant result has a rank of 1.
+          required: false
+          explode: true
+          schema:
+            type: integer
+            example: 100
       responses:
         200:
-          description: successful operation
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -34,8 +50,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Course'
         400:
-          description: Invalid value
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalServerError'
       x-amazon-apigateway-integration:
         uri:
           Fn::Join:
@@ -49,6 +66,27 @@ paths:
         httpMethod: "POST" #This HAS to be POST for lambda integrations
         type: "aws_proxy"
 components:
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Error'
+              - properties:
+                  status:
+                    example: 500
+                  error:
+                    example: Internal Server Error
+                  message:
+                    example: An error has occurred.
   schemas:
     Course:
       type: object
@@ -94,3 +132,21 @@ components:
         ucasCode:
           type: string
           example: VL11
+    Error:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: "2020-09-11T14:39:22.685Z"
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: The search parameter is required.
+        path:
+          type: string
+          example: /courses
