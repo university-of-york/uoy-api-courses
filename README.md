@@ -15,7 +15,7 @@ The API has been primarily written as a data source for the [Course Search](http
 
 ## Consuming the API
 
-The Courses API is available at [https://api.courses.app.york.ac.uk/v1/courses](https://api.courses.app.york.ac.uk/v1/courses).
+The Courses API is available at [https://api.v1.courses.app.york.ac.uk/courses](https://api.v1.courses.app.york.ac.uk/courses).
 
 You can view the [API specification](https://university-of-york.github.io/uoy-api-courses/) for a description of endpoints and parameters.
 
@@ -23,12 +23,11 @@ The latest version of the Courses API specification is published and kept up-to-
 
 ## Development
 
+The API is hosted in AWS API Gateway, and deployed using the [Serverless](https://www.serverless.com/) framework.
+
 ### Prerequisites
 
-You will need the following installed on your machine:
-
-- [Node.js](https://nodejs.org/en/download/) (LTS version)
-- [Serverless](https://www.serverless.com/framework/docs/providers/aws/guide/installation/) installed and configured against your own AWS (sandbox) account. We recommend using `saml2aws` to authenticate, check [our wiki page](https://wiki.york.ac.uk/display/AWS/2.+Command+Line+Access) for more details.
+You will need [Node.js](https://nodejs.org/en/download/) (LTS version) installed on your machine.
 
 You will also need to add an `AWS_ACCOUNT_ID` environment variable with the value set as the ID of your AWS account.
 
@@ -43,10 +42,16 @@ npm install
 To deploy the application to your account, login to AWS (e.g. `saml2aws login`) then run:
 
 ```
-serverless deploy
+npm run deploy
 ```
 
 Then find the API's URL in AWS API Gateway under the appropriate Stage to try it out.
+
+To undeploy the application from your account, run:
+
+```
+npm run undeploy
+```
 
 ### Testing
 
