@@ -63,9 +63,9 @@ npm test
 
 ### Deployment
 
-Deployment to the staging and production environments happen through GitHub actions that trigger automatically when new code is merged into the `staging` and `main` branches.
+Deployment to the development and production environments happen through GitHub actions that trigger automatically when new code is merged into the `dev` and `main` branches.
 
-The staging version of the Courses API is available at [https://api.courses.staging.app.york.ac.uk/v1/courses](https://api.courses.staging.app.york.ac.uk/v1/courses).
+The development version of the Courses API is available at [https://api.v1.courses.dev.app.york.ac.uk/courses](https://api.v1.courses.dev.app.york.ac.uk/courses).
 
 ## Documentation
 
