@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "src/handler.js",
   "scripts": {
-    "start": "serverless invoke local --function courses",
     "test": "jest",
     "deploy": "serverless deploy",
     "undeploy": "serverless remove"
