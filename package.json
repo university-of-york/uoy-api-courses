@@ -1,10 +1,10 @@
 {
   "name": "uoy-api-courses",
   "version": "1.0.0",
-  "main": "handler.js",
+  "main": "src/handler.js",
   "scripts": {
     "start": "serverless invoke local --function courses",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "deploy": "serverless deploy",
     "undeploy": "serverless remove"
   },
@@ -12,7 +12,16 @@
   "author": "University of York",
   "license": "MIT",
   "devDependencies": {
-    "serverless": "^2.1.1"
+    "serverless": "^2.1.1",
+    "jest": "^26.4.2",
+    "jest-fetch-mock": "^3.0.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.js"
+    ]
+  }
 }
