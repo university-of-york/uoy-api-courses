@@ -17,6 +17,7 @@ module.exports.coursesUrl = (parameters) => {
     if (parameters.max) {
         queryParams.append("num_ranks", parameters.max);
     }
+
     if (parameters.offset) {
         queryParams.append("start_rank", parameters.offset);
     }

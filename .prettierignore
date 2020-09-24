@@ -7,5 +7,5 @@ coverage
 *.md
 
 # Ignore directories that aren't code
-**/docs
-**/spec
+docs/
+spec/
