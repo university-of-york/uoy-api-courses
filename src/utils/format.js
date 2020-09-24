@@ -1,9 +1,9 @@
 module.exports.success = (body) => {
     return {
         statusCode: 200,
-        body: JSON.stringify(body)
-    }
-}
+        body: JSON.stringify(body),
+    };
+};
 
 module.exports.error = (message, status, error, path) => {
     return {
@@ -13,7 +13,7 @@ module.exports.error = (message, status, error, path) => {
             status: status,
             error: error,
             message: message,
-            path: path
-        })
-    }
-}
+            path: path,
+        }),
+    };
+};

@@ -1,10 +1,10 @@
-const {URLSearchParams} = require('url');
-const ClientError = require('../errors/ClientError');
-const BASE_URL = 'https://www.york.ac.uk/search/';
+const { URLSearchParams } = require("url");
+const ClientError = require("../errors/ClientError");
+const BASE_URL = "https://www.york.ac.uk/search/";
 
-module.exports.coursesUrl = parameters => {
+module.exports.coursesUrl = (parameters) => {
     if (!parameters || !parameters.search) {
-        throw new ClientError('The search parameter is required.');
+        throw new ClientError("The search parameter is required.");
     }
 
     const queryParams = new URLSearchParams();

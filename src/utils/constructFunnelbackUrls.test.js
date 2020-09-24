@@ -1,17 +1,17 @@
-const {coursesUrl} = require('./constructFunnelbackUrls');
-const ClientError = require('../errors/ClientError');
+const { coursesUrl } = require("./constructFunnelbackUrls");
+const ClientError = require("../errors/ClientError");
 
-test('Call without parameters throws ClientError', async () => {
+test("Call without parameters throws ClientError", async () => {
     expect(() => {
         coursesUrl();
     }).toThrow(ClientError);
 
     expect(() => {
         coursesUrl();
-    }).toThrow('The search parameter is required.');
+    }).toThrow("The search parameter is required.");
 });
 
-test('Call without search parameter throws ClientError', async () => {
+test("Call without search parameter throws ClientError", async () => {
     const parameters = {
         max: 5,
     };
@@ -22,49 +22,53 @@ test('Call without search parameter throws ClientError', async () => {
 
     expect(() => {
         coursesUrl(parameters);
-    }).toThrow('The search parameter is required.');
+    }).toThrow("The search parameter is required.");
 });
 
-test('Call with search parameter returns correct URL', async () => {
+test("Call with search parameter returns correct URL", async () => {
     const parameters = {
-        search: 'Maths',
+        search: "Maths",
     };
 
-    const expectedUrl = "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths";
+    const expectedUrl =
+        "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
 
-test('Call with search & max parameters returns correct URL', async () => {
+test("Call with search & max parameters returns correct URL", async () => {
     const parameters = {
-        search: 'Maths',
+        search: "Maths",
         max: 12,
     };
 
-    const expectedUrl = "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths&num_ranks=12";
+    const expectedUrl =
+        "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths&num_ranks=12";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
 
-test('Call with search & offset parameters returns correct URL', async () => {
+test("Call with search & offset parameters returns correct URL", async () => {
     const parameters = {
-        search: 'Maths',
+        search: "Maths",
         offset: 25,
     };
 
-    const expectedUrl = "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths&start_rank=25";
+    const expectedUrl =
+        "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths&start_rank=25";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
 
-test('Call with search, max & offset parameters returns correct URL', async () => {
+test("Call with search, max & offset parameters returns correct URL", async () => {
     const parameters = {
-        search: 'Maths',
+        search: "Maths",
         max: 18,
         offset: 15,
     };
 
-    const expectedUrl = "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths&num_ranks=18&start_rank=15";
+    const expectedUrl =
+        "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths&num_ranks=18&start_rank=15";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
