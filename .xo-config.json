@@ -1,21 +1,25 @@
 {
-  "extends":["xo-react","prettier","prettier/react"],
-  "overrides":[
+  "extends": ["xo-react", "prettier", "prettier/react"],
+  "ignore": [
+    "docs/**","spec/**"
+  ],
+
+  "overrides": [
     {
-      "files":["**/*.test.js","e2e/**","jest/*"],
-      "envs":["browser","jest"]
+      "files": ["**/*.test.js", "e2e/**", "jest/*"],
+      "envs": ["browser", "jest"]
     }
   ],
-  "envs":["browser"],
-  "rules":{
-    "capitalized-comments":"off",
-    "indent":"off",
-    "import/no-unassigned-import":"off",
-    "react/react-in-jsx-scope":"off",
-    "unicorn/catch-error-name":"off",
-    "unicorn/filename-case":"off",
-    "unicorn/import-index":"off",
-    "unicorn/prevent-abbreviations":"off"
+  "envs": ["browser"],
+  "rules": {
+    "capitalized-comments": "off",
+    "indent": "off",
+    "import/no-unassigned-import": "off",
+    "react/react-in-jsx-scope": "off",
+    "unicorn/catch-error-name": "off",
+    "unicorn/filename-case": "off",
+    "unicorn/import-index": "off",
+    "unicorn/prevent-abbreviations": "off"
   },
-  "space":true
+  "space": true
 }

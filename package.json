@@ -6,7 +6,7 @@
     "test": "jest",
     "deploy": "serverless deploy",
     "undeploy": "serverless remove",
-    "lint": "xo"
+    "lint": "xo ."
   },
   "keywords": [],
   "author": "University of York",

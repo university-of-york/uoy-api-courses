@@ -31,12 +31,11 @@ custom:
   sslCertificateArn: ${env:SSL_CERTIFICATE_ARN, ''}
 
 resources:
-
   Conditions:
     UseCustomDomainName: !Not
       - !Equals
         - ${self:custom.domainName}
-        - ''
+        - ""
 
   Resources:
     # The following would be done magically by Serverless if we were defining
@@ -84,7 +83,7 @@ resources:
       Condition: UseCustomDomainName
       DependsOn: [ApiGatewayDeployment]
       Properties:
-        BasePath: ''
+        BasePath: ""
         DomainName: !Ref ApiGatewayCustomDomainName
         RestApiId: !Ref ApiGatewayRestApi
         Stage: ${self:provider.stage}
@@ -97,4 +96,4 @@ resources:
       Properties:
         ServiceToken: arn:aws:sns:eu-west-1:230504789214:RequestRecordSet
         Source: ${self:custom.domainName}.
-        Target: !Join [ '', [ !GetAtt ApiGatewayCustomDomainName.RegionalDomainName, '.' ] ]
+        Target: !Join ["", [!GetAtt ApiGatewayCustomDomainName.RegionalDomainName, "."]]

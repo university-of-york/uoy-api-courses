@@ -10,10 +10,10 @@ module.exports.error = (message, status, error, path) => {
         statusCode: status,
         body: JSON.stringify({
             timestamp: new Date().toISOString(),
-            status: status,
-            error: error,
-            message: message,
-            path: path,
+            status,
+            error,
+            message,
+            path,
         }),
     };
 };
