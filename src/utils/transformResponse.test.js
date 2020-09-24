@@ -43,4 +43,15 @@ describe('transformer', () => {
         expect(result[1].distanceLearning).toBeNull();
         expect(result[2].distanceLearning).toBeNull();
     });
+
+    it('splits departments into an array', () => {
+        const multiDepartmentResponse = [{"department": "Department of Computer Science, Department of Mathematics"}];
+        const singleDepartmentResponse = [{"department": "Department of Computer Science"}];
+
+        expect(transformResponse(singleDepartmentResponse)[0].department).toStrictEqual(["Department of Computer Science"])
+        expect(transformResponse(multiDepartmentResponse)[0].department).toStrictEqual([
+          "Department of Computer Science",
+          "Department of Mathematics"
+        ])
+    });
 });
