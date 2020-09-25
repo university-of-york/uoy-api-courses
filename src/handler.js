@@ -1,9 +1,8 @@
-'use strict';
-const fetch = require('node-fetch');
-const {coursesUrl} = require('./utils/constructFunnelbackUrls');
-const {success, error} = require('./utils/format');
-const ClientError = require('./errors/ClientError');
-const {transformResponse} = require('./utils/transformResponse');
+"use strict";
+const fetch = require("node-fetch");
+const { coursesUrl } = require("./utils/constructFunnelbackUrls");
+const { success, error } = require("./utils/format");
+const ClientError = require("./errors/ClientError");
 
 module.exports.courses = async (event) => {
     try {
