@@ -4,9 +4,10 @@
   "main": "src/handler.js",
   "scripts": {
     "test": "jest",
+    "lint": "xo .",
+    "check": "xo && jest",
     "deploy": "serverless deploy",
-    "undeploy": "serverless remove",
-    "lint": "xo ."
+    "undeploy": "serverless remove"
   },
   "keywords": [],
   "author": "University of York",
