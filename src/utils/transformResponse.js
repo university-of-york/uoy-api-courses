@@ -5,19 +5,17 @@
  * @returns {[Object]}
  */
 module.exports.transformResponse = (response) => {
-    return response.map(course => {
+    return response.map((course) => {
         transformDistanceLearning(course);
         transformDepartment(course);
         return course;
     });
 };
 
-
 const transformDistanceLearning = (course) => {
-    if(course && course.distanceLearning) {
-        const distanceLearning = typeof course.distanceLearning === "string"
-          ? course.distanceLearning.toLowerCase()
-          : null;
+    if (course && course.distanceLearning) {
+        const distanceLearning =
+            typeof course.distanceLearning === "string" ? course.distanceLearning.toLowerCase() : null;
 
         course.distanceLearning = distanceLearning === "yes" ? true : distanceLearning === "no" ? false : null;
     }
@@ -26,12 +24,10 @@ const transformDistanceLearning = (course) => {
 };
 
 const transformDepartment = (course) => {
-    if(course && course.department) {
-        const departments = typeof course.department === "string"
-            ? course.department
-            : "";
+    if (course && course.department) {
+        const departments = typeof course.department === "string" ? course.department : "";
 
-        if(departments.includes(", ")) {
+        if (departments.includes(", ")) {
             course.department = departments.split(", ");
         } else {
             course.department = [departments];

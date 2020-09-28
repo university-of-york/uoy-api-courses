@@ -1,8 +1,6 @@
 {
-  "extends": ["xo-react", "prettier", "prettier/react"],
-  "ignore": [
-    "docs/**","spec/**"
-  ],
+  "extends": ["xo", "prettier"],
+  "ignore": ["docs/**", "spec/**"],
 
   "overrides": [
     {
@@ -15,11 +13,10 @@
     "capitalized-comments": "off",
     "indent": "off",
     "import/no-unassigned-import": "off",
-    "react/react-in-jsx-scope": "off",
     "unicorn/catch-error-name": "off",
     "unicorn/filename-case": "off",
     "unicorn/import-index": "off",
     "unicorn/prevent-abbreviations": "off"
   },
-  "space": true
+  "space": 4
 }
