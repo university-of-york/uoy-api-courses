@@ -96,38 +96,39 @@ test("Response with 200 code is returned correctly", async () => {
     expect(result.body).toEqual('{"results":[]}');
 });
 
-test('Response with basic results returns those results', async () => {
+test("Response with basic results returns those results", async () => {
     const event = {
         queryStringParameters: {
-            search: 'physics',
-        }
+            search: "physics",
+        },
     };
     const searchResults = {
         results: [
             {
-                "title": "Maths and Computer Science",
-                "liveUrl": "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
-                "award": "MMath (Hons)",
-                "level": "undergraduate",
-                "length": "4 years full-time",
-                "typicalOffer": "AAA-AAB",
-                "yearOfEntry": "2021/22",
-                "ucasCode": "GG14"
+                title: "Maths and Computer Science",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
+                award: "MMath (Hons)",
+                level: "undergraduate",
+                length: "4 years full-time",
+                typicalOffer: "AAA-AAB",
+                yearOfEntry: "2021/22",
+                ucasCode: "GG14",
             },
             {
-                "title": "Maths and Computer Science (with a year in industry)",
-                "liveUrl": "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science-year-industry/",
-                "award": "MMath (Hons)",
-                "level": "undergraduate",
-                "length": "5 years full-time",
-                "typicalOffer": "AAA-AAB",
-                "yearOfEntry": "2021/22",
-                "ucasCode": "GG1K"
-            }
-        ]
+                title: "Maths and Computer Science (with a year in industry)",
+                liveUrl:
+                    "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science-year-industry/",
+                award: "MMath (Hons)",
+                level: "undergraduate",
+                length: "5 years full-time",
+                typicalOffer: "AAA-AAB",
+                yearOfEntry: "2021/22",
+                ucasCode: "GG1K",
+            },
+        ],
     };
 
-    fetch.mockResponse(JSON.stringify(searchResults), {status: 200});
+    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
 
     const result = await courses(event);
 
@@ -135,7 +136,7 @@ test('Response with basic results returns those results', async () => {
     expect(result.body).toEqual(JSON.stringify(searchResults));
 });
 
-test('Request without any parameters returns an appropriate error', async () => {
+test("Request without any parameters returns an appropriate error", async () => {
     const result = await courses({});
 
     expect(result.statusCode).toBe(400);
