@@ -11,7 +11,6 @@ jobs:
   deploy_to_aws:
     runs-on: ubuntu-latest
     steps:
-
       - name: Check out the application's source code
         uses: actions/checkout@v2
 

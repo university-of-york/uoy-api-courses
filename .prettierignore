@@ -1,0 +1,11 @@
+# Ignore artifacts:
+build
+coverage
+
+# Ignore all HTML and Markdown files:
+*.html
+*.md
+
+# Ignore directories that aren't code
+docs/
+spec/

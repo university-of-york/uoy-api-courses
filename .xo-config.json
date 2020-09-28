@@ -1,0 +1,22 @@
+{
+  "extends": ["xo", "prettier"],
+  "ignore": ["docs/**", "spec/**"],
+
+  "overrides": [
+    {
+      "files": ["**/*.test.js", "e2e/**", "jest/*"],
+      "envs": ["browser", "jest"]
+    }
+  ],
+  "envs": ["browser"],
+  "rules": {
+    "capitalized-comments": "off",
+    "indent": "off",
+    "import/no-unassigned-import": "off",
+    "unicorn/catch-error-name": "off",
+    "unicorn/filename-case": "off",
+    "unicorn/import-index": "off",
+    "unicorn/prevent-abbreviations": "off"
+  },
+  "space": 4
+}
