@@ -1,8 +1,8 @@
-name: actions
+name: Run XO
 on:
   push:
     branches:
-      - CFIN-281_add_Prettier_and_XO
+      - CFIN-262_run_Prettier_and_XO_automaticlly
 
 jobs:
   run-lint:
@@ -20,4 +20,4 @@ jobs:
         run: npm ci
 
       - name: Install application dependencies
-        run: npm lint
+        run: npm run lint
