@@ -4,6 +4,7 @@
   "main": "src/handler.js",
   "scripts": {
     "test": "jest",
+    "format": "prettier --write .",
     "lint": "xo .",
     "check": "xo && jest",
     "deploy": "serverless deploy",

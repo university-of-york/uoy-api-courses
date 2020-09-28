@@ -16,6 +16,7 @@
     "unicorn/catch-error-name": "off",
     "unicorn/filename-case": "off",
     "unicorn/import-index": "off",
+    "unicorn/no-nested-ternary": "off",
     "unicorn/prevent-abbreviations": "off"
   },
   "space": 4

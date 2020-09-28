@@ -19,5 +19,16 @@ jobs:
       - name: Install application dependencies
         run: npm ci
 
-      - name: Install application dependencies
+      - name: Run XO script
         run: npm run lint
+
+      - name: Run Prettier
+        run: npm run format
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        with:
+          commit_message: Apply formatting changes
+          branch: ${{ github.head_ref }}
+
+
