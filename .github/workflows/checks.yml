@@ -1,11 +1,11 @@
-name: Run XO
+name: Run XO and Prettier
 on:
   push:
     branches:
       - CFIN-262_run_Prettier_and_XO_automaticlly
 
 jobs:
-  run-lint:
+  run-checks:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the application's source code
