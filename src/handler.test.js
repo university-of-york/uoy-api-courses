@@ -92,6 +92,58 @@ test('Response with 200 code is returned correctly', async () => {
     expect(result.body).toEqual('{"results":[]}');
 });
 
+test('Response results are transformed to match openAPI spec', async () => {
+    const event = {
+        queryStringParameters: {
+            search: 'physics',
+        }
+    };
+    const searchResults = {
+        results: [
+            {
+                "title": "Maths and Computer Science",
+                "liveUrl": "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
+                "award": "MMath (Hons)",
+                "department": "Department of Computer Science, Department of Mathematics",
+                "level": "undergraduate",
+                "length": "4 years full-time",
+                "typicalOffer": "AAA-AAB",
+                "yearOfEntry": "2021/22",
+                "distanceLearning": "No",
+                "summary": "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
+                "imageUrl": "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
+                "ucasCode": "GG14"
+            }
+        ]
+    };
+
+    const expectedResult = {
+        results: [
+            {
+                "title": "Maths and Computer Science",
+                "liveUrl": "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
+                "award": "MMath (Hons)",
+                "department": ["Department of Computer Science", "Department of Mathematics"],
+                "level": "undergraduate",
+                "length": "4 years full-time",
+                "typicalOffer": "AAA-AAB",
+                "yearOfEntry": "2021/22",
+                "distanceLearning": false,
+                "summary": "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
+                "imageUrl": "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
+                "ucasCode": "GG14"
+            }
+        ]
+    };
+
+    fetch.mockResponse(JSON.stringify(searchResults), {status: 200});
+
+    const result = await courses(event);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toEqual(JSON.stringify(expectedResult));
+});
+
 test('Request without any parameters returns an appropriate error', async () => {
     const result = await courses({});
 
