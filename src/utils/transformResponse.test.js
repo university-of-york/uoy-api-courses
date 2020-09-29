@@ -30,7 +30,7 @@ describe('transformer', () => {
         expect(transformResponse(positiveInput)[0].distanceLearning).toBe(true);
     });
 
-    it('returns null for distanceLearning if the result is not valid', () => {
+    it('returns false for distanceLearning if the result is not expected', () => {
         const weirdInputs = [
             {distanceLearning: "Maybe, maybe not"},
             {distanceLearning: 53478},
@@ -39,19 +39,24 @@ describe('transformer', () => {
 
         const result = transformResponse(weirdInputs);
 
-        expect(result[0].distanceLearning).toBeNull();
-        expect(result[1].distanceLearning).toBeNull();
-        expect(result[2].distanceLearning).toBeNull();
+        expect(result[0].distanceLearning).toBe(false);
+        expect(result[1].distanceLearning).toBe(false);
+        expect(result[2].distanceLearning).toBe(false);
     });
 
-    it('splits departments into an array', () => {
+    it('splits multiple departments into an array', () => {
         const multiDepartmentResponse = [{"department": "Department of Computer Science, Department of Mathematics"}];
-        const singleDepartmentResponse = [{"department": "Department of Computer Science"}];
 
-        expect(transformResponse(singleDepartmentResponse)[0].department).toStrictEqual(["Department of Computer Science"])
         expect(transformResponse(multiDepartmentResponse)[0].department).toStrictEqual([
           "Department of Computer Science",
           "Department of Mathematics"
         ])
+    });
+
+    it('converts a single department into an array', () => {
+        const singleDepartmentResponse = [{"department": "Department of Computer Science"}];
+
+        expect(transformResponse(singleDepartmentResponse)[0].department).toStrictEqual(["Department of Computer Science"])
+
     });
 });
