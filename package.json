@@ -5,6 +5,7 @@
   "scripts": {
     "test": "jest",
     "format": "prettier --write .",
+    "checkformat": "prettier --check .",
     "lint": "xo .",
     "check": "xo && jest",
     "deploy": "serverless deploy",

@@ -13,10 +13,10 @@
     "capitalized-comments": "off",
     "indent": "off",
     "import/no-unassigned-import": "off",
+    "no-warning-comments": "off",
     "unicorn/catch-error-name": "off",
     "unicorn/filename-case": "off",
     "unicorn/import-index": "off",
-    "unicorn/no-nested-ternary": "off",
     "unicorn/prevent-abbreviations": "off"
   },
   "space": 4
