@@ -22,4 +22,3 @@ jobs:
 
       - name: Run XO script
         run: npm run lint
-
