@@ -4,9 +4,13 @@
   "main": "src/handler.js",
   "scripts": {
     "test": "jest",
+    "format": "prettier --write .",
+    "checkformat": "prettier --check .",
+    "lint": "xo .",
+    "formatandcheck": "npm run format && npm run lint && npm run test",
+    "check": "npm run checkformat && npm run lint && npm run test",
     "deploy": "serverless deploy",
-    "undeploy": "serverless remove",
-    "lint": "xo ."
+    "undeploy": "serverless remove"
   },
   "keywords": [],
   "author": "University of York",

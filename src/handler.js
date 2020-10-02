@@ -9,20 +9,21 @@ module.exports.courses = async (event) => {
     try {
         const url = coursesUrl(event.queryStringParameters);
 
-        const response = await fetch(url, {
+        const searchResponse = await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
         });
 
-        if (!response.ok) {
-            return error("An error has occurred.", response.status, response.statusText, event.path);
+        if (!searchResponse.ok) {
+            return error("An error has occurred.", searchResponse.status, searchResponse.statusText, event.path);
         }
 
-        const body = await response.json();
+        const body = await searchResponse.json();
+        const results = transformResponse(body.results);
 
-        return success(body);
+        return success({ results });
     } catch (e) {
         switch (e.constructor.name) {
             case ClientError.name:

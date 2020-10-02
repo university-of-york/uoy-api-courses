@@ -96,7 +96,7 @@ test("Response with 200 code is returned correctly", async () => {
     expect(result.body).toEqual('{"results":[]}');
 });
 
-test("Response with basic results returns those results", async () => {
+test("Response results are transformed to match openAPI spec", async () => {
     const event = {
         queryStringParameters: {
             search: "physics",
@@ -108,22 +108,38 @@ test("Response with basic results returns those results", async () => {
                 title: "Maths and Computer Science",
                 liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
                 award: "MMath (Hons)",
+                department: "Department of Computer Science, Department of Mathematics",
                 level: "undergraduate",
                 length: "4 years full-time",
                 typicalOffer: "AAA-AAB",
                 yearOfEntry: "2021/22",
+                distanceLearning: "No",
+                summary:
+                    "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
+                imageUrl:
+                    "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
                 ucasCode: "GG14",
             },
+        ],
+    };
+
+    const expectedResult = {
+        results: [
             {
-                title: "Maths and Computer Science (with a year in industry)",
-                liveUrl:
-                    "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science-year-industry/",
+                title: "Maths and Computer Science",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
                 award: "MMath (Hons)",
+                department: ["Department of Computer Science", "Department of Mathematics"],
                 level: "undergraduate",
-                length: "5 years full-time",
+                length: "4 years full-time",
                 typicalOffer: "AAA-AAB",
                 yearOfEntry: "2021/22",
-                ucasCode: "GG1K",
+                distanceLearning: false,
+                summary:
+                    "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
+                imageUrl:
+                    "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
+                ucasCode: "GG14",
             },
         ],
     };
@@ -133,7 +149,7 @@ test("Response with basic results returns those results", async () => {
     const result = await courses(event);
 
     expect(result.statusCode).toBe(200);
-    expect(result.body).toEqual(JSON.stringify(searchResults));
+    expect(result.body).toEqual(JSON.stringify(expectedResult));
 });
 
 test("Request without any parameters returns an appropriate error", async () => {
