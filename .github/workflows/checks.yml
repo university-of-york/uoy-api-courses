@@ -17,8 +17,8 @@ jobs:
       - name: Install application dependencies
         run: npm ci
 
-      - name: Run Prettier
+      - name: Check code is formatted correctly
         run: npm run checkformat
 
-      - name: Run XO script
+      - name: Check code conforms to linting rules
         run: npm run lint
