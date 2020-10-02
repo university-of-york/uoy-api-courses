@@ -1,6 +1,10 @@
 # Ignore artifacts:
 build
 coverage
+node_modules
+.git
+.idea
+.serverless
 
 # Ignore all HTML and Markdown files:
 *.html
