@@ -22,6 +22,15 @@ jobs:
       - name: Install application dependencies
         run: npm ci
 
+      - name: Check code is formatted correctly
+        run: npm run checkformat
+
+      - name: Check code conforms to linting rules
+        run: npm run lint
+
+      - name: Check tests run
+        run: npm run test
+
       - name: Deploy - dev
         if: github.ref == 'refs/heads/dev'
         run: npm run deploy
