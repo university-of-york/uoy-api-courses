@@ -1,7 +1,3 @@
-class ClientError extends Error {
-    constructor(message) {
-        super(message);
-    }
-}
+class ClientError extends Error {}
 
 module.exports = ClientError;

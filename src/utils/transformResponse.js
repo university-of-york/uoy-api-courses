@@ -3,7 +3,7 @@
  * our OpenAPI specification.
  */
 module.exports.transformResponse = (response) => {
-    return response.map(course => {
+    return response.map((course) => {
         const transformedCourse = course;
         transformDistanceLearning(transformedCourse);
         transformDepartment(transformedCourse);
@@ -11,10 +11,9 @@ module.exports.transformResponse = (response) => {
     });
 };
 
-
 const transformDistanceLearning = (course) => {
     let distanceLearning;
-    if(course) {
+    if (course) {
         if (typeof course.distanceLearning === "string") {
             distanceLearning = course.distanceLearning.toLowerCase();
         } else {
@@ -28,11 +27,11 @@ const transformDistanceLearning = (course) => {
 };
 
 const transformDepartment = (course) => {
-    if(course.department && typeof course.department === "string") {
+    if (course.department && typeof course.department === "string") {
         const departments = course.department;
 
-        //TODO: Business Analysis work to determine if we can change the delimiter for departments
-        if(departments.includes(", ")) {
+        // TODO: Business Analysis work to determine if we can change the delimiter for departments
+        if (departments.includes(", ")) {
             course.department = departments.split(", ");
         } else {
             course.department = [departments];

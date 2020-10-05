@@ -4,6 +4,11 @@
   "main": "src/handler.js",
   "scripts": {
     "test": "jest",
+    "format": "prettier --write .",
+    "checkformat": "prettier --check .",
+    "lint": "xo .",
+    "formatandcheck": "npm run format && npm run lint && npm run test",
+    "check": "npm run checkformat && npm run lint && npm run test",
     "deploy": "serverless deploy",
     "undeploy": "serverless remove"
   },
@@ -11,9 +16,11 @@
   "author": "University of York",
   "license": "MIT",
   "devDependencies": {
-    "serverless": "^2.1.1",
     "jest": "^26.4.2",
-    "jest-fetch-mock": "^3.0.3"
+    "jest-fetch-mock": "^3.0.3",
+    "prettier": "2.1.2",
+    "serverless": "^2.1.1",
+    "xo": "^0.33.1"
   },
   "dependencies": {
     "node-fetch": "^2.6.1"

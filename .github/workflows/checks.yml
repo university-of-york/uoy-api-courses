@@ -1,0 +1,29 @@
+name: Run XO and Prettier
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  run-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the application's source code
+        uses: actions/checkout@v2
+
+      - name: Install node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install application dependencies
+        run: npm ci
+
+      - name: Check code is formatted correctly
+        run: npm run checkformat
+
+      - name: Check code conforms to linting rules
+        run: npm run lint
