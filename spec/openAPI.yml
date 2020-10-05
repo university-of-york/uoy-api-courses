@@ -150,3 +150,8 @@ components:
         path:
           type: string
           example: /courses
+servers:
+  - url: https://api.v1.courses.app.york.ac.uk
+    description: Production API
+  - url: https://api.v1.courses.dev.app.york.ac.uk
+    description: Development API
