@@ -1,6 +1,11 @@
 name: Run XO and Prettier
 on:
+  push:
+    branches:
+      - dev
+      - main
   pull_request:
+  workflow_dispatch:
 
 jobs:
   run-checks:
