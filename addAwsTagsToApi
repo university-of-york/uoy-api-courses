@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# define AWS tags
+TAGS="name=courses api,group=ESG,project=course-search,status=dev,pushed_by=github,defined_in=serverless,repo_name=uoy-api-courses,team=ESG Teaching and Learning"
+
+# fetch API id and stage name from the Serverless CloudFormation stack
+API_ID=`aws cloudformation describe-stacks --stack-name uoy-courses-api-v1 --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayRestApiId'].OutputValue" --output text`
+STAGE_NAME=`aws cloudformation describe-stacks --stack-name uoy-courses-api-v1 --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayDeploymentStageName'].OutputValue" --output text`
+
+# construct API and stage ARNs
+API_ARN=arn:aws:apigateway:eu-west-1::/restapis/$API_ID
+STAGE_ARN=arn:aws:apigateway:eu-west-1::/restapis/$API_ID/stages/$STAGE_NAME
+
+# add tags to API
+aws apigateway tag-resource --resource-arn $API_ARN --tags "$TAGS"
+
+# add tags to API deployment stage
+aws apigateway tag-resource --resource-arn $STAGE_ARN --tags "$TAGS"
