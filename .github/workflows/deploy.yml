@@ -44,7 +44,7 @@ jobs:
 
       - name: Add AWS tags to API resources - dev
         if: github.ref == 'refs/heads/dev'
-        run: ./addAwsTagsToApi uoy-courses-api-v1 dev
+        run: scripts/addAwsTagsToApi uoy-courses-api-v1 dev
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
@@ -63,7 +63,7 @@ jobs:
 
       - name: Add AWS tags to API resources - production
         if: github.ref == 'refs/heads/main'
-        run: ./addAwsTagsToApi uoy-courses-api-v1 prod
+        run: scripts/addAwsTagsToApi uoy-courses-api-v1 prod
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
