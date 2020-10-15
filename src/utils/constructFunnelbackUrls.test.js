@@ -1,5 +1,8 @@
 const { coursesUrl } = require("./constructFunnelbackUrls");
 const ClientError = require("../errors/ClientError");
+const { COLLECTION, FORM, PROFILE } = require("../constants/UrlParameters");
+
+const constantPartOfSearchUrl = `collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}`;
 
 test("Call without parameters throws ClientError", async () => {
     expect(() => {
@@ -30,8 +33,7 @@ test("Call with search parameter returns correct URL", async () => {
         search: "Maths",
     };
 
-    const expectedUrl =
-        "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths";
+    const expectedUrl = "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=Maths";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
@@ -42,8 +44,7 @@ test("Call with search & max parameters returns correct URL", async () => {
         max: 12,
     };
 
-    const expectedUrl =
-        "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths&num_ranks=12";
+    const expectedUrl = "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=Maths&num_ranks=12";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
@@ -54,8 +55,7 @@ test("Call with search & offset parameters returns correct URL", async () => {
         offset: 25,
     };
 
-    const expectedUrl =
-        "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths&start_rank=25";
+    const expectedUrl = "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=Maths&start_rank=25";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
@@ -68,7 +68,7 @@ test("Call with search, max & offset parameters returns correct URL", async () =
     };
 
     const expectedUrl =
-        "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default&query=Maths&num_ranks=18&start_rank=15";
+        "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=Maths&num_ranks=18&start_rank=15";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
