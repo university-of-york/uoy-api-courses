@@ -4,9 +4,21 @@
  */
 module.exports.transformResponse = (response) => {
     return response.map((course) => {
-        const transformedCourse = course;
-        transformDistanceLearning(transformedCourse);
-        transformDepartment(transformedCourse);
+        const actualCourse = () => {
+            if (course.department) {
+                return course;
+            }
+
+            console.log("Invalid course entry " + course.title);
+            return null;
+        };
+
+        const transformedCourse = actualCourse(course);
+        if (transformedCourse) {
+            transformDistanceLearning(transformedCourse);
+            transformDepartment(transformedCourse);
+        }
+
         return transformedCourse;
     });
 };

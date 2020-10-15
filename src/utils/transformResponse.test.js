@@ -27,8 +27,8 @@ describe("transformer", () => {
     });
 
     it("converts Yes and No to Booleans for distanceLearning", () => {
-        const negativeInput = [{ distanceLearning: "No" }];
-        const positiveInput = [{ distanceLearning: "Yes" }];
+        const negativeInput = [{ department: "Department", distanceLearning: "No" }];
+        const positiveInput = [{ department: "Department", distanceLearning: "Yes" }];
 
         expect(transformResponse(negativeInput)[0].distanceLearning).toBe(false);
         expect(transformResponse(positiveInput)[0].distanceLearning).toBe(true);
@@ -36,9 +36,9 @@ describe("transformer", () => {
 
     it("returns false for distanceLearning if the result is not expected", () => {
         const weirdInputs = [
-            { distanceLearning: "Maybe, maybe not" },
-            { distanceLearning: 53478 },
-            { distanceLearning: "I am distanceLearning" },
+            { department: "Department", distanceLearning: "Maybe, maybe not" },
+            { department: "Department", distanceLearning: 53478 },
+            { department: "Department", distanceLearning: "I am distanceLearning" },
         ];
 
         const result = transformResponse(weirdInputs);
