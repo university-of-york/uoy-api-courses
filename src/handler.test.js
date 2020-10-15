@@ -176,7 +176,7 @@ test("Response with 400 code returns an error", async () => {
     expect(result.statusCode).toBe(400);
     expect(result.body).toContain('"status":400');
     expect(result.body).toContain('"error":"Bad Request"');
-    expect(result.body).toContain('"message":"An error has occurred."');
+    expect(result.body).toContain('"message":"There is a problem with the Funnelback search."');
     expect(result.body).toContain('"timestamp":');
 });
 
@@ -194,7 +194,7 @@ test("Response with 500 code returns an error", async () => {
     expect(result.statusCode).toBe(500);
     expect(result.body).toContain('"status":500');
     expect(result.body).toContain('"error":"Internal Server Error"');
-    expect(result.body).toContain('"message":"An error has occurred."');
+    expect(result.body).toContain('"message":"There is a problem with the Funnelback search."');
     expect(result.body).toContain('"timestamp":');
 });
 

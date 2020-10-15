@@ -17,7 +17,15 @@ module.exports.courses = async (event) => {
         });
 
         if (!searchResponse.ok) {
-            return error("An error has occurred.", searchResponse.status, searchResponse.statusText, event.path);
+            console.log("Funnelback search problem");
+            console.log(url);
+            console.log(searchResponse.statusText);
+            return error(
+                "There is a problem with the Funnelback search.",
+                searchResponse.status,
+                searchResponse.statusText,
+                event.path
+            );
         }
 
         const body = await searchResponse.json();
@@ -25,6 +33,7 @@ module.exports.courses = async (event) => {
 
         return success({ results });
     } catch (e) {
+        console.log(e);
         switch (e.constructor.name) {
             case ClientError.name:
                 return error(e.message, 400, "Bad Request", event.path);
