@@ -1,6 +1,6 @@
 const { courses } = require("./handler");
 const fetch = require("jest-fetch-mock");
-const { COLLECTION, FORM, PROFILE } = require("./constants/UrlParameters");
+const { COLLECTION, FORM, PROFILE } = require("./constants/UrlAndParameters");
 
 const constantPartOfSearchUrl = `collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}`;
 

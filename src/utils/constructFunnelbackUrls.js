@@ -1,7 +1,6 @@
 const { URLSearchParams } = require("url");
 const ClientError = require("../errors/ClientError");
-const BASE_URL = "https://www.york.ac.uk/search/";
-const { COLLECTION, FORM, PROFILE } = require("../constants/UrlParameters");
+const { BASE_URL, COLLECTION, FORM, PROFILE } = require("../constants/UrlAndParameters");
 
 module.exports.coursesUrl = (parameters) => {
     if (!parameters || !parameters.search) {
