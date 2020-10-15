@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 
+# usage: addAwsTagsToApi cloudformation-stack-name [environment]
+
+CLOUDFORMATION_STACK_NAME=$1
+
+# 'status' tag defaults to 'dev' but can be overridden by command line argument
+ENVIRONMENT=${2:-dev}
+
 # define AWS tags
-TAGS="name=courses api,group=ESG,project=course-search,status=dev,pushed_by=github,defined_in=serverless,repo_name=uoy-api-courses,team=ESG Teaching and Learning"
+TAGS="name=courses api,group=ESG,project=course-search,status=$ENVIRONMENT,pushed_by=github,defined_in=serverless,repo_name=uoy-api-courses,team=ESG Teaching and Learning"
 
 # fetch API id and stage name from the Serverless CloudFormation stack
-API_ID=`aws cloudformation describe-stacks --stack-name uoy-courses-api-v1 --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayRestApiId'].OutputValue" --output text`
-STAGE_NAME=`aws cloudformation describe-stacks --stack-name uoy-courses-api-v1 --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayDeploymentStageName'].OutputValue" --output text`
+API_ID=`aws cloudformation describe-stacks --stack-name $CLOUDFORMATION_STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayRestApiId'].OutputValue" --output text`
+STAGE_NAME=`aws cloudformation describe-stacks --stack-name $CLOUDFORMATION_STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayDeploymentStageName'].OutputValue" --output text`
 
 # construct API and stage ARNs
 API_ARN=arn:aws:apigateway:eu-west-1::/restapis/$API_ID
