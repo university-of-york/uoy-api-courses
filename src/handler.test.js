@@ -1,8 +1,8 @@
 const { courses } = require("./handler");
 const fetch = require("jest-fetch-mock");
-const { COLLECTION, FORM, PROFILE } = require("./constants/UrlAndParameters");
+const { BASE_URL, COLLECTION, FORM, PROFILE } = require("./constants/UrlAndParameters");
 
-const constantPartOfSearchUrl = `collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}`;
+const constantPartOfSearchUrl = `${BASE_URL}?collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}`;
 
 beforeEach(() => {
     fetch.resetMocks();
@@ -19,7 +19,7 @@ test("Simple query calls Funnelback", async () => {
 
     await courses(event);
 
-    const expectedUrl = "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=maths";
+    const expectedUrl = constantPartOfSearchUrl + "&query=maths";
 
     expect(fetch.mock.calls[0][0]).toEqual(expectedUrl);
     expect(fetch.mock.calls[0][1].method).toEqual("GET");
@@ -37,7 +37,7 @@ test("Request with max parameter correctly calls Funnelback", async () => {
 
     await courses(event);
 
-    const expectedUrl = "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=biology&num_ranks=5";
+    const expectedUrl = constantPartOfSearchUrl + "&query=biology&num_ranks=5";
 
     expect(fetch.mock.calls[0][0]).toEqual(expectedUrl);
     expect(fetch.mock.calls[0][1].method).toEqual("GET");
@@ -55,7 +55,7 @@ test("Request with offset parameter correctly calls Funnelback", async () => {
 
     await courses(event);
 
-    const expectedUrl = "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=chemistry&start_rank=10";
+    const expectedUrl = constantPartOfSearchUrl + "&query=chemistry&start_rank=10";
 
     expect(fetch.mock.calls[0][0]).toEqual(expectedUrl);
     expect(fetch.mock.calls[0][1].method).toEqual("GET");
@@ -74,8 +74,7 @@ test("Request with max & offset parameters correctly calls Funnelback", async ()
 
     await courses(event);
 
-    const expectedUrl =
-        "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=english&num_ranks=10&start_rank=12";
+    const expectedUrl = constantPartOfSearchUrl + "&query=english&num_ranks=10&start_rank=12";
 
     expect(fetch.mock.calls[0][0]).toEqual(expectedUrl);
     expect(fetch.mock.calls[0][1].method).toEqual("GET");
