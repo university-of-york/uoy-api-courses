@@ -38,7 +38,6 @@ const transformDepartment = (course) => {
         }
     } else {
         course.department = [];
-        console.warn("Department missing for " + course.title);
     }
 
     return course;
