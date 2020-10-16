@@ -17,9 +17,9 @@ module.exports.courses = async (event) => {
         });
 
         if (!searchResponse.ok) {
-            console.log("Funnelback search problem");
-            console.log(url);
-            console.log(searchResponse.statusText);
+            console.error("Funnelback search problem");
+            console.error(url);
+            console.error(searchResponse.statusText);
             return error(
                 "There is a problem with the Funnelback search.",
                 searchResponse.status,
@@ -29,11 +29,12 @@ module.exports.courses = async (event) => {
         }
 
         const body = await searchResponse.json();
-        const results = transformResponse(body.results);
+        const transformedResults = transformResponse(body.results);
+        const results = transformedResults.filter(Boolean); // Removes null values
 
         return success({ results });
     } catch (e) {
-        console.log(e);
+        console.error(e);
         switch (e.constructor.name) {
             case ClientError.name:
                 return error(e.message, 400, "Bad Request", event.path);

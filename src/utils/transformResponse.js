@@ -4,23 +4,25 @@
  */
 module.exports.transformResponse = (response) => {
     return response.map((course) => {
-        const actualCourse = () => {
-            if (course.department) {
-                return course;
-            }
-
-            console.log("Invalid course entry " + course.title);
-            return null;
-        };
-
-        const transformedCourse = actualCourse(course);
-        if (transformedCourse) {
+        if (isValid(course)) {
+            const transformedCourse = course;
             transformDistanceLearning(transformedCourse);
             transformDepartment(transformedCourse);
+
+            return transformedCourse;
         }
 
-        return transformedCourse;
+        return null;
     });
+};
+
+const isValid = (course) => {
+    if (course.department) {
+        return true;
+    }
+
+    console.error("Invalid course entry " + course.title);
+    return false;
 };
 
 const transformDistanceLearning = (course) => {
