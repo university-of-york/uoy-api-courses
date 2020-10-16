@@ -150,7 +150,7 @@ test("Response results are transformed to match openAPI spec", async () => {
     expect(result.statusCode).toBe(200);
     expect(result.body).toEqual(JSON.stringify(expectedResult));
 });
-test("Response results do not contain entries from Funnelback that have no department", async () => {
+test("Response results from Funnelback with missing metadata are returned OK", async () => {
     const event = {
         queryStringParameters: {
             search: "physics",
@@ -224,6 +224,20 @@ test("Response results do not contain entries from Funnelback that have no depar
                 imageUrl:
                     "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
                 ucasCode: "GG14",
+            },
+            {
+                title: "Teaching and Learning",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/teaching-learning/",
+                award: null,
+                department: [],
+                level: null,
+                length: null,
+                typicalOffer: "N/A",
+                yearOfEntry: null,
+                distanceLearning: false,
+                summary: null,
+                imageUrl: "https://www.york.ac.uk|https://www.york.ac.uk",
+                ucasCode: null,
             },
             {
                 title: "Physics",

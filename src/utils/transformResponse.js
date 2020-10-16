@@ -4,25 +4,11 @@
  */
 module.exports.transformResponse = (response) => {
     return response.map((course) => {
-        if (isValid(course)) {
-            const transformedCourse = course;
-            transformDistanceLearning(transformedCourse);
-            transformDepartment(transformedCourse);
-
-            return transformedCourse;
-        }
-
-        return null;
+        const transformedCourse = course;
+        transformDistanceLearning(transformedCourse);
+        transformDepartment(transformedCourse);
+        return transformedCourse;
     });
-};
-
-const isValid = (course) => {
-    if (course.department) {
-        return true;
-    }
-
-    console.error("Invalid course entry " + course.title);
-    return false;
 };
 
 const transformDistanceLearning = (course) => {
@@ -50,6 +36,9 @@ const transformDepartment = (course) => {
         } else {
             course.department = [departments];
         }
+    } else {
+        course.department = [];
+        console.warn("Department missing for " + course.title);
     }
 
     return course;
