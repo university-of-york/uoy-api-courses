@@ -1,8 +1,8 @@
 const { coursesUrl } = require("./constructFunnelbackUrls");
 const ClientError = require("../errors/ClientError");
-const { COLLECTION, FORM, PROFILE } = require("../constants/UrlParameters");
+const { BASE_URL, COLLECTION, FORM, PROFILE } = require("../constants/UrlAndParameters");
 
-const constantPartOfSearchUrl = `collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}`;
+const constantPartOfSearchUrl = `${BASE_URL}?collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}`;
 
 test("Call without parameters throws ClientError", async () => {
     expect(() => {
@@ -33,7 +33,7 @@ test("Call with search parameter returns correct URL", async () => {
         search: "Maths",
     };
 
-    const expectedUrl = "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=Maths";
+    const expectedUrl = constantPartOfSearchUrl + "&query=Maths";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
@@ -44,7 +44,7 @@ test("Call with search & max parameters returns correct URL", async () => {
         max: 12,
     };
 
-    const expectedUrl = "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=Maths&num_ranks=12";
+    const expectedUrl = constantPartOfSearchUrl + "&query=Maths&num_ranks=12";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
@@ -55,7 +55,7 @@ test("Call with search & offset parameters returns correct URL", async () => {
         offset: 25,
     };
 
-    const expectedUrl = "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=Maths&start_rank=25";
+    const expectedUrl = constantPartOfSearchUrl + "&query=Maths&start_rank=25";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
@@ -67,8 +67,7 @@ test("Call with search, max & offset parameters returns correct URL", async () =
         offset: 15,
     };
 
-    const expectedUrl =
-        "https://www.york.ac.uk/search/?" + constantPartOfSearchUrl + "&query=Maths&num_ranks=18&start_rank=15";
+    const expectedUrl = constantPartOfSearchUrl + "&query=Maths&num_ranks=18&start_rank=15";
 
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
