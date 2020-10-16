@@ -27,8 +27,8 @@ describe("transformer", () => {
     });
 
     it("converts Yes and No to Booleans for distanceLearning", () => {
-        const negativeInput = [{ department: "Department", distanceLearning: "No" }];
-        const positiveInput = [{ department: "Department", distanceLearning: "Yes" }];
+        const negativeInput = [{ distanceLearning: "No" }];
+        const positiveInput = [{ distanceLearning: "Yes" }];
 
         expect(transformResponse(negativeInput)[0].distanceLearning).toBe(false);
         expect(transformResponse(positiveInput)[0].distanceLearning).toBe(true);
@@ -36,9 +36,9 @@ describe("transformer", () => {
 
     it("returns false for distanceLearning if the result is not expected", () => {
         const weirdInputs = [
-            { department: "Department", distanceLearning: "Maybe, maybe not" },
-            { department: "Department", distanceLearning: 53478 },
-            { department: "Department", distanceLearning: "I am distanceLearning" },
+            { distanceLearning: "Maybe, maybe not" },
+            { distanceLearning: 53478 },
+            { distanceLearning: "I am distanceLearning" },
         ];
 
         const result = transformResponse(weirdInputs);
@@ -63,5 +63,11 @@ describe("transformer", () => {
         expect(transformResponse(singleDepartmentResponse)[0].department).toStrictEqual([
             "Department of Computer Science",
         ]);
+    });
+
+    it("returns an empty array if null department", () => {
+        const noDepartmentResponse = [{ department: null }];
+
+        expect(transformResponse(noDepartmentResponse)[0].department).toStrictEqual([]);
     });
 });

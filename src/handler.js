@@ -29,8 +29,7 @@ module.exports.courses = async (event) => {
         }
 
         const body = await searchResponse.json();
-        const transformedResults = transformResponse(body.results);
-        const results = transformedResults.filter(Boolean); // Removes null values
+        const results = transformResponse(body.results);
 
         return success({ results });
     } catch (e) {
