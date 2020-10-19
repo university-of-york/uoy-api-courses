@@ -64,4 +64,10 @@ describe("transformer", () => {
             "Department of Computer Science",
         ]);
     });
+
+    it("returns an empty array if null department", () => {
+        const noDepartmentResponse = [{ department: null }];
+
+        expect(transformResponse(noDepartmentResponse)[0].department).toStrictEqual([]);
+    });
 });
