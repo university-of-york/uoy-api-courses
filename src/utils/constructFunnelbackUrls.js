@@ -1,6 +1,6 @@
 const { URLSearchParams } = require("url");
 const ClientError = require("../errors/ClientError");
-const { BASE_URL, COLLECTION, FORM, PROFILE } = require("../constants/UrlAndParameters");
+const { BASE_URL, COLLECTION, FORM, PROFILE, SMETA_CONTENT_TYPE } = require("../constants/UrlAndParameters");
 
 module.exports.coursesUrl = (parameters) => {
     if (!parameters || !parameters.search) {
@@ -12,6 +12,7 @@ module.exports.coursesUrl = (parameters) => {
     queryParams.append("collection", COLLECTION);
     queryParams.append("form", FORM);
     queryParams.append("profile", PROFILE);
+    queryParams.append("smeta_contentType", SMETA_CONTENT_TYPE);
     queryParams.append("query", parameters.search);
 
     if (parameters.max) {

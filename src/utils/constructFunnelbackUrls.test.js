@@ -1,8 +1,8 @@
 const { coursesUrl } = require("./constructFunnelbackUrls");
 const ClientError = require("../errors/ClientError");
-const { BASE_URL, COLLECTION, FORM, PROFILE } = require("../constants/UrlAndParameters");
+const { BASE_URL, COLLECTION, FORM, PROFILE, SMETA_CONTENT_TYPE } = require("../constants/UrlAndParameters");
 
-const constantPartOfSearchUrl = `${BASE_URL}?collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}`;
+const constantPartOfSearchUrl = `${BASE_URL}?collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}&smeta_contentType=${SMETA_CONTENT_TYPE}`;
 
 test("Call without parameters throws ClientError", async () => {
     expect(() => {
