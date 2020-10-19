@@ -30,6 +30,14 @@ functions:
       - http:
           path: courses
           method: get
+          request:
+            parameters:
+              querystrings:
+                search: true
+          reqValidatorName: QueryParamValidator
+
+plugins:
+  - serverless-reqvalidator-plugin
 
 custom:
   domainName: ${env:DOMAIN_NAME, ''}
@@ -73,3 +81,11 @@ resources:
         ServiceToken: arn:aws:sns:eu-west-1:230504789214:RequestRecordSet
         Source: ${self:custom.domainName}.
         Target: !Join ["", [!GetAtt ApiGatewayCustomDomainName.RegionalDomainName, "."]]
+
+    QueryParamValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: false
+        ValidateRequestParameters: true
