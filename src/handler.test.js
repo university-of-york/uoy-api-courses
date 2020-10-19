@@ -159,6 +159,58 @@ test("Response results from Funnelback with missing metadata are returned OK", a
     const searchResults = {
         results: [
             {
+                title: "Teaching and Learning",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/teaching-learning/",
+                award: null,
+                department: null,
+                level: null,
+                length: null,
+                typicalOffer: "N/A",
+                yearOfEntry: null,
+                distanceLearning: null,
+                summary: null,
+                imageUrl: "https://www.york.ac.uk|https://www.york.ac.uk",
+                ucasCode: null,
+            },
+        ],
+    };
+
+    const expectedResult = {
+        results: [
+            {
+                title: "Teaching and Learning",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/teaching-learning/",
+                award: null,
+                department: [],
+                level: null,
+                length: null,
+                typicalOffer: "N/A",
+                yearOfEntry: null,
+                distanceLearning: false,
+                summary: null,
+                imageUrl: "https://www.york.ac.uk|https://www.york.ac.uk",
+                ucasCode: null,
+            },
+        ],
+    };
+
+    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+
+    const result = await courses(event);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toEqual(JSON.stringify(expectedResult));
+});
+
+test("Multiple response results are transformed and returned OK", async () => {
+    const event = {
+        queryStringParameters: {
+            search: "physics",
+        },
+    };
+    const searchResults = {
+        results: [
+            {
                 title: "Maths and Computer Science",
                 liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
                 award: "MMath (Hons)",
