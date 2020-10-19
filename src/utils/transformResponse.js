@@ -36,6 +36,8 @@ const transformDepartment = (course) => {
         } else {
             course.department = [departments];
         }
+    } else {
+        course.department = [];
     }
 
     return course;

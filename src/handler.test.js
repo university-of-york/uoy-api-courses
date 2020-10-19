@@ -150,6 +150,173 @@ test("Response results are transformed to match openAPI spec", async () => {
     expect(result.statusCode).toBe(200);
     expect(result.body).toEqual(JSON.stringify(expectedResult));
 });
+test("Response results from Funnelback with missing metadata are returned OK", async () => {
+    const event = {
+        queryStringParameters: {
+            search: "physics",
+        },
+    };
+    const searchResults = {
+        results: [
+            {
+                title: "Teaching and Learning",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/teaching-learning/",
+                award: null,
+                department: null,
+                level: null,
+                length: null,
+                typicalOffer: "N/A",
+                yearOfEntry: null,
+                distanceLearning: null,
+                summary: null,
+                imageUrl: "https://www.york.ac.uk|https://www.york.ac.uk",
+                ucasCode: null,
+            },
+        ],
+    };
+
+    const expectedResult = {
+        results: [
+            {
+                title: "Teaching and Learning",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/teaching-learning/",
+                award: null,
+                department: [],
+                level: null,
+                length: null,
+                typicalOffer: "N/A",
+                yearOfEntry: null,
+                distanceLearning: false,
+                summary: null,
+                imageUrl: "https://www.york.ac.uk|https://www.york.ac.uk",
+                ucasCode: null,
+            },
+        ],
+    };
+
+    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+
+    const result = await courses(event);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toEqual(JSON.stringify(expectedResult));
+});
+
+test("Multiple response results are transformed and returned OK", async () => {
+    const event = {
+        queryStringParameters: {
+            search: "physics",
+        },
+    };
+    const searchResults = {
+        results: [
+            {
+                title: "Maths and Computer Science",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
+                award: "MMath (Hons)",
+                department: "Department of Computer Science, Department of Mathematics",
+                level: "undergraduate",
+                length: "4 years full-time",
+                typicalOffer: "AAA-AAB",
+                yearOfEntry: "2021/22",
+                distanceLearning: "No",
+                summary:
+                    "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
+                imageUrl:
+                    "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
+                ucasCode: "GG14",
+            },
+            {
+                title: "Teaching and Learning",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/teaching-learning/",
+                award: null,
+                department: null,
+                level: null,
+                length: null,
+                typicalOffer: "N/A",
+                yearOfEntry: null,
+                distanceLearning: null,
+                summary: null,
+                imageUrl: "https://www.york.ac.uk|https://www.york.ac.uk",
+                ucasCode: null,
+            },
+            {
+                title: "Physics",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mphys-physics/",
+                award: "MPhys (Hons)",
+                department: "Department of Physics",
+                level: "undergraduate",
+                length: "4 years full-time",
+                typicalOffer: "AAA",
+                yearOfEntry: "2021/22",
+                distanceLearning: "No",
+                summary:
+                    "Accelerate towards a career as a professional physicist in industry or academia. |Accelerate towards a career as a professional physicist in industry or academia. ",
+                imageUrl:
+                    "https://www.york.ac.uk/media/study/courses/undergraduate/physics/hero-physics-mphys-1160.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/physics/hero-physics-mphys-1160.jpg",
+                ucasCode: "F303",
+            },
+        ],
+    };
+
+    const expectedResult = {
+        results: [
+            {
+                title: "Maths and Computer Science",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
+                award: "MMath (Hons)",
+                department: ["Department of Computer Science", "Department of Mathematics"],
+                level: "undergraduate",
+                length: "4 years full-time",
+                typicalOffer: "AAA-AAB",
+                yearOfEntry: "2021/22",
+                distanceLearning: false,
+                summary:
+                    "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
+                imageUrl:
+                    "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
+                ucasCode: "GG14",
+            },
+            {
+                title: "Teaching and Learning",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/teaching-learning/",
+                award: null,
+                department: [],
+                level: null,
+                length: null,
+                typicalOffer: "N/A",
+                yearOfEntry: null,
+                distanceLearning: false,
+                summary: null,
+                imageUrl: "https://www.york.ac.uk|https://www.york.ac.uk",
+                ucasCode: null,
+            },
+            {
+                title: "Physics",
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mphys-physics/",
+                award: "MPhys (Hons)",
+                department: ["Department of Physics"],
+                level: "undergraduate",
+                length: "4 years full-time",
+                typicalOffer: "AAA",
+                yearOfEntry: "2021/22",
+                distanceLearning: false,
+                summary:
+                    "Accelerate towards a career as a professional physicist in industry or academia. |Accelerate towards a career as a professional physicist in industry or academia. ",
+                imageUrl:
+                    "https://www.york.ac.uk/media/study/courses/undergraduate/physics/hero-physics-mphys-1160.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/physics/hero-physics-mphys-1160.jpg",
+                ucasCode: "F303",
+            },
+        ],
+    };
+
+    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+
+    const result = await courses(event);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toEqual(JSON.stringify(expectedResult));
+});
 
 test("Request without any parameters returns an appropriate error", async () => {
     const result = await courses({});
@@ -175,7 +342,7 @@ test("Response with 400 code returns an error", async () => {
     expect(result.statusCode).toBe(400);
     expect(result.body).toContain('"status":400');
     expect(result.body).toContain('"error":"Bad Request"');
-    expect(result.body).toContain('"message":"An error has occurred."');
+    expect(result.body).toContain('"message":"There is a problem with the Funnelback search."');
     expect(result.body).toContain('"timestamp":');
 });
 
@@ -193,7 +360,7 @@ test("Response with 500 code returns an error", async () => {
     expect(result.statusCode).toBe(500);
     expect(result.body).toContain('"status":500');
     expect(result.body).toContain('"error":"Internal Server Error"');
-    expect(result.body).toContain('"message":"An error has occurred."');
+    expect(result.body).toContain('"message":"There is a problem with the Funnelback search."');
     expect(result.body).toContain('"timestamp":');
 });
 
