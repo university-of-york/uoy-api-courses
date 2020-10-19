@@ -1,8 +1,11 @@
 # Courses API
 
-This is the University of York Courses API. Consumers can search for and retrieve a list of courses that are published on the [University of York website](https://www.york.ac.uk), with results ordered by relevance.
+This is the University of York Courses API. Consumers can search for and retrieve a list of courses that are published on the 
+[University of York website](https://www.york.ac.uk), with results ordered by relevance.
 
-The data is sourced from the University's instance of [Funnelback](https://www.funnelback.com/home), a search provider which handles the indexing of the course web pages into a data collection and the subsequent querying of this collection. See the [related repo](https://github.com/university-of-york/uoy-config-funnelback-courses) for more information.
+The data is sourced from the University's instance of [Funnelback](https://www.funnelback.com/home), a search provider which handles 
+the indexing of the course web pages into a data collection and the subsequent querying of this collection. See the 
+[related repo](https://github.com/university-of-york/uoy-config-funnelback-courses) for more information.
 
 ## Course Search
 
@@ -21,6 +24,22 @@ You can view the [API specification](https://university-of-york.github.io/uoy-ap
 
 The latest version of the Courses API specification is published and kept up-to-date automatically. It is defined using the [OpenAPI specification](https://swagger.io/docs/specification/about/) and is served as a static site using a distribution of [Swagger-UI](https://github.com/swagger-api/swagger-ui/tree/master/dist).
 
+## Error handling and logs
+Exceptions caught in the application are logged. These can be found in CloudWatch. As an ESG AWS user for the relevant environment, or 
+as your own user id if the application is running in your AWS sandbox, open CloudWatch from the AWS Management console and 
+click on `Log groups`. The group name is `/aws/lambda/uoy-courses-api-v1-courses`.
+
+Something similar to the following will be returned via the API
+
+```{
+ "timestamp": "2020-10-19T09:59:36.872Z",
+ "status": 500,
+ "error": "Internal Server Error",
+ "message": "An error has occurred..",
+ "path": "/courses"
+ }
+```
+ 
 ## Development
 
 The API is hosted in AWS API Gateway, and deployed using the [Serverless](https://www.serverless.com/) framework.
