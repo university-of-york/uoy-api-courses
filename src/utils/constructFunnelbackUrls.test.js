@@ -1,34 +1,13 @@
 const { coursesUrl } = require("./constructFunnelbackUrls");
-const ClientError = require("../errors/ClientError");
 const { BASE_URL, COLLECTION, FORM, PROFILE, SMETA_CONTENT_TYPE } = require("../constants/UrlAndParameters");
 
 const constantPartOfSearchUrl = `${BASE_URL}?collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}&smeta_contentType=${SMETA_CONTENT_TYPE}`;
 
-test("Call without parameters throws ClientError", async () => {
-    expect(() => {
-        coursesUrl();
-    }).toThrow(ClientError);
-
-    expect(() => {
-        coursesUrl();
-    }).toThrow("The search parameter is required.");
+test("No search parameters gives a blank search", () => {
+    expect(coursesUrl({})).toEqual(constantPartOfSearchUrl);
 });
 
-test("Call without search parameter throws ClientError", async () => {
-    const parameters = {
-        max: 5,
-    };
-
-    expect(() => {
-        coursesUrl(parameters);
-    }).toThrow(ClientError);
-
-    expect(() => {
-        coursesUrl(parameters);
-    }).toThrow("The search parameter is required.");
-});
-
-test("Call with search parameter returns correct URL", async () => {
+test("Call with search parameter returns correct URL", () => {
     const parameters = {
         search: "Maths",
     };
@@ -38,7 +17,7 @@ test("Call with search parameter returns correct URL", async () => {
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
 
-test("Call with search & max parameters returns correct URL", async () => {
+test("Call with search & max parameters returns correct URL", () => {
     const parameters = {
         search: "Maths",
         max: 12,
@@ -49,7 +28,7 @@ test("Call with search & max parameters returns correct URL", async () => {
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
 
-test("Call with search & offset parameters returns correct URL", async () => {
+test("Call with search & offset parameters returns correct URL", () => {
     const parameters = {
         search: "Maths",
         offset: 25,
@@ -60,7 +39,7 @@ test("Call with search & offset parameters returns correct URL", async () => {
     expect(coursesUrl(parameters)).toEqual(expectedUrl);
 });
 
-test("Call with search, max & offset parameters returns correct URL", async () => {
+test("Call with search, max & offset parameters returns correct URL", () => {
     const parameters = {
         search: "Maths",
         max: 18,

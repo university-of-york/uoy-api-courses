@@ -2,11 +2,14 @@
 const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
 const { success, error } = require("./utils/format");
-const ClientError = require("./errors/ClientError");
 const { transformResponse } = require("./utils/transformResponse");
 
 module.exports.courses = async (event) => {
     try {
+        if (!event.queryStringParameters || !event.queryStringParameters.search) {
+            return error("The search parameter is required.", 400, "Bad Request", event.path);
+        }
+
         const url = coursesUrl(event.queryStringParameters);
 
         const searchResponse = await fetch(url, {
@@ -35,8 +38,6 @@ module.exports.courses = async (event) => {
     } catch (e) {
         console.error(e);
         switch (e.constructor.name) {
-            case ClientError.name:
-                return error(e.message, 400, "Bad Request", event.path);
             default:
                 return error("An error has occurred.", 500, "Internal Server Error", event.path);
         }
