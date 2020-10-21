@@ -7,6 +7,9 @@ CLOUDFORMATION_STACK_NAME=$1
 # 'status' tag defaults to 'dev' but can be overridden by command line argument
 ENVIRONMENT=${2:-dev}
 
+# the current AWS region will either be specified as an environment variable or as part of the logged in user's profile
+AWS_REGION=${AWS_DEFAULT_REGION:-$(aws configure get region)}
+
 # define AWS tags
 TAGS="name=courses api,group=ESG,project=course-search,status=$ENVIRONMENT,pushed_by=github,defined_in=serverless,repo_name=uoy-api-courses,team=ESG Teaching and Learning"
 
@@ -15,8 +18,8 @@ API_ID=`aws cloudformation describe-stacks --stack-name $CLOUDFORMATION_STACK_NA
 STAGE_NAME=`aws cloudformation describe-stacks --stack-name $CLOUDFORMATION_STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayDeploymentStageName'].OutputValue" --output text`
 
 # construct API and stage ARNs
-API_ARN=arn:aws:apigateway:eu-west-1::/restapis/$API_ID
-STAGE_ARN=arn:aws:apigateway:eu-west-1::/restapis/$API_ID/stages/$STAGE_NAME
+API_ARN=arn:aws:apigateway:$AWS_REGION::/restapis/$API_ID
+STAGE_ARN=arn:aws:apigateway:$AWS_REGION::/restapis/$API_ID/stages/$STAGE_NAME
 
 # add tags to API
 aws apigateway tag-resource --resource-arn $API_ARN --tags "$TAGS"
