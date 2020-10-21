@@ -6,11 +6,13 @@ const { transformResponse } = require("./utils/transformResponse");
 
 module.exports.courses = async (event) => {
     try {
-        if (!event.queryStringParameters || !event.queryStringParameters.search) {
+        const requestParams = event.queryStringParameters;
+
+        if (!requestParams || !requestParams.search) {
             return error("The search parameter is required.", 400, "Bad Request", event.path);
         }
 
-        const url = coursesUrl(event.queryStringParameters);
+        const url = coursesUrl(requestParams);
 
         const searchResponse = await fetch(url, {
             method: "GET",
@@ -37,9 +39,6 @@ module.exports.courses = async (event) => {
         return success({ results });
     } catch (e) {
         console.error(e);
-        switch (e.constructor.name) {
-            default:
-                return error("An error has occurred.", 500, "Internal Server Error", event.path);
-        }
+        return error("An error has occurred.", 500, "Internal Server Error", event.path);
     }
 };
