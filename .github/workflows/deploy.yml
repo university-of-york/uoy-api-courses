@@ -42,6 +42,14 @@ jobs:
           DEPLOY_ENVIRONMENT: dev
           DOMAIN_NAME: api.v1.courses.dev.app.york.ac.uk
 
+      - name: Add AWS tags to API resources - dev
+        if: github.ref == 'refs/heads/dev'
+        run: scripts/addAwsTagsToApi uoy-courses-api-v1 dev
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-1
+
       - name: Deploy - production
         if: github.ref == 'refs/heads/main'
         run: npm run deploy
@@ -52,3 +60,11 @@ jobs:
           SSL_CERTIFICATE_ARN: ${{ secrets.PRODUCTION_SSL_CERTIFICATE_ARN }}
           DEPLOY_ENVIRONMENT: prod
           DOMAIN_NAME: api.v1.courses.app.york.ac.uk
+
+      - name: Add AWS tags to API resources - production
+        if: github.ref == 'refs/heads/main'
+        run: scripts/addAwsTagsToApi uoy-courses-api-v1 prod
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-1
