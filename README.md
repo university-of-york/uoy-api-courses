@@ -171,7 +171,7 @@ Fixes code formatting (`prettier`), checks coding standards (`XO`), then runs te
 
 ## Documentation
 
-The [customised Swagger-UI](https://university-of-york.github.io/uoy-config-funnelback-courses/) has been set up by 
+The [customised Swagger-UI](https://university-of-york.github.io/uoy-api-courses/#/) has been set up by 
 following [these instructions](https://wiki.york.ac.uk/display/ittechdocs/Hosting+API+Documentation+with+Swagger+UI).
 
 ## Contact

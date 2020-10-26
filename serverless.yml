@@ -97,3 +97,9 @@ resources:
         ServiceToken: arn:aws:sns:eu-west-1:230504789214:RequestRecordSet
         Source: ${self:custom.domainName}.
         Target: !Join ["", [!GetAtt ApiGatewayCustomDomainName.RegionalDomainName, "."]]
+
+  Outputs:
+    ApiGatewayRestApiId:
+      Value: !Ref ApiGatewayRestApi
+    ApiGatewayDeploymentStageName:
+      Value: ${self:provider.stage}
