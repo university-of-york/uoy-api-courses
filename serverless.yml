@@ -1,5 +1,3 @@
-org: mrgibbonsuoy
-app: myapp
 service: uoy-courses-api
 
 provider:
