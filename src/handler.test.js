@@ -383,7 +383,7 @@ test("Response with malformed JSON returns an error", async () => {
     expect(result.body).toContain('"timestamp":');
 });
 
-test("Multiple response results counted and returned OK in the number of count", async () => {
+test("Return multiple responses to test the numberOfMatches value returned", async () => {
     const event = {
         queryStringParameters: {
             search: "physics",
