@@ -383,7 +383,7 @@ test("Response with malformed JSON returns an error", async () => {
     expect(result.body).toContain('"timestamp":');
 });
 
-test("Multiple response results counted and returned OK in the number of count", async () => {
+test("Return multiple responses to test the numberOfMatches value returned", async () => {
     const event = {
         queryStringParameters: {
             search: "physics",
@@ -391,110 +391,15 @@ test("Multiple response results counted and returned OK in the number of count",
     };
     const searchResults = {
         numberOfMatches: 3,
-        results: [
-            {
-                title: "Maths and Computer Science",
-                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
-                award: "MMath (Hons)",
-                department: "Department of Computer Science, Department of Mathematics",
-                level: "undergraduate",
-                length: "4 years full-time",
-                typicalOffer: "AAA-AAB",
-                yearOfEntry: "2021/22",
-                distanceLearning: "No",
-                summary:
-                    "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
-                imageUrl:
-                    "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
-                ucasCode: "GG14",
-            },
-            {
-                title: "Teaching and Learning",
-                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/teaching-learning/",
-                award: null,
-                department: null,
-                level: null,
-                length: null,
-                typicalOffer: "N/A",
-                yearOfEntry: null,
-                distanceLearning: null,
-                summary: null,
-                imageUrl: "https://www.york.ac.uk|https://www.york.ac.uk",
-                ucasCode: null,
-            },
-            {
-                title: "Physics",
-                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mphys-physics/",
-                award: "MPhys (Hons)",
-                department: "Department of Physics",
-                level: "undergraduate",
-                length: "4 years full-time",
-                typicalOffer: "AAA",
-                yearOfEntry: "2021/22",
-                distanceLearning: "No",
-                summary:
-                    "Accelerate towards a career as a professional physicist in industry or academia. |Accelerate towards a career as a professional physicist in industry or academia. ",
-                imageUrl:
-                    "https://www.york.ac.uk/media/study/courses/undergraduate/physics/hero-physics-mphys-1160.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/physics/hero-physics-mphys-1160.jpg",
-                ucasCode: "F303",
-            },
-        ],
+        results: [],
     };
 
     const expectedResult = {
         numberOfMatches: 3,
-        results: [
-            {
-                title: "Maths and Computer Science",
-                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mmath-mathematics-computer-science/",
-                award: "MMath (Hons)",
-                department: ["Department of Computer Science", "Department of Mathematics"],
-                level: "undergraduate",
-                length: "4 years full-time",
-                typicalOffer: "AAA-AAB",
-                yearOfEntry: "2021/22",
-                distanceLearning: false,
-                summary:
-                    "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
-                imageUrl:
-                    "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
-                ucasCode: "GG14",
-            },
-            {
-                title: "Teaching and Learning",
-                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/teaching-learning/",
-                award: null,
-                department: [],
-                level: null,
-                length: null,
-                typicalOffer: "N/A",
-                yearOfEntry: null,
-                distanceLearning: false,
-                summary: null,
-                imageUrl: "https://www.york.ac.uk|https://www.york.ac.uk",
-                ucasCode: null,
-            },
-            {
-                title: "Physics",
-                liveUrl: "https://www.york.ac.uk/study/undergraduate/courses/mphys-physics/",
-                award: "MPhys (Hons)",
-                department: ["Department of Physics"],
-                level: "undergraduate",
-                length: "4 years full-time",
-                typicalOffer: "AAA",
-                yearOfEntry: "2021/22",
-                distanceLearning: false,
-                summary:
-                    "Accelerate towards a career as a professional physicist in industry or academia. |Accelerate towards a career as a professional physicist in industry or academia. ",
-                imageUrl:
-                    "https://www.york.ac.uk/media/study/courses/undergraduate/physics/hero-physics-mphys-1160.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/physics/hero-physics-mphys-1160.jpg",
-                ucasCode: "F303",
-            },
-        ],
+        results: [],
     };
 
     fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
-
     const result = await courses(event);
     expect(result.statusCode).toBe(200);
     expect(result.body).toEqual(JSON.stringify(expectedResult));
