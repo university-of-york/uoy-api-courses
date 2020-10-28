@@ -37,7 +37,7 @@ module.exports.courses = async (event) => {
         const numberOfMatches = body.numberOfMatches;
         const results = transformResponse(body.results);
 
-        return success({numberOfMatches, results });
+        return success({ numberOfMatches, results });
     } catch (e) {
         console.error(e);
         return error("An error has occurred.", 500, "Internal Server Error", event.path);
