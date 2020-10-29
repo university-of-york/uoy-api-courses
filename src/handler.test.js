@@ -394,13 +394,7 @@ test("the numberOfMatches value is returned", async () => {
         results: [],
     };
 
-    const expectedResult = {
-        numberOfMatches: 3,
-        results: [],
-    };
-
     fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
     const result = await courses(event);
     expect(result.statusCode).toBe(200);
-    expect(result.body).toEqual(JSON.stringify(expectedResult));
-});
+    expect(JSON.parse(result.body).numberOfMatches).toEqual(3);
