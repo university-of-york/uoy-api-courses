@@ -398,3 +398,4 @@ test("the numberOfMatches value is returned", async () => {
     const result = await courses(event);
     expect(result.statusCode).toBe(200);
     expect(JSON.parse(result.body).numberOfMatches).toEqual(3);
+});
