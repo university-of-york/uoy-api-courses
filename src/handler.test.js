@@ -150,6 +150,7 @@ test("Response results are transformed to match openAPI spec", async () => {
     expect(result.statusCode).toBe(200);
     expect(result.body).toEqual(JSON.stringify(expectedResult));
 });
+
 test("Response results from Funnelback with missing metadata are returned OK", async () => {
     const event = {
         queryStringParameters: {
@@ -380,4 +381,21 @@ test("Response with malformed JSON returns an error", async () => {
     expect(result.body).toContain('"error":"Internal Server Error"');
     expect(result.body).toContain('"message":"An error has occurred."');
     expect(result.body).toContain('"timestamp":');
+});
+
+test("the numberOfMatches value is returned", async () => {
+    const event = {
+        queryStringParameters: {
+            search: "physics",
+        },
+    };
+    const searchResults = {
+        numberOfMatches: 3,
+        results: [],
+    };
+
+    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+    const result = await courses(event);
+    expect(result.statusCode).toBe(200);
+    expect(JSON.parse(result.body).numberOfMatches).toEqual(3);
 });

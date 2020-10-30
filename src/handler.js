@@ -34,9 +34,10 @@ module.exports.courses = async (event) => {
         }
 
         const body = await searchResponse.json();
+        const numberOfMatches = body.numberOfMatches;
         const results = transformResponse(body.results);
 
-        return success({ results });
+        return success({ numberOfMatches, results });
     } catch (e) {
         console.error(e);
         return error("An error has occurred.", 500, "Internal Server Error", event.path);

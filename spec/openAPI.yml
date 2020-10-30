@@ -46,9 +46,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Course'
+                type: object
+                properties:
+                  numberOfMatches:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
         400:
           $ref: '#/components/responses/BadRequest'
         500:
