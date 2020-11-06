@@ -9,6 +9,7 @@
     "lint": "xo .",
     "formatandcheck": "npm run format && npm run lint && npm run test",
     "check": "npm run checkformat && npm run lint && npm run test",
+    "package": "serverless package",
     "deploy": "serverless deploy",
     "undeploy": "serverless remove"
   },
