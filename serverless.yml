@@ -19,8 +19,17 @@ provider:
 
 package:
   exclude:
+    - .github/**
+    - .idea/**
     - docs/**
     - spec/**
+    - package-lock.json
+    - package.json
+    - .prettierignore
+    - .prettierrc.json
+    - .xo-config.json
+    - LICENSE
+    - README.md
 
 functions:
   courses:
