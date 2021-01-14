@@ -17,10 +17,11 @@
   "author": "University of York",
   "license": "MIT",
   "devDependencies": {
+    "ajv": "^7.0.3",
     "jest": "^26.4.2",
     "jest-fetch-mock": "^3.0.3",
     "prettier": "2.1.2",
-    "serverless": "^2.1.1",
+    "serverless": "^2.18.0",
     "xo": "^0.33.1"
   },
   "dependencies": {
