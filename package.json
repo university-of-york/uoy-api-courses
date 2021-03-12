@@ -22,6 +22,7 @@
     "jest-fetch-mock": "^3.0.3",
     "prettier": "2.1.2",
     "serverless": "^2.18.0",
+    "serverless-dotenv-plugin": "^3.1.0",
     "xo": "^0.33.1"
   },
   "dependencies": {
