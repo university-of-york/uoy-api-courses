@@ -1,13 +1,12 @@
 const { URLSearchParams } = require("url");
-const { BASE_URL, COLLECTION, FORM, PROFILE, SMETA_CONTENT_TYPE } = require("../constants/UrlAndParameters");
 
 module.exports.coursesUrl = (parameters) => {
     const queryParams = new URLSearchParams();
 
-    queryParams.append("collection", COLLECTION);
-    queryParams.append("form", FORM);
-    queryParams.append("profile", PROFILE);
-    queryParams.append("smeta_contentType", SMETA_CONTENT_TYPE);
+    queryParams.append("collection", process.env.COLLECTION);
+    queryParams.append("form", process.env.FORM);
+    queryParams.append("profile", process.env.PROFILE);
+    queryParams.append("smeta_contentType", process.env.SMETA_CONTENT_TYPE);
 
     if (parameters.search) {
         queryParams.append("query", parameters.search);
@@ -21,5 +20,5 @@ module.exports.coursesUrl = (parameters) => {
         queryParams.append("start_rank", parameters.offset);
     }
 
-    return `${BASE_URL}?${queryParams.toString()}`;
+    return `${process.env.BASE_URL}?${queryParams.toString()}`;
 };

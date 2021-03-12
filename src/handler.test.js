@@ -7,24 +7,6 @@ beforeEach(() => {
     fetch.resetMocks();
 });
 
-test("constructs the Funnelback url with the expected environment variables", async () => {
-
-    const event = {
-        queryStringParameters: {
-            search: "maths",
-        },
-    };
-
-    fetch.mockResponse(JSON.stringify({ results: [] }));
-
-    await courses(event);
-
-    expect(fetch).toHaveBeenCalledTimes(1);
-
-    const calledUrl = fetch.mock.calls[0][0];
-    expect(calledUrl).toMatch(/^https:\/\/www.york.ac.uk\/search\/\?collection=york-uni-courses&form=course-search&profile=_default_preview&smeta_contentType=course.+/);
-});
-
 test("Simple query calls Funnelback", async () => {
     const event = {
         queryStringParameters: {
