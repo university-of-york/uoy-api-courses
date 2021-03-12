@@ -1,11 +1,28 @@
 const { courses } = require("./handler");
 const fetch = require("jest-fetch-mock");
-const { BASE_URL, COLLECTION, FORM, PROFILE, SMETA_CONTENT_TYPE } = require("./constants/UrlAndParameters");
 
-const constantPartOfSearchUrl = `${BASE_URL}?collection=${COLLECTION}&form=${FORM}&profile=${PROFILE}&smeta_contentType=${SMETA_CONTENT_TYPE}`;
+const constantPartOfSearchUrl = `${process.env.BASE_URL}?collection=${process.env.COLLECTION}&form=${process.env.FORM}&profile=${process.env.PROFILE}&smeta_contentType=${process.env.SMETA_CONTENT_TYPE}`;
 
 beforeEach(() => {
     fetch.resetMocks();
+});
+
+test("constructs the Funnelback url with the expected environment variables", async () => {
+
+    const event = {
+        queryStringParameters: {
+            search: "maths",
+        },
+    };
+
+    fetch.mockResponse(JSON.stringify({ results: [] }));
+
+    await courses(event);
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    const calledUrl = fetch.mock.calls[0][0];
+    expect(calledUrl).toMatch(/^https:\/\/www.york.ac.uk\/search\/\?collection=york-uni-courses&form=course-search&profile=_default_preview&smeta_contentType=course.+/);
 });
 
 test("Simple query calls Funnelback", async () => {
