@@ -4,7 +4,7 @@ const constantPartOfSearchUrl = `${process.env.BASE_URL}?collection=${process.en
 
 test("constructs the Funnelback url with the expected environment variables", async () => {
     expect(coursesUrl({})).toEqual(
-        "https://www.york.ac.uk/search/?collection=york-uni-courses&form=course-search&profile=_default_preview&smeta_contentType=course"
+        "https://www.york.ac.uk/search/?collection=courses&form=course-search&profile=_default_preview&smeta_contentType=course"
     );
 });
 
