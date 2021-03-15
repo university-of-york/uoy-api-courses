@@ -2,7 +2,7 @@ const { coursesUrl } = require("./constructFunnelbackUrls");
 
 const constantPartOfSearchUrl = `${process.env.BASE_URL}?collection=${process.env.COLLECTION}&form=${process.env.FORM}&profile=${process.env.PROFILE}&smeta_contentType=${process.env.SMETA_CONTENT_TYPE}`;
 
-test("constructs the Funnelback url with the expected environment variables", async () => {
+test("constructs the Funnelback url with the expected environment variables", () => {
     expect(coursesUrl({})).toEqual(
         "https://www.york.ac.uk/search/?collection=courses&form=course-search&profile=_default_preview&smeta_contentType=course"
     );
