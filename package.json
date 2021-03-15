@@ -8,6 +8,7 @@
     "checkformat": "prettier --check .",
     "lint": "xo .",
     "formatandcheck": "npm run format && npm run lint && npm run test",
+    "fc": "npm run formatandcheck",
     "check": "npm run checkformat && npm run lint && npm run test",
     "package": "serverless package --env production",
     "deploy": "serverless deploy --env production",
