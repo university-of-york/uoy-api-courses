@@ -35,6 +35,9 @@ functions:
   courses:
     handler: src/handler.courses
 
+plugins:
+  - serverless-dotenv-plugin
+
 custom:
   domainName: ${env:DOMAIN_NAME, ''}
   sslCertificateArn: ${env:SSL_CERTIFICATE_ARN, ''}

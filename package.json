@@ -8,9 +8,11 @@
     "checkformat": "prettier --check .",
     "lint": "xo .",
     "formatandcheck": "npm run format && npm run lint && npm run test",
+    "fc": "npm run formatandcheck",
     "check": "npm run checkformat && npm run lint && npm run test",
-    "package": "serverless package",
-    "deploy": "serverless deploy",
+    "package": "serverless package --env production",
+    "deploy": "serverless deploy --env production",
+    "deploy:dev": "serverless deploy --env development",
     "undeploy": "serverless remove"
   },
   "keywords": [],
@@ -18,10 +20,12 @@
   "license": "MIT",
   "devDependencies": {
     "ajv": "^7.0.3",
+    "dotenv": "^8.2.0",
     "jest": "^26.4.2",
     "jest-fetch-mock": "^3.0.3",
     "prettier": "2.1.2",
     "serverless": "^2.18.0",
+    "serverless-dotenv-plugin": "^3.1.0",
     "xo": "^0.33.1"
   },
   "dependencies": {

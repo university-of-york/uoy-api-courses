@@ -33,7 +33,7 @@ jobs:
 
       - name: Deploy - dev
         if: github.ref == 'refs/heads/dev'
-        run: npm run deploy
+        run: npm run deploy:dev
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
