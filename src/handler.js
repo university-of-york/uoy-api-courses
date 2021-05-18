@@ -1,6 +1,7 @@
 "use strict";
 const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
+const { logEntry } = require("./utils/auditLogEntry");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
 
@@ -13,6 +14,7 @@ module.exports.courses = async (event) => {
         }
 
         const url = coursesUrl(requestParams);
+        console.log(url);
 
         const searchResponse = await fetch(url, {
             method: "GET",
@@ -36,6 +38,7 @@ module.exports.courses = async (event) => {
         const body = await searchResponse.json();
         const numberOfMatches = body.numberOfMatches;
         const results = transformResponse(body.results);
+        console.log(logEntry(event, 200));
 
         return success({ numberOfMatches, results });
     } catch (e) {
