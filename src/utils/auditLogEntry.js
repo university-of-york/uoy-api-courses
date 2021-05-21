@@ -1,4 +1,4 @@
-module.exports.logEntry = (event, statuscode) => {
+module.exports.auditLogEntry = (event, statuscode) => {
     const getHeaderInfo = () => {
         const source = event.headers["X-Forwarded-For"];
         const sourcePort = event.headers["X-Forwarded-For"];
