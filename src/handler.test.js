@@ -9,7 +9,6 @@ beforeEach(() => {
 
 test("Simple query calls Funnelback", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "maths",
         },
@@ -27,7 +26,6 @@ test("Simple query calls Funnelback", async () => {
 
 test("Request with max parameter correctly calls Funnelback", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "biology",
             max: 5,
@@ -46,7 +44,6 @@ test("Request with max parameter correctly calls Funnelback", async () => {
 
 test("Request with offset parameter correctly calls Funnelback", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "chemistry",
             offset: 10,
@@ -65,7 +62,6 @@ test("Request with offset parameter correctly calls Funnelback", async () => {
 
 test("Request with max & offset parameters correctly calls Funnelback", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "english",
             max: 10,
@@ -85,7 +81,6 @@ test("Request with max & offset parameters correctly calls Funnelback", async ()
 
 test("Response with 200 code is returned correctly", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "physics",
         },
@@ -101,7 +96,6 @@ test("Response with 200 code is returned correctly", async () => {
 
 test("Response results are transformed to match openAPI spec", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "physics",
         },
@@ -158,7 +152,6 @@ test("Response results are transformed to match openAPI spec", async () => {
 
 test("Response results from Funnelback with missing metadata are returned OK", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "physics",
         },
@@ -211,7 +204,6 @@ test("Response results from Funnelback with missing metadata are returned OK", a
 
 test("Multiple response results are transformed and returned OK", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "physics",
         },
@@ -338,7 +330,6 @@ test("Request without any parameters returns an appropriate error", async () => 
 
 test("Response with 400 code returns an error", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "physics",
         },
@@ -357,7 +348,6 @@ test("Response with 400 code returns an error", async () => {
 
 test("Response with 500 code returns an error", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "physics",
         },
@@ -376,7 +366,6 @@ test("Response with 500 code returns an error", async () => {
 
 test("Response with malformed JSON returns an error", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "physics",
         },
@@ -395,7 +384,6 @@ test("Response with malformed JSON returns an error", async () => {
 
 test("the numberOfMatches value is returned", async () => {
     const event = {
-        headers: {},
         queryStringParameters: {
             search: "physics",
         },

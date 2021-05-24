@@ -74,3 +74,19 @@ test("can extract data from event object", () => {
         })
     );
 });
+
+test("Nonexistent fields are returned as null instead of skipped", () => {
+    const event = {
+        queryStringParameters: {
+            search: "biology",
+        },
+    };
+
+    const result = JSON.parse(auditLogEntry(event, 200));
+
+    expect(result.ip.client).toBeNull();
+    expect(result.ip.source).toBeNull();
+    expect(result.ip.sourcePort).toBeNull();
+    expect(result.correlationId).toBeNull();
+    expect(result.self.type).toBeNull();
+});
