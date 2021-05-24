@@ -1,6 +1,8 @@
+import MockDate from "mockdate";
 const { auditLogEntry } = require("./auditLogEntry");
 
 test("can extract data from event object", () => {
+    MockDate.set(new Date());
     const event = JSON.parse(
         "{\n" +
             '        "resource": "/courses",\n' +

@@ -1,14 +1,14 @@
 module.exports.auditLogEntry = (event, statuscode) => {
     const getHeaderInfo = () => {
         const source = event.headers["X-Forwarded-For"];
-        const sourcePort = event.headers["X-Forwarded-For"];
+        const sourcePort = event.headers["X-Forwarded-Port"];
         return {
             source,
             sourcePort,
         };
     };
 
-    const headers = getHeaderInfo;
+    const headers = getHeaderInfo();
 
     return JSON.stringify({
         timestamp: new Date().toISOString(),
