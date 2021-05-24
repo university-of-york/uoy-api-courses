@@ -38,7 +38,7 @@ module.exports.courses = async (event) => {
         const body = await searchResponse.json();
         const numberOfMatches = body.numberOfMatches;
         const results = transformResponse(body.results);
-        console.log(auditLogEntry(event, 200));
+        console.log(auditLogEntry(event, 200, numberOfMatches));
 
         return success({ numberOfMatches, results });
     } catch (e) {

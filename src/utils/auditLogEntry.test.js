@@ -1,7 +1,7 @@
 import MockDate from "mockdate";
 const { auditLogEntry } = require("./auditLogEntry");
 
-test("can extract data from event object", () => {
+test("Required data added to audit log when supplied in event object", () => {
     MockDate.set(new Date());
     const event = JSON.parse(
         "{\n" +
@@ -46,7 +46,7 @@ test("can extract data from event object", () => {
             "    }"
     );
 
-    expect(auditLogEntry(event, 200)).toEqual(
+    expect(auditLogEntry(event, 200, 66)).toEqual(
         JSON.stringify({
             timestamp: new Date().toISOString(),
             ip: {
@@ -71,6 +71,7 @@ test("can extract data from event object", () => {
             queryStringParameters: {
                 search: "biology",
             },
+            numberOfMatches: 66,
         })
     );
 });

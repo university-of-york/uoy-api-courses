@@ -1,4 +1,4 @@
-module.exports.auditLogEntry = (event, statuscode) => {
+module.exports.auditLogEntry = (event, statuscode, numberOfMatches) => {
     const getHeaderInfo = () => {
         const requestHeaders = event?.headers;
 
@@ -34,5 +34,6 @@ module.exports.auditLogEntry = (event, statuscode) => {
         schemaURI: "https://github.com/university-of-york/uoy-api-courses/README.md",
         type: "audit",
         queryStringParameters: event.queryStringParameters,
+        numberOfMatches,
     });
 };
