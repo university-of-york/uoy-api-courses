@@ -14,7 +14,6 @@ module.exports.courses = async (event) => {
         }
 
         const url = coursesUrl(requestParams);
-        console.log(url);
 
         const searchResponse = await fetch(url, {
             method: "GET",
