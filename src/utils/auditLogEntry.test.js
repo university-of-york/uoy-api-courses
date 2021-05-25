@@ -66,7 +66,7 @@ test("Required data added to audit log when supplied in event object", () => {
                 version: "v1",
             },
             sensitive: false,
-            schemaURI: "https://github.com/university-of-york/uoy-api-courses/README.md",
+            schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
             type: "audit",
             queryStringParameters: {
                 search: "biology",

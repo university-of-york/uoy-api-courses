@@ -31,7 +31,7 @@ module.exports.auditLogEntry = (event, statuscode, numberOfMatches) => {
             version: "v1",
         },
         sensitive: false,
-        schemaURI: "https://github.com/university-of-york/uoy-api-courses/README.md",
+        schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
         type: "audit",
         queryStringParameters: event.queryStringParameters,
         numberOfMatches,
