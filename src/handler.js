@@ -1,16 +1,19 @@
-"use strict";
+("use strict");
 const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
-const { auditLogEntry } = require("./utils/auditLogEntry");
+const { logEntry } = require("./utils/logEntry");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
+const { LOG_TYPES } = require("./constants/constants.js");
 
 module.exports.courses = async (event) => {
     try {
         const requestParams = event.queryStringParameters;
 
         if (!requestParams || !requestParams.search) {
-            return error("The search parameter is required.", 400, "Bad Request", event.path);
+            const errorParameters = { message: "The search parameter is required." };
+            console.error(logEntry(event, 400, LOG_TYPES.ERROR, errorParameters));
+            return error(errorParameters.message, 400, "Bad Request", event.path);
         }
 
         const url = coursesUrl(requestParams);
@@ -23,9 +26,12 @@ module.exports.courses = async (event) => {
         });
 
         if (!searchResponse.ok) {
-            console.error("Funnelback search problem");
-            console.error(url);
-            console.error(searchResponse.statusText);
+            const errorParameters = {
+                message: "Funnelback search problem",
+                funnelBackUrl: url,
+                statusText: searchResponse.statusText,
+            };
+            console.error(logEntry(event, searchResponse.status, LOG_TYPES.ERROR, errorParameters));
             return error(
                 "There is a problem with the Funnelback search.",
                 searchResponse.status,
@@ -37,7 +43,8 @@ module.exports.courses = async (event) => {
         const body = await searchResponse.json();
         const numberOfMatches = body.numberOfMatches;
         const results = transformResponse(body.results);
-        console.info(auditLogEntry(event, searchResponse.status, numberOfMatches));
+        const otherParameters = { numberOfMatches };
+        console.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, otherParameters));
 
         return success({ numberOfMatches, results });
     } catch (e) {

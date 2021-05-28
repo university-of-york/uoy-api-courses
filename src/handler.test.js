@@ -335,7 +335,7 @@ test("Response with 400 code returns an error", async () => {
         },
     };
 
-    fetch.mockResponse(JSON.stringify({ results: [] }), { status: 400 });
+    fetch.mockResponse(JSON.stringify({ results: [] }), { status: 400, statusText: "Bad Request" });
 
     const result = await courses(event);
 
@@ -353,7 +353,7 @@ test("Response with 500 code returns an error", async () => {
         },
     };
 
-    fetch.mockResponse(JSON.stringify({ results: [] }), { status: 500 });
+    fetch.mockResponse(JSON.stringify({ results: [] }), { status: 500, statusText: "Internal Server Error" });
 
     const result = await courses(event);
 
