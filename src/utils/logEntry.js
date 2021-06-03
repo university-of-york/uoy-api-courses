@@ -1,4 +1,4 @@
-module.exports.logEntry = (event, statuscode, logType, otherParameters) => {
+module.exports.logEntry = (event, statuscode, logType, additionalDetails) => {
     const getHeaderInfo = () => {
         const requestHeaders = event?.headers;
 
@@ -34,6 +34,6 @@ module.exports.logEntry = (event, statuscode, logType, otherParameters) => {
         schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
         type: logType,
         queryStringParameters: event.queryStringParameters,
-        otherParameters,
+        additionalDetails,
     });
 };

@@ -11,9 +11,9 @@ module.exports.courses = async (event) => {
         const requestParams = event.queryStringParameters;
 
         if (!requestParams || !requestParams.search) {
-            const errorParameters = { message: "The search parameter is required." };
-            console.error(logEntry(event, 400, LOG_TYPES.ERROR, errorParameters));
-            return error(errorParameters.message, 400, "Bad Request", event.path);
+            const errorDetails = { message: "The search parameter is required." };
+            console.error(logEntry(event, 400, LOG_TYPES.ERROR, errorDetails));
+            return error(errorDetails.message, 400, "Bad Request", event.path);
         }
 
         const url = coursesUrl(requestParams);
@@ -26,12 +26,12 @@ module.exports.courses = async (event) => {
         });
 
         if (!searchResponse.ok) {
-            const errorParameters = {
+            const errorDetails = {
                 message: "Funnelback search problem",
                 funnelBackUrl: url,
                 statusText: searchResponse.statusText,
             };
-            console.error(logEntry(event, searchResponse.status, LOG_TYPES.ERROR, errorParameters));
+            console.error(logEntry(event, searchResponse.status, LOG_TYPES.ERROR, errorDetails));
             return error(
                 "There is a problem with the Funnelback search.",
                 searchResponse.status,
@@ -43,8 +43,8 @@ module.exports.courses = async (event) => {
         const body = await searchResponse.json();
         const numberOfMatches = body.numberOfMatches;
         const results = transformResponse(body.results);
-        const otherParameters = { numberOfMatches };
-        console.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, otherParameters));
+        const additionalDetails = { numberOfMatches };
+        console.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
 
         return success({ numberOfMatches, results });
     } catch (e) {

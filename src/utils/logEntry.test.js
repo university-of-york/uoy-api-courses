@@ -72,7 +72,7 @@ test("Required data added to log when supplied in event object", () => {
             queryStringParameters: {
                 search: "biology",
             },
-            otherParameters: {
+            additionalDetails: {
                 numberOfMatches: 66,
             },
         })
@@ -136,7 +136,7 @@ test("No search results error log is correct", () => {
             schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
             type: "error",
             queryStringParameters: {},
-            otherParameters: {
+            additionalDetails: {
                 message: "The search parameter is required.",
             },
         })
@@ -198,7 +198,7 @@ test("Funnelback error log is correct", () => {
             queryStringParameters: {
                 search: "maths",
             },
-            otherParameters: {
+            additionalDetails: {
                 message: "Funnelback search problem",
                 funnelBackUrl: searchUrl,
                 statusText: "Internal Server Error",
