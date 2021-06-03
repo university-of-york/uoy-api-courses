@@ -1,4 +1,4 @@
-const { HTTP_CODES } = require("./constants/constants.js");
+const { HTTP_CODES } = require("../constants/constants.js");
 
 module.exports.success = (body) => {
     return {
