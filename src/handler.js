@@ -4,7 +4,7 @@ const { coursesUrl } = require("./utils/constructFunnelbackUrls");
 const { logEntry } = require("./utils/logEntry");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
-const { LOG_TYPES } = require("./constants/constants.js");
+const { LOG_TYPES, HTTP_CODES } = require("./constants/constants.js");
 
 module.exports.courses = async (event) => {
     try {
@@ -12,8 +12,8 @@ module.exports.courses = async (event) => {
 
         if (!requestParams || !requestParams.search) {
             const errorDetails = { message: "The search parameter is required." };
-            console.error(logEntry(event, 400, LOG_TYPES.ERROR, errorDetails));
-            return error(errorDetails.message, 400, "Bad Request", event.path);
+            console.error(logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, errorDetails));
+            return error(errorDetails.message, HTTP_CODES.BAD_REQUEST, "Bad Request", event.path);
         }
 
         const url = coursesUrl(requestParams);
@@ -49,6 +49,6 @@ module.exports.courses = async (event) => {
         return success({ numberOfMatches, results });
     } catch (e) {
         console.error(e);
-        return error("An error has occurred.", 500, "Internal Server Error", event.path);
+        return error("An error has occurred.", HTTP_CODES.INTERNAL_SERVER_ERROR, "Internal Server Error", event.path);
     }
 };

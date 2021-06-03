@@ -1,7 +1,7 @@
 import MockDate from "mockdate";
 
 const { logEntry } = require("./logEntry");
-const { LOG_TYPES } = require("../constants/constants.js");
+const { LOG_TYPES, HTTP_CODES } = require("../constants/constants.js");
 
 test("Required data added to log when supplied in event object", () => {
     MockDate.set(new Date());
@@ -47,7 +47,7 @@ test("Required data added to log when supplied in event object", () => {
         },
     };
 
-    expect(logEntry(event, 200, LOG_TYPES.AUDIT, { numberOfMatches: 66 })).toEqual(
+    expect(logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT, { numberOfMatches: 66 })).toEqual(
         JSON.stringify({
             timestamp: new Date().toISOString(),
             ip: {
@@ -86,7 +86,7 @@ test("Nonexistent fields are returned as null instead of skipped", () => {
         },
     };
 
-    const result = JSON.parse(logEntry(event, 200, LOG_TYPES.AUDIT));
+    const result = JSON.parse(logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT));
 
     expect(result.ip.client).toBeNull();
     expect(result.ip.source).toBeNull();
@@ -113,7 +113,9 @@ test("No search results error log is correct", () => {
         },
     };
 
-    expect(logEntry(event, 400, LOG_TYPES.ERROR, { message: "The search parameter is required." })).toEqual(
+    expect(
+        logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, { message: "The search parameter is required." })
+    ).toEqual(
         JSON.stringify({
             timestamp: new Date().toISOString(),
             ip: {
