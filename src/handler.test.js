@@ -401,6 +401,7 @@ test("the numberOfMatches value is returned", async () => {
 
 const data = [
     ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-adult/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-child/"],
 ];
 
 test.each(data)(
