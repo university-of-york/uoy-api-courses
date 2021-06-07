@@ -1,5 +1,7 @@
+const { URLS_TO_OVERRIDE } = require("../constants/nursingOverrides");
+
 const overrideUrl = (url) => {
-    if (url === "https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-adult/") {
+    if (URLS_TO_OVERRIDE.includes(url)) {
         return "https://www.york.ac.uk/study/undergraduate/subjects/nursing/";
     }
     return url;
