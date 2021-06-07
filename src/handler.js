@@ -3,6 +3,7 @@ const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
+const { OVERRIDE_URL, URLS_TO_OVERRIDE } = require("./constants/nursingOverrides");
 
 module.exports.courses = async (event) => {
     try {
@@ -36,16 +37,6 @@ module.exports.courses = async (event) => {
         const body = await searchResponse.json();
         const numberOfMatches = body.numberOfMatches;
         const results = transformResponse(body.results);
-
-        const URLS_TO_OVERRIDE = [
-            "https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-adult/",
-            "https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-child/",
-            "https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-mental-health/",
-            "https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-adult/",
-            "https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-child/",
-            "https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-mental-health/",
-        ];
-        const OVERRIDE_URL = "https://www.york.ac.uk/study/undergraduate/subjects/nursing/";
 
         results.map((course) => course.liveUrl = (URLS_TO_OVERRIDE.includes(course.liveUrl)) ? OVERRIDE_URL : course.liveUrl);
 
