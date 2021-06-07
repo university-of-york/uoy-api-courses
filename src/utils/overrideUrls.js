@@ -7,4 +7,11 @@ const overrideUrl = (url) => {
     return url;
 };
 
-module.exports = { overrideUrl };
+const overrideUrls = (courses) => {
+    return courses.map((course) => {
+        course.liveUrl = overrideUrl(course.liveUrl);
+        return course;
+    });
+};
+
+module.exports = { overrideUrls };

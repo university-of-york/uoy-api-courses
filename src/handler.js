@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
-const { overrideUrl } = require("./utils/overrideUrls");
+const { overrideUrls } = require("./utils/overrideUrls");
 
 module.exports.courses = async (event) => {
     try {
@@ -36,9 +36,8 @@ module.exports.courses = async (event) => {
 
         const body = await searchResponse.json();
         const numberOfMatches = body.numberOfMatches;
-        const results = transformResponse(body.results);
-
-        results.map((course) => course.liveUrl = overrideUrl(course.liveUrl));
+        let results = transformResponse(body.results);
+        results = overrideUrls(results);
 
         return success({ numberOfMatches, results });
     } catch (e) {
