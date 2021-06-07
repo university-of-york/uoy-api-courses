@@ -1,10 +1,9 @@
-const { URLS_TO_OVERRIDE, OVERRIDE_URL } = require("../constants/nursingOverrides");
+const { OVERRIDES } = require("../constants/urlOverrides");
 
 const overrideUrl = (url) => {
-    if (URLS_TO_OVERRIDE.includes(url)) {
-        return OVERRIDE_URL;
-    }
-    return url;
+    const relevantOverride = OVERRIDES.find((override) => override.courseUrl === url);
+
+    return relevantOverride ? relevantOverride.overrideUrl : url;
 };
 
 const overrideUrls = (courses) => {
