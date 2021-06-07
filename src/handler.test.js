@@ -398,3 +398,69 @@ test("the numberOfMatches value is returned", async () => {
     expect(result.statusCode).toBe(200);
     expect(JSON.parse(result.body).numberOfMatches).toEqual(3);
 });
+
+const data = [
+    ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-adult/"],
+];
+
+test.each(data)(
+    "Results with specified overrides are returned with an altered URL (%s)",
+    async (url) => {
+        const event = {
+            queryStringParameters: {
+                search: "nursing",
+            },
+        };
+
+        const searchResults = {
+            results: [
+                {
+                    title: "Nursing (Adult)",
+                    liveUrl: url,
+                    award: "BSc (Hons)",
+                    department: "Department of Nursing",
+                    level: "undergraduate",
+                    length: "4 years full-time",
+                    typicalOffer: "AAA-AAB",
+                    yearOfEntry: "2021/22",
+                    distanceLearning: "No",
+                    summary:
+                        "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
+                    imageUrl:
+                        "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
+                    ucasCode: "GG14",
+                },
+            ],
+        };
+
+        const expectedResult = {
+            results: [
+                {
+                    title: "Nursing (Adult)",
+                    liveUrl: "https://www.york.ac.uk/study/undergraduate/subjects/nursing/",
+                    award: "BSc (Hons)",
+                    department: ["Department of Nursing"],
+                    level: "undergraduate",
+                    length: "4 years full-time",
+                    typicalOffer: "AAA-AAB",
+                    yearOfEntry: "2021/22",
+                    distanceLearning: false,
+                    summary:
+                        "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
+                    imageUrl:
+                        "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
+                    ucasCode: "GG14",
+                },
+            ],
+        };
+
+        fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+
+        console.log(url);
+
+        const result = await courses(event);
+
+        expect(result.statusCode).toBe(200);
+        expect(result.body).toEqual(JSON.stringify(expectedResult));
+    }
+)

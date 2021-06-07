@@ -37,6 +37,11 @@ module.exports.courses = async (event) => {
         const numberOfMatches = body.numberOfMatches;
         const results = transformResponse(body.results);
 
+        const URL_TO_OVERRIDE = "https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-adult/";
+        const OVERRIDE_URL = "https://www.york.ac.uk/study/undergraduate/subjects/nursing/";
+
+        results.map((course) => course.liveUrl = (course.liveUrl === URL_TO_OVERRIDE) ? OVERRIDE_URL : course.liveUrl);
+
         return success({ numberOfMatches, results });
     } catch (e) {
         console.error(e);
