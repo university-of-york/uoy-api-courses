@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
-const { OVERRIDE_URL, URLS_TO_OVERRIDE } = require("./constants/nursingOverrides");
+const { overrideUrl } = require("./utils/overrideUrls");
 
 module.exports.courses = async (event) => {
     try {
@@ -38,7 +38,7 @@ module.exports.courses = async (event) => {
         const numberOfMatches = body.numberOfMatches;
         const results = transformResponse(body.results);
 
-        results.map((course) => course.liveUrl = (URLS_TO_OVERRIDE.includes(course.liveUrl)) ? OVERRIDE_URL : course.liveUrl);
+        results.map((course) => course.liveUrl = overrideUrl(course.liveUrl));
 
         return success({ numberOfMatches, results });
     } catch (e) {
