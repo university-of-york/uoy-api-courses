@@ -399,16 +399,14 @@ test("the numberOfMatches value is returned", async () => {
     expect(JSON.parse(result.body).numberOfMatches).toEqual(3);
 });
 
-const data = [
+test.each([
     ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-adult/"],
     ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-child/"],
     ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-mental-health/"],
     ["https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-adult/"],
     ["https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-child/"],
     ["https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-mental-health/"],
-];
-
-test.each(data)("Results with specified overrides are returned with an altered URL (%s)", async (url) => {
+])("Nursing results with specified overrides are returned with an altered URL (%s)", async (url) => {
     const event = {
         queryStringParameters: {
             search: "nursing",
@@ -418,20 +416,7 @@ test.each(data)("Results with specified overrides are returned with an altered U
     const searchResults = {
         results: [
             {
-                title: "Nursing (Adult)",
                 liveUrl: url,
-                award: "BSc (Hons)",
-                department: "Department of Nursing",
-                level: "undergraduate",
-                length: "4 years full-time",
-                typicalOffer: "AAA-AAB",
-                yearOfEntry: "2021/22",
-                distanceLearning: "No",
-                summary:
-                    "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
-                imageUrl:
-                    "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
-                ucasCode: "GG14",
             },
         ],
     };
@@ -439,20 +424,9 @@ test.each(data)("Results with specified overrides are returned with an altered U
     const expectedResult = {
         results: [
             {
-                title: "Nursing (Adult)",
                 liveUrl: "https://www.york.ac.uk/study/undergraduate/subjects/nursing/",
-                award: "BSc (Hons)",
-                department: ["Department of Nursing"],
-                level: "undergraduate",
-                length: "4 years full-time",
-                typicalOffer: "AAA-AAB",
-                yearOfEntry: "2021/22",
                 distanceLearning: false,
-                summary:
-                    "Study complementary subjects to become fluent in both.|Study complementary subjects to become fluent in both.",
-                imageUrl:
-                    "https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg|https://www.york.ac.uk/media/study/courses/undergraduate/computerscience/mmath-maths-cs-banner.jpg",
-                ucasCode: "GG14",
+                department: [],
             },
         ],
     };
