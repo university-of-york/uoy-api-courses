@@ -402,6 +402,10 @@ test("the numberOfMatches value is returned", async () => {
 const data = [
     ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-adult/"],
     ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-child/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-mental-health/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-adult/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-child/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-mental-health/"],
 ];
 
 test.each(data)(
