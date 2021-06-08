@@ -12,7 +12,7 @@ module.exports.courses = async (event) => {
 
         if (!requestParams || !requestParams.search) {
             const errorDetails = { message: "The search parameter is required." };
-            console.error(logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, errorDetails));
+            console.warn(logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, errorDetails));
             return error(errorDetails.message, HTTP_CODES.BAD_REQUEST, "Bad Request", event.path);
         }
 
