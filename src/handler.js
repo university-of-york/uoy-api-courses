@@ -45,7 +45,7 @@ module.exports.courses = async (event) => {
         const numberOfMatches = body.numberOfMatches;
         let results = transformResponse(body.results);
         results = overrideUrls(results);
-        
+
         const additionalDetails = { numberOfMatches };
         console.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
 
