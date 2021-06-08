@@ -1,16 +1,20 @@
-"use strict";
+("use strict");
 const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
+const { logEntry } = require("./utils/logEntry");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
 const { overrideUrls } = require("./utils/overrideUrls");
+const { LOG_TYPES, HTTP_CODES } = require("./constants/constants.js");
 
 module.exports.courses = async (event) => {
     try {
         const requestParams = event.queryStringParameters;
 
         if (!requestParams || !requestParams.search) {
-            return error("The search parameter is required.", 400, "Bad Request", event.path);
+            const errorDetails = { message: "The search parameter is required." };
+            console.warn(logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, errorDetails));
+            return error(errorDetails.message, HTTP_CODES.BAD_REQUEST, "Bad Request", event.path);
         }
 
         const url = coursesUrl(requestParams);
@@ -23,9 +27,12 @@ module.exports.courses = async (event) => {
         });
 
         if (!searchResponse.ok) {
-            console.error("Funnelback search problem");
-            console.error(url);
-            console.error(searchResponse.statusText);
+            const errorDetails = {
+                message: "Funnelback search problem",
+                funnelBackUrl: url,
+                statusText: searchResponse.statusText,
+            };
+            console.error(logEntry(event, searchResponse.status, LOG_TYPES.ERROR, errorDetails));
             return error(
                 "There is a problem with the Funnelback search.",
                 searchResponse.status,
@@ -38,10 +45,13 @@ module.exports.courses = async (event) => {
         const numberOfMatches = body.numberOfMatches;
         let results = transformResponse(body.results);
         results = overrideUrls(results);
+        
+        const additionalDetails = { numberOfMatches };
+        console.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
 
         return success({ numberOfMatches, results });
     } catch (e) {
         console.error(e);
-        return error("An error has occurred.", 500, "Internal Server Error", event.path);
+        return error("An error has occurred.", HTTP_CODES.INTERNAL_SERVER_ERROR, "Internal Server Error", event.path);
     }
 };

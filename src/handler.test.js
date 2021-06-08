@@ -1,4 +1,5 @@
 const { courses } = require("./handler");
+const { HTTP_CODES } = require("./constants/constants.js");
 const fetch = require("jest-fetch-mock");
 
 const constantPartOfSearchUrl = `${process.env.BASE_URL}?collection=${process.env.COLLECTION}&form=${process.env.FORM}&profile=${process.env.PROFILE}&smeta_contentType=${process.env.SMETA_CONTENT_TYPE}`;
@@ -86,11 +87,11 @@ test("Response with 200 code is returned correctly", async () => {
         },
     };
 
-    fetch.mockResponse(JSON.stringify({ results: [] }), { status: 200 });
+    fetch.mockResponse(JSON.stringify({ results: [] }), { status: HTTP_CODES.OK });
 
     const result = await courses(event);
 
-    expect(result.statusCode).toBe(200);
+    expect(result.statusCode).toBe(HTTP_CODES.OK);
     expect(result.body).toEqual('{"results":[]}');
 });
 
@@ -142,11 +143,11 @@ test("Response results are transformed to match openAPI spec", async () => {
         ],
     };
 
-    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+    fetch.mockResponse(JSON.stringify(searchResults), { status: HTTP_CODES.OK });
 
     const result = await courses(event);
 
-    expect(result.statusCode).toBe(200);
+    expect(result.statusCode).toBe(HTTP_CODES.OK);
     expect(result.body).toEqual(JSON.stringify(expectedResult));
 });
 
@@ -194,11 +195,11 @@ test("Response results from Funnelback with missing metadata are returned OK", a
         ],
     };
 
-    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+    fetch.mockResponse(JSON.stringify(searchResults), { status: HTTP_CODES.OK });
 
     const result = await courses(event);
 
-    expect(result.statusCode).toBe(200);
+    expect(result.statusCode).toBe(HTTP_CODES.OK);
     expect(result.body).toEqual(JSON.stringify(expectedResult));
 });
 
@@ -310,18 +311,18 @@ test("Multiple response results are transformed and returned OK", async () => {
         ],
     };
 
-    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+    fetch.mockResponse(JSON.stringify(searchResults), { status: HTTP_CODES.OK });
 
     const result = await courses(event);
 
-    expect(result.statusCode).toBe(200);
+    expect(result.statusCode).toBe(HTTP_CODES.OK);
     expect(result.body).toEqual(JSON.stringify(expectedResult));
 });
 
 test("Request without any parameters returns an appropriate error", async () => {
     const result = await courses({});
 
-    expect(result.statusCode).toBe(400);
+    expect(result.statusCode).toBe(HTTP_CODES.BAD_REQUEST);
     expect(result.body).toContain('"status":400');
     expect(result.body).toContain('"error":"Bad Request"');
     expect(result.body).toContain('"message":"The search parameter is required."');
@@ -335,11 +336,11 @@ test("Response with 400 code returns an error", async () => {
         },
     };
 
-    fetch.mockResponse(JSON.stringify({ results: [] }), { status: 400 });
+    fetch.mockResponse(JSON.stringify({ results: [] }), { status: HTTP_CODES.BAD_REQUEST, statusText: "Bad Request" });
 
     const result = await courses(event);
 
-    expect(result.statusCode).toBe(400);
+    expect(result.statusCode).toBe(HTTP_CODES.BAD_REQUEST);
     expect(result.body).toContain('"status":400');
     expect(result.body).toContain('"error":"Bad Request"');
     expect(result.body).toContain('"message":"There is a problem with the Funnelback search."');
@@ -353,11 +354,14 @@ test("Response with 500 code returns an error", async () => {
         },
     };
 
-    fetch.mockResponse(JSON.stringify({ results: [] }), { status: 500 });
+    fetch.mockResponse(JSON.stringify({ results: [] }), {
+        status: HTTP_CODES.INTERNAL_SERVER_ERROR,
+        statusText: "Internal Server Error",
+    });
 
     const result = await courses(event);
 
-    expect(result.statusCode).toBe(500);
+    expect(result.statusCode).toBe(HTTP_CODES.INTERNAL_SERVER_ERROR);
     expect(result.body).toContain('"status":500');
     expect(result.body).toContain('"error":"Internal Server Error"');
     expect(result.body).toContain('"message":"There is a problem with the Funnelback search."');
@@ -371,11 +375,11 @@ test("Response with malformed JSON returns an error", async () => {
         },
     };
 
-    fetch.mockResponse('{"results": [', { status: 200 });
+    fetch.mockResponse('{"results": [', { status: HTTP_CODES.OK });
 
     const result = await courses(event);
 
-    expect(result.statusCode).toBe(500);
+    expect(result.statusCode).toBe(HTTP_CODES.INTERNAL_SERVER_ERROR);
     expect(result.body).toContain('"status":500');
     expect(result.body).toContain('"error":"Internal Server Error"');
     expect(result.body).toContain('"message":"An error has occurred."');
@@ -393,9 +397,9 @@ test("the numberOfMatches value is returned", async () => {
         results: [],
     };
 
-    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+    fetch.mockResponse(JSON.stringify(searchResults), { status: HTTP_CODES.OK });
     const result = await courses(event);
-    expect(result.statusCode).toBe(200);
+    expect(result.statusCode).toBe(HTTP_CODES.OK);
     expect(JSON.parse(result.body).numberOfMatches).toEqual(3);
 });
 
