@@ -1,6 +1,8 @@
+const { HTTP_CODES } = require("../constants/constants.js");
+
 module.exports.success = (body) => {
     return {
-        statusCode: 200,
+        statusCode: HTTP_CODES.OK,
         body: JSON.stringify(body),
     };
 };
