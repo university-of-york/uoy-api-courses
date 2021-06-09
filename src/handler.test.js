@@ -402,3 +402,43 @@ test("the numberOfMatches value is returned", async () => {
     expect(result.statusCode).toBe(HTTP_CODES.OK);
     expect(JSON.parse(result.body).numberOfMatches).toEqual(3);
 });
+
+test.each([
+    ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-adult/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-child/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-mental-health/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-adult/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-child/"],
+    ["https://www.york.ac.uk/study/undergraduate/courses/mnurs-nursing-mental-health/"],
+])("Nursing results with specified overrides are returned with an altered URL (%s)", async (url) => {
+    const event = {
+        queryStringParameters: {
+            search: "nursing",
+        },
+    };
+
+    const searchResults = {
+        results: [
+            {
+                liveUrl: url,
+            },
+        ],
+    };
+
+    const expectedResult = {
+        results: [
+            {
+                liveUrl: "https://www.york.ac.uk/study/undergraduate/subjects/nursing/",
+                distanceLearning: false,
+                department: [],
+            },
+        ],
+    };
+
+    fetch.mockResponse(JSON.stringify(searchResults), { status: 200 });
+
+    const result = await courses(event);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toEqual(JSON.stringify(expectedResult));
+});

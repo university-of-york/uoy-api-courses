@@ -4,6 +4,7 @@ const { coursesUrl } = require("./utils/constructFunnelbackUrls");
 const { logEntry } = require("./utils/logEntry");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
+const { overrideUrls } = require("./utils/overrideUrls");
 const { LOG_TYPES, HTTP_CODES } = require("./constants/constants.js");
 
 module.exports.courses = async (event) => {
@@ -42,7 +43,9 @@ module.exports.courses = async (event) => {
 
         const body = await searchResponse.json();
         const numberOfMatches = body.numberOfMatches;
-        const results = transformResponse(body.results);
+        let results = transformResponse(body.results);
+        results = overrideUrls(results);
+
         const additionalDetails = { numberOfMatches };
         console.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
 
