@@ -1,18 +1,16 @@
 const path = require("path");
 const { spawn } = require("child_process");
 
-describe("logger behaviour", () => {
-    it("logs out in JSON", () => {
-        invokeDemoLoggerGetResult().then((res) => {
-            expect(res).anything();
-            expect(() => JSON.parse(res)).not.toThrow();
-        });
+describe("Logger behaviour", () => {
+    it("Output in JSON", async () => {
+        const res = await invokeDemoLoggerGetResult();
+        expect(res).toEqual(expect.anything());
+        expect(() => JSON.parse(res)).not.toThrow();
     });
-    it("Logs out the level as a string", () => {
-        invokeDemoLoggerGetResult().then((res) => {
-            const resJSON = JSON.parse(res);
-            expect(() => resJSON.level).toBe("info");
-        });
+    it("Output level as a string", async () => {
+        const res = await invokeDemoLoggerGetResult();
+        const resJSON = JSON.parse(res);
+        expect(resJSON.level).toBe("info");
     });
 });
 
@@ -21,14 +19,9 @@ const invokeDemoLoggerGetResult = () => {
     const testApp = spawn("node", [testAppFilePath]);
 
     return new Promise((resolve) => {
-        let logResult = null;
-
         testApp.stdout.on("data", (data) => {
-            logResult = data.toString();
             testApp.kill("SIGINT");
-        });
-        testApp.on("close", () => {
-            resolve(logResult);
+            resolve(data.toString());
         });
     });
 };
