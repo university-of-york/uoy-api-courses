@@ -47,36 +47,21 @@ test("Required data added to log when supplied in event object", () => {
         },
     };
 
-    expect(logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT, { numberOfMatches: 66 })).toEqual(
-        JSON.stringify({
-            timestamp: new Date().toISOString(),
-            ip: {
-                client: "144.32.90.155",
-                source: "144.32.90.155, 130.176.97.157",
-                sourcePort: "443",
-            },
-            req: {
-                user: null,
-                service: "uoy-api-courses",
-            },
-            correlationId: "theApiId",
-            self: {
-                application: "uoy-api-courses",
-                type: "GET",
-                statusCode: 200,
-                version: "v1",
-            },
-            sensitive: false,
-            schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
-            type: "audit",
-            queryStringParameters: {
-                search: "biology",
-            },
-            additionalDetails: {
-                numberOfMatches: 66,
-            },
-        })
-    );
+    expect(logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT, { numberOfMatches: 66 })).toEqual({
+        "ip.client": "144.32.90.155",
+        "ip.source": "144.32.90.155, 130.176.97.157",
+        "ip.sourcePort": "443",
+        correlationId: "theApiId",
+        "self.type": "GET",
+        "self.statusCode": 200,
+        type: "audit",
+        queryStringParameters: {
+            search: "biology",
+        },
+        additionalDetails: {
+            numberOfMatches: 66,
+        },
+    });
 });
 
 test("Nonexistent fields are returned as null instead of skipped", () => {
@@ -86,13 +71,13 @@ test("Nonexistent fields are returned as null instead of skipped", () => {
         },
     };
 
-    const result = JSON.parse(logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT));
+    const result = logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT);
 
-    expect(result.ip.client).toBeNull();
-    expect(result.ip.source).toBeNull();
-    expect(result.ip.sourcePort).toBeNull();
+    expect(result["ip.client"]).toBeNull();
+    expect(result["ip.source"]).toBeNull();
+    expect(result["ip.sourcePort"]).toBeNull();
     expect(result.correlationId).toBeNull();
-    expect(result.self.type).toBeNull();
+    expect(result["self.type"]).toBeNull();
 });
 
 test("No search results error log is correct", () => {
@@ -115,34 +100,19 @@ test("No search results error log is correct", () => {
 
     expect(
         logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, { message: "The search parameter is required." })
-    ).toEqual(
-        JSON.stringify({
-            timestamp: new Date().toISOString(),
-            ip: {
-                client: "144.32.90.155",
-                source: "130.176.97.157",
-                sourcePort: "443",
-            },
-            req: {
-                user: null,
-                service: "uoy-api-courses",
-            },
-            correlationId: "theApiId",
-            self: {
-                application: "uoy-api-courses",
-                type: "GET",
-                statusCode: 400,
-                version: "v1",
-            },
-            sensitive: false,
-            schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
-            type: "error",
-            queryStringParameters: {},
-            additionalDetails: {
-                message: "The search parameter is required.",
-            },
-        })
-    );
+    ).toEqual({
+        "ip.client": "144.32.90.155",
+        "ip.source": "130.176.97.157",
+        "ip.sourcePort": "443",
+        correlationId: "theApiId",
+        "self.type": "GET",
+        "self.statusCode": 400,
+        type: "error",
+        queryStringParameters: {},
+        additionalDetails: {
+            message: "The search parameter is required.",
+        },
+    });
 });
 
 test("Funnelback error log is correct", () => {
@@ -175,36 +145,21 @@ test("Funnelback error log is correct", () => {
             funnelBackUrl: searchUrl,
             statusText: "Internal Server Error",
         })
-    ).toEqual(
-        JSON.stringify({
-            timestamp: new Date().toISOString(),
-            ip: {
-                client: "144.32.90.155",
-                source: "130.176.97.157",
-                sourcePort: "443",
-            },
-            req: {
-                user: null,
-                service: "uoy-api-courses",
-            },
-            correlationId: "theApiId",
-            self: {
-                application: "uoy-api-courses",
-                type: "GET",
-                statusCode: 500,
-                version: "v1",
-            },
-            sensitive: false,
-            schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
-            type: "error",
-            queryStringParameters: {
-                search: "maths",
-            },
-            additionalDetails: {
-                message: "Funnelback search problem",
-                funnelBackUrl: searchUrl,
-                statusText: "Internal Server Error",
-            },
-        })
-    );
+    ).toEqual({
+        "ip.client": "144.32.90.155",
+        "ip.source": "130.176.97.157",
+        "ip.sourcePort": "443",
+        correlationId: "theApiId",
+        "self.type": "GET",
+        "self.statusCode": 500,
+        type: "error",
+        queryStringParameters: {
+            search: "maths",
+        },
+        additionalDetails: {
+            message: "Funnelback search problem",
+            funnelBackUrl: searchUrl,
+            statusText: "Internal Server Error",
+        },
+    });
 });
