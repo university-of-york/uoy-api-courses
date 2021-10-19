@@ -1,6 +1,9 @@
 const path = require("path");
 const { spawn } = require("child_process");
 
+// See also: https://github.com/jest-community/jest-extended/pull/164 for the regex origin
+const regexIso8601Timestamp = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3])(:[0-5]\d){2}\.\d{3}Z$/;
+
 describe("Logger behaviour", () => {
     it("Output in JSON", async () => {
         const res = await invokeDemoLoggerGetResult();
@@ -15,9 +18,7 @@ describe("Logger behaviour", () => {
     it("Timestamp is in ISO8601 format", async () => {
         const res = await invokeDemoLoggerGetResult();
         const resJSON = JSON.parse(res);
-        // See also: https://github.com/jest-community/jest-extended/pull/164 for the regex origin
-        const regex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3])(:[0-5]\d){2}\.\d{3}Z$/;
-        expect(regex.test(resJSON.timestamp)).toBe(true);
+        expect(regexIso8601Timestamp.test(resJSON.timestamp)).toBe(true);
     });
 });
 
