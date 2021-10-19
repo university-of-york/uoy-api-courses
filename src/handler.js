@@ -6,6 +6,7 @@ const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
 const { overrideUrls } = require("./utils/overrideUrls");
 const { LOG_TYPES, HTTP_CODES } = require("./constants/constants.js");
+const { logger } = require("./utils/logger");
 
 module.exports.courses = async (event) => {
     try {
@@ -13,7 +14,7 @@ module.exports.courses = async (event) => {
 
         if (!requestParams || !requestParams.search) {
             const errorDetails = { message: "The search parameter is required." };
-            console.warn(logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, errorDetails));
+            logger.warn(logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.AUDIT, errorDetails));
             return error(errorDetails.message, HTTP_CODES.BAD_REQUEST, "Bad Request", event.path);
         }
 
@@ -32,7 +33,7 @@ module.exports.courses = async (event) => {
                 funnelBackUrl: url,
                 statusText: searchResponse.statusText,
             };
-            console.error(logEntry(event, searchResponse.status, LOG_TYPES.ERROR, errorDetails));
+            logger.error(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, errorDetails));
             return error(
                 "There is a problem with the Funnelback search.",
                 searchResponse.status,
@@ -47,7 +48,7 @@ module.exports.courses = async (event) => {
         results = overrideUrls(results);
 
         const additionalDetails = { numberOfMatches };
-        console.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
+        logger.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
 
         return success({ numberOfMatches, results });
     } catch (e) {
