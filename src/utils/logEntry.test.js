@@ -1,6 +1,6 @@
 import MockDate from "mockdate";
 
-const { logEntry } = require("./logEntry");
+const { logEntry, errorEntry } = require("./logEntry");
 const { LOG_TYPES, HTTP_CODES } = require("../constants/constants.js");
 
 test("Required data added to log when supplied in event object", () => {
@@ -162,4 +162,19 @@ test("Funnelback error log is correct", () => {
             statusText: "Internal Server Error",
         },
     });
+});
+
+test("errorEntry handles a test error", () => {
+    const event = {
+        queryStringParameters: {
+            search: "biology",
+        },
+    };
+
+    const err = new Error("test error");
+
+    const result = errorEntry(event, null, err);
+
+    expect(result.err).toBe(err);
+    expect(result.queryStringParameters.search).toBe("biology");
 });

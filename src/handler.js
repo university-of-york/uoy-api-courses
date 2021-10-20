@@ -1,7 +1,7 @@
 ("use strict");
 const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
-const { logEntry } = require("./utils/logEntry");
+const { logEntry, errorEntry } = require("./utils/logEntry");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
 const { overrideUrls } = require("./utils/overrideUrls");
@@ -51,8 +51,8 @@ module.exports.courses = async (event) => {
         logger.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
 
         return success({ numberOfMatches, results });
-    } catch (e) {
-        console.error(e);
+    } catch (err) {
+        logger.error(errorEntry(event, null, err));
         return error("An error has occurred.", HTTP_CODES.INTERNAL_SERVER_ERROR, "Internal Server Error", event.path);
     }
 };
