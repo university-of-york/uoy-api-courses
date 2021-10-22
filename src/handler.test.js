@@ -448,7 +448,7 @@ test.each([
 });
 
 describe("Logger output", () => {
-    it("Logs a single info log given a response with 200 code", async () => {
+    it("logs a single info log given a response with 200 code", async () => {
         const event = {
             queryStringParameters: {
                 search: "physics",
@@ -475,7 +475,7 @@ describe("Logger output", () => {
         });
     });
 
-    test("Logs a single warning if there are no search parameters given", async () => {
+    it("logs a single warning if there are no search parameters given", async () => {
         const event = {
             queryStringParameters: {},
         };
@@ -498,7 +498,7 @@ describe("Logger output", () => {
         });
     });
 
-    it("Logs a single error when there is a funnelback problem", async () => {
+    it("logs a single error when there is a funnelback problem", async () => {
         const event = {
             queryStringParameters: {
                 search: "physics",
@@ -533,7 +533,7 @@ describe("Logger output", () => {
         });
     });
 
-    it("Return only an error log when catching a malformed JSON", async () => {
+    it("return only an error log when catching a malformed JSON", async () => {
         const event = {
             queryStringParameters: {
                 search: "physics",

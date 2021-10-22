@@ -5,7 +5,7 @@ const { spawn } = require("child_process");
 const regexIso8601Timestamp = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3])(:[0-5]\d){2}\.\d{3}Z$/;
 
 describe("Logger behaviour", () => {
-    it("Output in JSON", async () => {
+    it("output in JSON", async () => {
         const res = await invokeDemoLoggerGetResult();
         expect(res).toEqual(expect.anything());
         expect(() => JSON.parse(res)).not.toThrow();
@@ -17,13 +17,13 @@ describe("Logger behaviour", () => {
         expect(resJSON["ip.source"]).toBeDefined();
         expect(resJSON["ip.sourcePort"]).toBeDefined();
     });
-    it("Request fields are present", async () => {
+    it("request fields are present", async () => {
         const res = await invokeDemoLoggerGetResult();
         const resJSON = JSON.parse(res);
         expect(resJSON["req.user"]).toBeDefined();
         expect(resJSON["req.service"]).toEqual("uoy-app-course-search");
     });
-    it("Self fields are present", async () => {
+    it("self fields are present", async () => {
         const res = await invokeDemoLoggerGetResult();
         const resJSON = JSON.parse(res);
         expect(resJSON["self.application"]).toEqual("uoy-api-courses");
@@ -31,7 +31,7 @@ describe("Logger behaviour", () => {
         expect(resJSON["self.statusCode"]).toBeDefined();
         expect(resJSON["self.version"]).toEqual("v1");
     });
-    it("Miscellaneous fields are present", async () => {
+    it("miscellaneous fields are present", async () => {
         const res = await invokeDemoLoggerGetResult();
         const resJSON = JSON.parse(res);
         expect(resJSON.correlationId).toBeDefined();
@@ -39,12 +39,12 @@ describe("Logger behaviour", () => {
         expect(resJSON.schemaURI).toEqual("https://university-of-york.github.io/uoy-api-courses/");
         expect(resJSON.type).toBeDefined();
     });
-    it("Output level as a string", async () => {
+    it("output level as a string", async () => {
         const res = await invokeDemoLoggerGetResult();
         const resJSON = JSON.parse(res);
         expect(resJSON.level).toBe("info");
     });
-    it("Timestamp is in ISO8601 format", async () => {
+    it("timestamp is in ISO8601 format", async () => {
         const res = await invokeDemoLoggerGetResult();
         const resJSON = JSON.parse(res);
         expect(regexIso8601Timestamp.test(resJSON.timestamp)).toBe(true);
