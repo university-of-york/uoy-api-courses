@@ -475,7 +475,7 @@ describe("Logger output", () => {
         });
     });
 
-    it("logs a single warning if there are no search parameters given", async () => {
+    it("logs a single info if there are no search parameters given", async () => {
         const event = {
             queryStringParameters: {},
         };
@@ -483,16 +483,16 @@ describe("Logger output", () => {
         await courses(event);
 
         expect(logger.error).toBeCalledTimes(0);
-        expect(logger.warn).toBeCalledTimes(1);
-        expect(logger.info).toBeCalledTimes(0);
-        expect(logger.warn).toBeCalledWith({
+        expect(logger.warn).toBeCalledTimes(0);
+        expect(logger.info).toBeCalledTimes(1);
+        expect(logger.info).toBeCalledWith({
             "ip.client": null,
             "ip.source": null,
             "ip.sourcePort": null,
             correlationId: null,
             "self.type": null,
             "self.statusCode": 400,
-            type: "audit",
+            type: "application",
             queryStringParameters: {},
             additionalDetails: { message: "The search parameter is required." },
         });
@@ -522,7 +522,7 @@ describe("Logger output", () => {
             correlationId: null,
             "self.type": null,
             "self.statusCode": 400,
-            type: "audit",
+            type: "application",
             queryStringParameters: { search: "physics" },
             additionalDetails: {
                 message: "Funnelback search problem",

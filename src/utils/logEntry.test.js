@@ -99,7 +99,7 @@ test("No search results error log is correct", () => {
     };
 
     expect(
-        logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, { message: "The search parameter is required." })
+        logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.APPLICATION, { message: "The search parameter is required." })
     ).toEqual({
         "ip.client": "144.32.90.155",
         "ip.source": "130.176.97.157",
@@ -107,7 +107,7 @@ test("No search results error log is correct", () => {
         correlationId: "theApiId",
         "self.type": "GET",
         "self.statusCode": 400,
-        type: "error",
+        type: "application",
         queryStringParameters: {},
         additionalDetails: {
             message: "The search parameter is required.",
@@ -140,7 +140,7 @@ test("Funnelback error log is correct", () => {
         "&query=maths";
 
     expect(
-        logEntry(event, 500, LOG_TYPES.ERROR, {
+        logEntry(event, 500, LOG_TYPES.APPLICATION, {
             message: "Funnelback search problem",
             funnelBackUrl: searchUrl,
             statusText: "Internal Server Error",
@@ -152,7 +152,7 @@ test("Funnelback error log is correct", () => {
         correlationId: "theApiId",
         "self.type": "GET",
         "self.statusCode": 500,
-        type: "error",
+        type: "application",
         queryStringParameters: {
             search: "maths",
         },
