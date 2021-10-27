@@ -51,6 +51,14 @@ module.exports.courses = async (event) => {
 
         return success({ numberOfMatches, results });
     } catch (err) {
+        if (!err.details) {
+            err.details = {
+                funnelBackUrl: null,
+                status: HTTP_CODES.INTERNAL_SERVER_ERROR,
+                statusText: "Internal Server Error",
+            };
+        }
+
         logger.error(errorEntry(event, err, null));
         return error(err.message, err.details.status, err.details.statusText, event.path);
     }

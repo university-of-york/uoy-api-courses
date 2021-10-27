@@ -2,15 +2,21 @@ const { courses } = require("./handler");
 const { HTTP_CODES } = require("./constants/constants.js");
 const fetch = require("jest-fetch-mock");
 const { logger } = require("./utils/logger");
+const { logEntry, errorEntry } = require("./utils/logEntry");
 const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
 
 jest.mock("./utils/logger");
+jest.mock("./utils/logEntry");
 
 const constantPartOfSearchUrl = `${process.env.BASE_URL}?collection=${process.env.COLLECTION}&form=${process.env.FORM}&profile=${process.env.PROFILE}&smeta_contentType=${process.env.SMETA_CONTENT_TYPE}`;
 
 beforeEach(() => {
     fetch.resetMocks();
-    jest.clearAllMocks();
+    logger.info.mockReset();
+    logger.warn.mockReset();
+    logger.error.mockReset();
+    logEntry.mockReset();
+    errorEntry.mockReset();
 });
 
 test("Simple query calls Funnelback", async () => {
@@ -456,23 +462,17 @@ describe("Logger output", () => {
         };
 
         fetch.mockResponse(JSON.stringify({ results: [] }), { status: HTTP_CODES.OK });
+        logEntry.mockReturnValue({ foo: "bar" });
 
         await courses(event);
 
         expect(logger.error).toBeCalledTimes(0);
         expect(logger.warn).toBeCalledTimes(0);
         expect(logger.info).toBeCalledTimes(1);
-        expect(logger.info).toBeCalledWith({
-            "ip.client": null,
-            "ip.source": null,
-            "ip.sourcePort": null,
-            correlationId: null,
-            "self.type": null,
-            "self.statusCode": 200,
-            type: "audit",
-            queryStringParameters: { search: "physics" },
-            additionalDetails: { numberOfMatches: undefined },
+        expect(logEntry).toBeCalledWith({ queryStringParameters: { search: "physics" } }, 200, "audit", {
+            numberOfMatches: undefined,
         });
+        expect(logger.info).toBeCalledWith({ foo: "bar" });
     });
 
     it("logs a single info if there are no search parameters given", async () => {
@@ -480,23 +480,19 @@ describe("Logger output", () => {
             queryStringParameters: {},
         };
 
+        errorEntry.mockReturnValue({ foo: "bar" });
+
         await courses(event);
 
         expect(logger.error).toBeCalledTimes(0);
         expect(logger.warn).toBeCalledTimes(0);
         expect(logger.info).toBeCalledTimes(1);
-        expect(logger.info).toBeCalledWith({
-            "ip.client": null,
-            "ip.source": null,
-            "ip.sourcePort": null,
-            correlationId: null,
-            "self.type": null,
-            "self.statusCode": 400,
-            type: "application",
-            queryStringParameters: {},
-            additionalDetails: null,
-            err: new NoQueryGivenError("The search parameter is required."),
-        });
+        expect(errorEntry).toBeCalledWith(
+            { queryStringParameters: {} },
+            new NoQueryGivenError("The search parameter is required."),
+            null
+        );
+        expect(logger.info).toBeCalledWith({ foo: "bar" });
     });
 
     it("logs a single error when there is a funnelback problem", async () => {
@@ -510,24 +506,19 @@ describe("Logger output", () => {
             status: HTTP_CODES.BAD_REQUEST,
             statusText: "Bad Request",
         });
+        errorEntry.mockReturnValue({ foo: "bar" });
 
         await courses(event);
 
         expect(logger.error).toBeCalledTimes(1);
         expect(logger.warn).toBeCalledTimes(0);
         expect(logger.info).toBeCalledTimes(0);
-        expect(logger.error).toBeCalledWith({
-            "ip.client": null,
-            "ip.source": null,
-            "ip.sourcePort": null,
-            correlationId: null,
-            "self.type": null,
-            "self.statusCode": 400,
-            type: "application",
-            queryStringParameters: { search: "physics" },
-            additionalDetails: null,
-            err: new FunnelbackError("There is a problem with the Funnelback search."),
-        });
+        expect(errorEntry).toBeCalledWith(
+            { queryStringParameters: { search: "physics" } },
+            new FunnelbackError("There is a problem with the Funnelback search."),
+            null
+        );
+        expect(logger.error).toBeCalledWith({ foo: "bar" });
     });
 
     it("return only an error log when catching a malformed JSON", async () => {
@@ -538,23 +529,18 @@ describe("Logger output", () => {
         };
 
         fetch.mockResponse('{"results": [', { status: HTTP_CODES.OK });
+        errorEntry.mockReturnValue({ foo: "bar" });
 
         await courses(event);
 
         expect(logger.error).toBeCalledTimes(1);
         expect(logger.warn).toBeCalledTimes(0);
         expect(logger.info).toBeCalledTimes(0);
-        expect(logger.error).toBeCalledWith({
-            "ip.client": null,
-            "ip.source": null,
-            "ip.sourcePort": null,
-            correlationId: null,
-            "self.type": null,
-            "self.statusCode": 500,
-            type: "application",
-            queryStringParameters: { search: "physics" },
-            additionalDetails: null,
-            err: new Error("invalid json response body at  reason: Unexpected end of JSON input"),
-        });
+        expect(errorEntry).toBeCalledWith(
+            { queryStringParameters: { search: "physics" } },
+            new Error("invalid json response body at  reason: Unexpected end of JSON input"),
+            null
+        );
+        expect(logger.error).toBeCalledWith({ foo: "bar" });
     });
 });

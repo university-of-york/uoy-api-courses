@@ -1,4 +1,4 @@
-const { HTTP_CODES, LOG_TYPES } = require("../constants/constants");
+const { LOG_TYPES } = require("../constants/constants");
 
 const logEntry = (event, statuscode, logType, additionalDetails) => {
     const getHeaderInfo = () => {
@@ -38,10 +38,6 @@ const errorEntry = (event, error, additionalDetails) => {
             status: null,
             statusText: null,
         };
-    }
-
-    if (error.details && !error.details.status) {
-        error.details.status = HTTP_CODES.INTERNAL_SERVER_ERROR;
     }
 
     const logMessage = logEntry(event, error.details.status, LOG_TYPES.APPLICATION, additionalDetails);
