@@ -144,10 +144,14 @@ test("Funnelback error log is correct", () => {
         funnelBackUrl: searchUrl,
         status: 500,
         statusText: "Internal Server Error",
-    }
+    };
 
-    const log = errorEntry(event, new FunnelbackError("There is a problem with the Funnelback search.", errorDetails), null);
-    
+    const log = errorEntry(
+        event,
+        new FunnelbackError("There is a problem with the Funnelback search.", errorDetails),
+        null
+    );
+
     expect(log).toEqual({
         "ip.client": "144.32.90.155",
         "ip.source": "130.176.97.157",
@@ -160,7 +164,7 @@ test("Funnelback error log is correct", () => {
             search: "maths",
         },
         additionalDetails: null,
-        err: new FunnelbackError("There is a problem with the Funnelback search.")
+        err: new FunnelbackError("There is a problem with the Funnelback search."),
     });
     expect(log.err.details).toEqual({
         funnelBackUrl: searchUrl,

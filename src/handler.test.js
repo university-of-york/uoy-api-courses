@@ -495,7 +495,7 @@ describe("Logger output", () => {
             type: "application",
             queryStringParameters: {},
             additionalDetails: null,
-            err: new NoQueryGivenError("The search parameter is required.")
+            err: new NoQueryGivenError("The search parameter is required."),
         });
     });
 
@@ -526,7 +526,7 @@ describe("Logger output", () => {
             type: "application",
             queryStringParameters: { search: "physics" },
             additionalDetails: null,
-            err: new FunnelbackError("There is a problem with the Funnelback search.")
+            err: new FunnelbackError("There is a problem with the Funnelback search."),
         });
     });
 
@@ -554,7 +554,7 @@ describe("Logger output", () => {
             type: "application",
             queryStringParameters: { search: "physics" },
             additionalDetails: null,
-            err: new Error("invalid json response body at  reason: Unexpected end of JSON input")
+            err: new Error("invalid json response body at  reason: Unexpected end of JSON input"),
         });
     });
 });

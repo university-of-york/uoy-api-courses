@@ -32,7 +32,7 @@ const logEntry = (event, statuscode, logType, additionalDetails) => {
 const errorEntry = (event, error, additionalDetails) => {
     // When there is an unknown error it is likely there is no error details passed, so
     // we are initialising an empty error details
-    if ( !error.details ) {
+    if (!error.details) {
         error.details = {
             funnelBackUrl: null,
             status: null,
@@ -40,12 +40,12 @@ const errorEntry = (event, error, additionalDetails) => {
         };
     }
 
-    if ( error.details && !error.details.status ) {
+    if (error.details && !error.details.status) {
         error.details.status = HTTP_CODES.INTERNAL_SERVER_ERROR;
     }
 
     const logMessage = logEntry(event, error.details.status, LOG_TYPES.APPLICATION, additionalDetails);
-    logMessage.err = error; 
+    logMessage.err = error;
     return logMessage;
 };
 

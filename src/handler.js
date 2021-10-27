@@ -14,11 +14,11 @@ module.exports.courses = async (event) => {
         const requestParams = event.queryStringParameters;
 
         if (!requestParams || !requestParams.search) {
-            const errDetails = { 
+            const errDetails = {
                 status: HTTP_CODES.BAD_REQUEST,
                 statusText: "Bad Request",
             };
-            const err = new NoQueryGivenError("The search parameter is required.", errDetails)
+            const err = new NoQueryGivenError("The search parameter is required.", errDetails);
             logger.info(errorEntry(event, err, null));
             return error(err.message, err.details.status, err.details.statusText, event.path);
         }
