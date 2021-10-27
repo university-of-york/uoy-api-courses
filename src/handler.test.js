@@ -2,6 +2,7 @@ const { courses } = require("./handler");
 const { HTTP_CODES } = require("./constants/constants.js");
 const fetch = require("jest-fetch-mock");
 const { logger } = require("./utils/logger");
+const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
 
 jest.mock("./utils/logger");
 
@@ -385,8 +386,7 @@ test("Response with malformed JSON returns an error", async () => {
 
     expect(result.statusCode).toBe(HTTP_CODES.INTERNAL_SERVER_ERROR);
     expect(result.body).toContain('"status":500');
-    expect(result.body).toContain('"error":"Internal Server Error"');
-    expect(result.body).toContain('"message":"An error has occurred."');
+    expect(result.body).toContain('"message":"invalid json response body at  reason: Unexpected end of JSON input"');
     expect(result.body).toContain('"timestamp":');
 });
 
@@ -494,7 +494,8 @@ describe("Logger output", () => {
             "self.statusCode": 400,
             type: "application",
             queryStringParameters: {},
-            additionalDetails: { message: "The search parameter is required." },
+            additionalDetails: null,
+            err: new NoQueryGivenError("The search parameter is required.")
         });
     });
 
@@ -524,12 +525,8 @@ describe("Logger output", () => {
             "self.statusCode": 400,
             type: "application",
             queryStringParameters: { search: "physics" },
-            additionalDetails: {
-                message: "Funnelback search problem",
-                funnelBackUrl:
-                    "https://www.york.ac.uk/search/?collection=courses&form=course-search&profile=_default_preview&smeta_contentType=course&query=physics",
-                statusText: "Bad Request",
-            },
+            additionalDetails: null,
+            err: new FunnelbackError("There is a problem with the Funnelback search.")
         });
     });
 
@@ -554,13 +551,10 @@ describe("Logger output", () => {
             correlationId: null,
             "self.type": null,
             "self.statusCode": 500,
-            type: "audit",
+            type: "application",
             queryStringParameters: { search: "physics" },
             additionalDetails: null,
-            err: {
-                message: "invalid json response body at  reason: Unexpected end of JSON input",
-                type: "invalid-json",
-            },
+            err: new Error("invalid json response body at  reason: Unexpected end of JSON input")
         });
     });
 });

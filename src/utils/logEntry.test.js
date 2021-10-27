@@ -1,4 +1,5 @@
 import MockDate from "mockdate";
+import { FunnelbackError } from "../constants/errors";
 
 const { logEntry, errorEntry } = require("./logEntry");
 const { LOG_TYPES, HTTP_CODES } = require("../constants/constants.js");
@@ -139,13 +140,15 @@ test("Funnelback error log is correct", () => {
         `${process.env.BASE_URL}?collection=${process.env.COLLECTION}&form=${process.env.FORM}&profile=${process.env.PROFILE}&smeta_contentType=${process.env.SMETA_CONTENT_TYPE}` +
         "&query=maths";
 
-    expect(
-        logEntry(event, 500, LOG_TYPES.APPLICATION, {
-            message: "Funnelback search problem",
-            funnelBackUrl: searchUrl,
-            statusText: "Internal Server Error",
-        })
-    ).toEqual({
+    const errorDetails = {
+        funnelBackUrl: searchUrl,
+        status: 500,
+        statusText: "Internal Server Error",
+    }
+
+    const log = errorEntry(event, new FunnelbackError("There is a problem with the Funnelback search.", errorDetails), null);
+    
+    expect(log).toEqual({
         "ip.client": "144.32.90.155",
         "ip.source": "130.176.97.157",
         "ip.sourcePort": "443",
@@ -156,11 +159,13 @@ test("Funnelback error log is correct", () => {
         queryStringParameters: {
             search: "maths",
         },
-        additionalDetails: {
-            message: "Funnelback search problem",
-            funnelBackUrl: searchUrl,
-            statusText: "Internal Server Error",
-        },
+        additionalDetails: null,
+        err: new FunnelbackError("There is a problem with the Funnelback search.")
+    });
+    expect(log.err.details).toEqual({
+        funnelBackUrl: searchUrl,
+        status: 500,
+        statusText: "Internal Server Error",
     });
 });
 
@@ -173,7 +178,7 @@ test("errorEntry handles a test error", () => {
 
     const err = new Error("test error");
 
-    const result = errorEntry(event, null, err);
+    const result = errorEntry(event, err, null);
 
     expect(result.err).toBe(err);
     expect(result.queryStringParameters.search).toBe("biology");
