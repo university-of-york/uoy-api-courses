@@ -13,7 +13,6 @@ const constantPartOfSearchUrl = `${process.env.BASE_URL}?collection=${process.en
 beforeEach(() => {
     fetch.resetMocks();
     logger.info.mockReset();
-    logger.warn.mockReset();
     logger.error.mockReset();
     logEntry.mockReset();
     errorEntry.mockReset();
@@ -467,7 +466,6 @@ describe("Logger output", () => {
         await courses(event);
 
         expect(logger.error).toBeCalledTimes(0);
-        expect(logger.warn).toBeCalledTimes(0);
         expect(logger.info).toBeCalledTimes(1);
         expect(logEntry).toBeCalledWith({ queryStringParameters: { search: "physics" } }, 200, "audit", {
             numberOfMatches: undefined,
@@ -485,7 +483,6 @@ describe("Logger output", () => {
         await courses(event);
 
         expect(logger.error).toBeCalledTimes(0);
-        expect(logger.warn).toBeCalledTimes(0);
         expect(logger.info).toBeCalledTimes(1);
         expect(errorEntry).toBeCalledWith(
             { queryStringParameters: {} },
@@ -511,7 +508,6 @@ describe("Logger output", () => {
         await courses(event);
 
         expect(logger.error).toBeCalledTimes(1);
-        expect(logger.warn).toBeCalledTimes(0);
         expect(logger.info).toBeCalledTimes(0);
         expect(errorEntry).toBeCalledWith(
             { queryStringParameters: { search: "physics" } },
@@ -534,7 +530,6 @@ describe("Logger output", () => {
         await courses(event);
 
         expect(logger.error).toBeCalledTimes(1);
-        expect(logger.warn).toBeCalledTimes(0);
         expect(logger.info).toBeCalledTimes(0);
         expect(errorEntry).toBeCalledWith(
             { queryStringParameters: { search: "physics" } },
