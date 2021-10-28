@@ -517,7 +517,7 @@ describe("Logger output", () => {
         expect(logger.error).toBeCalledWith({ foo: "bar" });
     });
 
-    it("return only an error log when catching a malformed JSON", async () => {
+    it("logs an error when catching malformed JSON", async () => {
         const event = {
             queryStringParameters: {
                 search: "physics",
