@@ -1,20 +1,26 @@
 ("use strict");
 const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
-const { logEntry } = require("./utils/logEntry");
+const { logEntry, errorEntry } = require("./utils/logEntry");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
 const { overrideUrls } = require("./utils/overrideUrls");
-const { LOG_TYPES, HTTP_CODES } = require("./constants/constants.js");
+const { LOG_TYPES, HTTP_CODES } = require("./constants/constants");
+const { logger } = require("./utils/logger");
+const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
 
 module.exports.courses = async (event) => {
     try {
         const requestParams = event.queryStringParameters;
 
         if (!requestParams || !requestParams.search) {
-            const errorDetails = { message: "The search parameter is required." };
-            console.warn(logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, errorDetails));
-            return error(errorDetails.message, HTTP_CODES.BAD_REQUEST, "Bad Request", event.path);
+            const errDetails = {
+                status: HTTP_CODES.BAD_REQUEST,
+                statusText: "Bad Request",
+            };
+            const err = new NoQueryGivenError("The search parameter is required.", errDetails);
+            logger.info(errorEntry(event, err, null));
+            return error(err.message, err.details.status, err.details.statusText, event.path);
         }
 
         const url = coursesUrl(requestParams);
@@ -28,17 +34,11 @@ module.exports.courses = async (event) => {
 
         if (!searchResponse.ok) {
             const errorDetails = {
-                message: "Funnelback search problem",
                 funnelBackUrl: url,
+                status: searchResponse.status,
                 statusText: searchResponse.statusText,
             };
-            console.error(logEntry(event, searchResponse.status, LOG_TYPES.ERROR, errorDetails));
-            return error(
-                "There is a problem with the Funnelback search.",
-                searchResponse.status,
-                searchResponse.statusText,
-                event.path
-            );
+            throw new FunnelbackError("There is a problem with the Funnelback search.", errorDetails);
         }
 
         const body = await searchResponse.json();
@@ -47,11 +47,19 @@ module.exports.courses = async (event) => {
         results = overrideUrls(results);
 
         const additionalDetails = { numberOfMatches };
-        console.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
+        logger.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
 
         return success({ numberOfMatches, results });
-    } catch (e) {
-        console.error(e);
-        return error("An error has occurred.", HTTP_CODES.INTERNAL_SERVER_ERROR, "Internal Server Error", event.path);
+    } catch (err) {
+        if (!err.details) {
+            err.details = {
+                funnelBackUrl: null,
+                status: HTTP_CODES.INTERNAL_SERVER_ERROR,
+                statusText: "Internal Server Error",
+            };
+        }
+
+        logger.error(errorEntry(event, err, null));
+        return error(err.message, err.details.status, err.details.statusText, event.path);
     }
 };
