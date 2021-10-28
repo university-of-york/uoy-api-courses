@@ -185,5 +185,10 @@ test("errorEntry handles a test error", () => {
     const result = errorEntry(event, err, null);
 
     expect(result.err).toBe(err);
+    expect(result.err.details).toEqual({
+        funnelBackUrl: null,
+        status: null,
+        statusText: null,
+    });
     expect(result.queryStringParameters.search).toBe("biology");
 });
