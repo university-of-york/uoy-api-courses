@@ -1,8 +1,8 @@
 import MockDate from "mockdate";
-import { FunnelbackError } from "../constants/errors";
+import { FunnelbackError, NoQueryGivenError } from "../constants/errors";
 
-const { logEntry, errorEntry } = require("./logEntry");
-const { LOG_TYPES, HTTP_CODES } = require("../constants/constants.js");
+const { logEntry } = require("./logEntry");
+const { HTTP_CODES } = require("../constants/constants.js");
 
 test("Required data added to log when supplied in event object", () => {
     MockDate.set(new Date());
@@ -48,37 +48,28 @@ test("Required data added to log when supplied in event object", () => {
         },
     };
 
-    expect(logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT, { numberOfMatches: 66 })).toEqual({
-        "ip.client": "144.32.90.155",
-        "ip.source": "144.32.90.155, 130.176.97.157",
-        "ip.sourcePort": "443",
-        correlationId: "theApiId",
-        "self.type": "GET",
-        "self.statusCode": 200,
-        type: "audit",
-        queryStringParameters: {
-            search: "biology",
-        },
-        additionalDetails: {
+    expect(logEntry(event, { numberOfMatches: 66 })).toEqual({
+        details: {
+            parameters: {
+                search: "biology",
+            },
             numberOfMatches: 66,
+            clientIp: "144.32.90.155",
+            application: "uoy-api-courses",
         },
     });
 });
 
-test("Nonexistent fields are returned as null instead of skipped", () => {
+test("Client IP is returned as null instead of skipped when undefined", () => {
     const event = {
         queryStringParameters: {
             search: "biology",
         },
     };
 
-    const result = logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT);
+    const result = logEntry(event, null);
 
-    expect(result["ip.client"]).toBeNull();
-    expect(result["ip.source"]).toBeNull();
-    expect(result["ip.sourcePort"]).toBeNull();
-    expect(result.correlationId).toBeNull();
-    expect(result["self.type"]).toBeNull();
+    expect(result.details.clientIp).toBeNull();
 });
 
 test("No search results error log is correct", () => {
@@ -99,20 +90,26 @@ test("No search results error log is correct", () => {
         },
     };
 
-    expect(
-        logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.APPLICATION, { message: "The search parameter is required." })
-    ).toEqual({
-        "ip.client": "144.32.90.155",
-        "ip.source": "130.176.97.157",
-        "ip.sourcePort": "443",
-        correlationId: "theApiId",
-        "self.type": "GET",
-        "self.statusCode": 400,
-        type: "application",
-        queryStringParameters: {},
-        additionalDetails: {
-            message: "The search parameter is required.",
+    const errDetails = {
+        funnelBackUrl: null,
+        status: HTTP_CODES.BAD_REQUEST,
+        statusText: "Bad Request",
+    };
+
+    const log = logEntry(event, null, new NoQueryGivenError("The search parameter is required.", errDetails));
+
+    expect(log).toEqual({
+        details: {
+            clientIp: "144.32.90.155",
+            parameters: {},
+            application: "uoy-api-courses",
         },
+        error: new NoQueryGivenError("The search parameter is required."),
+    });
+    expect(log.error.details).toEqual({
+        funnelBackUrl: null,
+        status: 400,
+        statusText: "Bad Request",
     });
 });
 
@@ -146,49 +143,44 @@ test("Funnelback error log is correct", () => {
         statusText: "Internal Server Error",
     };
 
-    const log = errorEntry(
+    const log = logEntry(
         event,
-        new FunnelbackError("There is a problem with the Funnelback search.", errorDetails),
-        null
+        null,
+        new FunnelbackError("There is a problem with the Funnelback search.", errorDetails)
     );
 
     expect(log).toEqual({
-        "ip.client": "144.32.90.155",
-        "ip.source": "130.176.97.157",
-        "ip.sourcePort": "443",
-        correlationId: "theApiId",
-        "self.type": "GET",
-        "self.statusCode": 500,
-        type: "application",
-        queryStringParameters: {
-            search: "maths",
+        details: {
+            clientIp: "144.32.90.155",
+            parameters: {
+                search: "maths",
+            },
+            application: "uoy-api-courses",
         },
-        additionalDetails: null,
-        err: new FunnelbackError("There is a problem with the Funnelback search."),
+        error: new FunnelbackError("There is a problem with the Funnelback search."),
     });
-    expect(log.err.details).toEqual({
+    expect(log.error.details).toEqual({
         funnelBackUrl: searchUrl,
         status: 500,
         statusText: "Internal Server Error",
     });
 });
-
-test("errorEntry handles a test error", () => {
+test("Generic error log is correct", () => {
     const event = {
         queryStringParameters: {
             search: "biology",
         },
+        requestContext: {
+            identity: {
+                sourceIp: "144.32.100.16",
+            },
+            apiId: "theApiId",
+        },
     };
 
-    const err = new Error("test error");
+    const error = new Error("test error");
 
-    const result = errorEntry(event, err, null);
+    const result = logEntry(event, null, error);
 
-    expect(result.err).toBe(err);
-    expect(result.err.details).toEqual({
-        funnelBackUrl: null,
-        status: null,
-        statusText: null,
-    });
-    expect(result.queryStringParameters.search).toBe("biology");
+    expect(result.error).toBe(error);
 });
