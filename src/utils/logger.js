@@ -9,25 +9,21 @@ module.exports.logger = pino({
             return { level: label };
         },
     },
+    // Serializers parse a certain field returning a JSONifiable object
+    //
+    // By default Pino will serialize the `err` field for errors but we
+    // want to move that functionality to the `error` field instead
+    serializers: {
+        error: pino.stdSerializers.err,
+    },
     // Base controls what fields are included in the JSON
     // object, by default Pino includes fields like pid which
     // are not very relevant in a serverless context
-    base: {
-        "ip.client": null,
-        "ip.source": null,
-        "ip.sourcePort": null,
-        "req.user": null,
-        "req.service": "uoy-app-course-search",
-        correlationId: null,
-        "self.application": "uoy-api-courses",
-        "self.type": null,
-        "self.statusCode": null,
-        "self.version": "v1",
-        sensitive: false,
-        schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
-        type: null,
-    },
+    base: {},
     // Whilst we could use `pino.stdTimeFunctions.isoTime`, it doesn't
     // have a key of `timestamp` which our AWS policy requires
     timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
+    // Whenever a string is given alongside an object to the logger it's the message.
+    // We're updating it from `msg` to `message` to match our AWS standard
+    messageKey: "message",
 });
