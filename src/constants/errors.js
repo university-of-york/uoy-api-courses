@@ -1,7 +1,7 @@
 class NoQueryGivenError extends Error {
     constructor(message, details) {
         super(message);
-        this.name = "NoQueryGivenError";
+        this.type = "NoQueryGivenError";
         this.details = details;
     }
 }
@@ -9,7 +9,7 @@ class NoQueryGivenError extends Error {
 class FunnelbackError extends Error {
     constructor(message, details) {
         super(message);
-        this.name = "FunnelbackError";
+        this.type = "FunnelbackError";
         this.details = details;
     }
 }
