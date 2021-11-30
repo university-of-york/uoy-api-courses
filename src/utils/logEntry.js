@@ -5,18 +5,18 @@ const logEntry = (event, details, error) => {
 
     if (!entry.details) entry.details = {};
 
+    entry.details.application = "uoy-api-courses";
+
+    if (!entry.details.parameters) entry.details.parameters = event.queryStringParameters;
+    entry.details.clientIp = event?.requestContext?.identity?.sourceIp || null;
+
     if (error) {
         entry.error = error;
-        if (error.details && error.details.statusCode) {
+        if (error.details && error.details.status) {
             entry.details.statusCode = error.details.status;
             entry.details.statusText = error.details.statusText;
         }
     }
-
-    if (!entry.details.parameters) entry.details.parameters = event.queryStringParameters;
-    if (!entry.details.application) entry.details.application = "uoy-api-courses";
-
-    entry.details.clientIp = event?.requestContext?.identity?.sourceIp || null;
 
     return entry;
 };

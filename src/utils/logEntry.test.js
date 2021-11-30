@@ -103,6 +103,8 @@ test("No search results error log is correct", () => {
             clientIp: "144.32.90.155",
             parameters: {},
             application: "uoy-api-courses",
+            statusCode: 400,
+            statusText: "Bad Request",
         },
         error: new NoQueryGivenError("The search parameter is required."),
     });
@@ -156,6 +158,8 @@ test("Funnelback error log is correct", () => {
                 search: "maths",
             },
             application: "uoy-api-courses",
+            statusCode: 500,
+            statusText: "Internal Server Error",
         },
         error: new FunnelbackError("There is a problem with the Funnelback search."),
     });
@@ -183,4 +187,71 @@ test("Generic error log is correct", () => {
     const result = logEntry(event, null, error);
 
     expect(result.error).toBe(error);
+});
+
+test("the error.details status and statusText is copied to the log details", () => {
+    const event = {
+        queryStringParameters: {
+            search: "biology",
+        },
+        requestContext: {
+            identity: {
+                sourceIp: "144.32.100.16",
+            },
+            apiId: "theApiId",
+        },
+    };
+
+    const error = new Error("test error");
+    error.details = {
+        status: 418,
+        statusText: "I'm a teapot",
+    };
+
+    const result = logEntry(event, null, error);
+
+    expect(result.error).toEqual(new Error("test error"));
+
+    expect(result.error.details).toEqual({
+        status: 418,
+        statusText: "I'm a teapot",
+    });
+});
+
+test("when no parameters are set in details, it will try to get them from the event", () => {
+    const event = {
+        queryStringParameters: {
+            search: "electronic engineering",
+        },
+        requestContext: {
+            identity: {
+                sourceIp: "144.32.100.16",
+            },
+            apiId: "theApiId",
+        },
+    };
+
+    const result = logEntry(event, null);
+
+    expect(result.details.parameters).toEqual({
+        search: "electronic engineering",
+    });
+});
+
+test("when parameters are set in details, do nothing", () => {
+    const event = {
+        queryStringParameters: {},
+        requestContext: {
+            identity: {
+                sourceIp: "144.32.100.16",
+            },
+            apiId: "theApiId",
+        },
+    };
+
+    const result = logEntry(event, { parameters: { foo: "bar" } });
+
+    expect(result.details.parameters).toEqual({
+        foo: "bar",
+    });
 });
