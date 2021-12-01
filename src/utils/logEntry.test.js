@@ -255,3 +255,25 @@ test("when parameters are set in details, do nothing", () => {
         foo: "bar",
     });
 });
+
+class DemoError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "DemoError";
+    }
+}
+test.each([
+    [new Error("Test Generic Error"), "Error"],
+    [new SyntaxError("Test Syntax Error"), "SyntaxError"],
+    [new DemoError("Test Demo Error"), "DemoError"],
+])("when the error type is not present, use the error name", async (error, expectedType) => {
+    const event = {
+        queryStringParameters: {
+            search: "physics",
+        },
+    };
+
+    const result = logEntry(event, null, error);
+
+    expect(result.error.type).toEqual(expectedType);
+});

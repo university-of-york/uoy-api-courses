@@ -16,6 +16,7 @@ const logEntry = (event, details, error) => {
             entry.details.statusCode = error.details.status;
             entry.details.statusText = error.details.statusText;
         }
+        if (!entry.error.type) entry.error.type = entry.error.name;
     }
 
     return entry;

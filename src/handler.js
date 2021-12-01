@@ -19,9 +19,7 @@ module.exports.courses = async (event) => {
                 status: HTTP_CODES.BAD_REQUEST,
                 statusText: "Bad Request",
             };
-            const err = new NoQueryGivenError("The search parameter is required.", errorDetails);
-            logger.info(logEntry(event, null, err));
-            return error(err.message, err.details.status, err.details.statusText, event.path);
+            throw new NoQueryGivenError("The search parameter is required.", errorDetails);
         }
 
         const url = coursesUrl(requestParams);
@@ -60,11 +58,13 @@ module.exports.courses = async (event) => {
                 statusText: "Internal Server Error",
             };
 
-        if (!err.type) err.type = err.name || "UnknownError";
-
-        if (!err.message) err.message = "Internal Server Error";
-
-        logger.error(logEntry(event, null, err), "Internal Server Error");
+        if (err.type === "NoQueryGivenError") {
+            // User error, only an info severity
+            logger.info(logEntry(event, null, err));
+        } else {
+            // Server error, error severity
+            logger.error(logEntry(event, null, err), "Internal Server Error");
+        }
         return error(err.message, err.details.status, err.details.statusText, event.path);
     }
 };
