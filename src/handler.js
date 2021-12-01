@@ -65,6 +65,7 @@ module.exports.courses = async (event) => {
             // Server error, error severity
             logger.error(logEntry(event, null, err), "Internal Server Error");
         }
+
         return error(err.message, err.details.status, err.details.statusText, event.path);
     }
 };
