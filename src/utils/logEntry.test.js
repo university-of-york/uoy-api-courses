@@ -239,7 +239,7 @@ test("when no parameters are set in details, it will try to get them from the ev
     });
 });
 
-test("when parameters are set in details, do nothing", () => {
+test("don't use parameters from the event object when they have been passed in through the details object", () => {
     const event = {
         queryStringParameters: {},
         requestContext: {
