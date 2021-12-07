@@ -3,7 +3,7 @@ const logEntry = (event, details, error) => {
         details,
     };
 
-    if (!entry.details) entry.details = {};
+    entry.details = entry.details ?? {};
 
     entry.details.application = "uoy-api-courses";
 
@@ -17,7 +17,7 @@ const logEntry = (event, details, error) => {
             entry.details.statusText = error.details.statusText;
         }
 
-        if (!entry.error.type) entry.error.type = entry.error.name;
+        entry.error.type = entry.error.type ?? entry.error.name;
     }
 
     return entry;
