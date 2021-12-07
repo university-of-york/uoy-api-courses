@@ -6,8 +6,7 @@ const logEntry = (event, details, error) => {
     entry.details = entry.details ?? {};
 
     entry.details.application = "uoy-api-courses";
-
-    if (!entry.details.parameters) entry.details.parameters = event.queryStringParameters;
+    entry.details.parameters = event.queryStringParameters;
     entry.details.clientIp = event?.requestContext?.identity?.sourceIp || null;
 
     if (error) {

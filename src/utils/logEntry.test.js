@@ -239,24 +239,6 @@ test("when no parameters are set in details, it will try to get them from the ev
     });
 });
 
-test("don't use parameters from the event object when they have been passed in through the details object", () => {
-    const event = {
-        queryStringParameters: {},
-        requestContext: {
-            identity: {
-                sourceIp: "144.32.100.16",
-            },
-            apiId: "theApiId",
-        },
-    };
-
-    const result = logEntry(event, { parameters: { foo: "bar" } });
-
-    expect(result.details.parameters).toEqual({
-        foo: "bar",
-    });
-});
-
 class DemoError extends Error {
     constructor(message) {
         super(message);
