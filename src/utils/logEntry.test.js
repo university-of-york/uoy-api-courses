@@ -268,7 +268,7 @@ test.each([
     [new Error("Test Generic Error"), "Error"],
     [new SyntaxError("Test Syntax Error"), "SyntaxError"],
     [new DemoError("Test Demo Error"), "DemoError"],
-])("when the error type is not present, use the error name", async (error, expectedType) => {
+])("when the error type is not present, use the error name", (error, expectedType) => {
     const event = {
         queryStringParameters: {
             search: "physics",
