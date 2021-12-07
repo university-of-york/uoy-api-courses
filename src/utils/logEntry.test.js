@@ -169,6 +169,7 @@ test("Funnelback error log is correct", () => {
         statusText: "Internal Server Error",
     });
 });
+
 test("Generic error log is correct", () => {
     const event = {
         queryStringParameters: {
@@ -262,6 +263,7 @@ class DemoError extends Error {
         this.name = "DemoError";
     }
 }
+
 test.each([
     [new Error("Test Generic Error"), "Error"],
     [new SyntaxError("Test Syntax Error"), "SyntaxError"],
