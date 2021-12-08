@@ -10,35 +10,6 @@ describe("Logger", () => {
         expect(res).toEqual(expect.anything());
         expect(() => JSON.parse(res)).not.toThrow();
     });
-    it("has IP fields", async () => {
-        const res = await invokeDemoLoggerGetResult();
-        const resJSON = JSON.parse(res);
-        expect(resJSON["ip.client"]).toBeDefined();
-        expect(resJSON["ip.source"]).toBeDefined();
-        expect(resJSON["ip.sourcePort"]).toBeDefined();
-    });
-    it("has request fields", async () => {
-        const res = await invokeDemoLoggerGetResult();
-        const resJSON = JSON.parse(res);
-        expect(resJSON["req.user"]).toBeDefined();
-        expect(resJSON["req.service"]).toEqual("uoy-app-course-search");
-    });
-    it("has self fields", async () => {
-        const res = await invokeDemoLoggerGetResult();
-        const resJSON = JSON.parse(res);
-        expect(resJSON["self.application"]).toEqual("uoy-api-courses");
-        expect(resJSON["self.type"]).toBeDefined();
-        expect(resJSON["self.statusCode"]).toBeDefined();
-        expect(resJSON["self.version"]).toEqual("v1");
-    });
-    it("has miscellaneous fields", async () => {
-        const res = await invokeDemoLoggerGetResult();
-        const resJSON = JSON.parse(res);
-        expect(resJSON.correlationId).toBeDefined();
-        expect(resJSON.sensitive).toBeDefined();
-        expect(resJSON.schemaURI).toEqual("https://university-of-york.github.io/uoy-api-courses/");
-        expect(resJSON.type).toBeDefined();
-    });
     it("has output level as a string", async () => {
         const res = await invokeDemoLoggerGetResult();
         const resJSON = JSON.parse(res);

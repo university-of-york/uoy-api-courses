@@ -1,11 +1,11 @@
 ("use strict");
 const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
-const { logEntry, errorEntry } = require("./utils/logEntry");
+const { logEntry } = require("./utils/logEntry");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
 const { overrideUrls } = require("./utils/overrideUrls");
-const { LOG_TYPES, HTTP_CODES } = require("./constants/constants");
+const { HTTP_CODES } = require("./constants/constants");
 const { logger } = require("./utils/logger");
 const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
 
@@ -14,13 +14,12 @@ module.exports.courses = async (event) => {
         const requestParams = event.queryStringParameters;
 
         if (!requestParams || !requestParams.search) {
-            const errDetails = {
+            const errorDetails = {
+                funnelBackUrl: null,
                 status: HTTP_CODES.BAD_REQUEST,
                 statusText: "Bad Request",
             };
-            const err = new NoQueryGivenError("The search parameter is required.", errDetails);
-            logger.info(errorEntry(event, err, null));
-            return error(err.message, err.details.status, err.details.statusText, event.path);
+            throw new NoQueryGivenError("The search parameter is required.", errorDetails);
         }
 
         const url = coursesUrl(requestParams);
@@ -46,20 +45,27 @@ module.exports.courses = async (event) => {
         let results = transformResponse(body.results);
         results = overrideUrls(results);
 
-        const additionalDetails = { numberOfMatches };
-        logger.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
+        logger.info(logEntry(event, { numberOfMatches, statusCode: searchResponse.status }), "Course search conducted");
 
         return success({ numberOfMatches, results });
     } catch (err) {
-        if (!err.details) {
+        // When there is an unknown error it is likely there is no error details passed, so
+        // we are initialising an empty error details
+        if (!err.details)
             err.details = {
                 funnelBackUrl: null,
                 status: HTTP_CODES.INTERNAL_SERVER_ERROR,
                 statusText: "Internal Server Error",
             };
+
+        if (err.type === "NoQueryGivenError") {
+            // User error, only an info severity
+            logger.info(logEntry(event, null, err), "No query given");
+        } else {
+            // Server error, error severity
+            logger.error(logEntry(event, null, err), err.message);
         }
 
-        logger.error(errorEntry(event, err, null));
         return error(err.message, err.details.status, err.details.statusText, event.path);
     }
 };

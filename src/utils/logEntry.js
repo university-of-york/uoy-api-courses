@@ -1,48 +1,25 @@
-const { LOG_TYPES } = require("../constants/constants");
-
-const logEntry = (event, statuscode, logType, additionalDetails) => {
-    const getHeaderInfo = () => {
-        const requestHeaders = event?.headers;
-
-        const source = requestHeaders ? requestHeaders["X-Forwarded-For"] : null;
-        const sourcePort = requestHeaders ? requestHeaders["X-Forwarded-Port"] : null;
-        return {
-            source,
-            sourcePort,
-        };
+const logEntry = (event, details, error) => {
+    const entry = {
+        details,
     };
 
-    const headers = getHeaderInfo();
+    entry.details = entry.details ?? {};
 
-    return {
-        "ip.client": event?.requestContext?.identity?.sourceIp || null,
-        "ip.source": headers.source || null,
-        "ip.sourcePort": headers.sourcePort || null,
-        correlationId: event?.requestContext?.apiId || null,
-        "self.type": event?.httpMethod || null,
-        "self.statusCode": statuscode,
-        type: logType,
-        queryStringParameters: event.queryStringParameters,
-        additionalDetails,
-    };
-};
+    entry.details.application = "uoy-api-courses";
+    entry.details.parameters = event.queryStringParameters;
+    entry.details.clientIp = event?.requestContext?.identity?.sourceIp || null;
 
-// In order for Pino to serialise errors correctly it either needs to be passed the error
-// directly or it needs to be under the key `err`
-const errorEntry = (event, error, additionalDetails) => {
-    // When there is an unknown error it is likely there is no error details passed, so
-    // we are initialising an empty error details
-    if (!error.details) {
-        error.details = {
-            funnelBackUrl: null,
-            status: null,
-            statusText: null,
-        };
+    if (error) {
+        entry.error = error;
+        if (error.details && error.details.status) {
+            entry.details.statusCode = error.details.status;
+            entry.details.statusText = error.details.statusText;
+        }
+
+        entry.error.type = entry.error.type ?? entry.error.name;
     }
 
-    const logMessage = logEntry(event, error.details.status, LOG_TYPES.APPLICATION, additionalDetails);
-    logMessage.err = error;
-    return logMessage;
+    return entry;
 };
 
-module.exports = { logEntry, errorEntry };
+module.exports = { logEntry };
