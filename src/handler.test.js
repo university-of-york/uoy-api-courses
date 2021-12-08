@@ -480,7 +480,7 @@ describe("Logger output", () => {
             { queryStringParameters: { search: "physics" } },
             { statusCode: 200, numberOfMatches: undefined }
         );
-        expect(logger.info).toBeCalledWith({ foo: "bar" });
+        expect(logger.info).toBeCalledWith({ foo: "bar" }, "Course search conducted");
     });
 
     it("logs a single info if there are no search parameters given", async () => {

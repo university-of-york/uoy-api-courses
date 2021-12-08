@@ -45,7 +45,7 @@ module.exports.courses = async (event) => {
         let results = transformResponse(body.results);
         results = overrideUrls(results);
 
-        logger.info(logEntry(event, { numberOfMatches, statusCode: searchResponse.status }));
+        logger.info(logEntry(event, { numberOfMatches, statusCode: searchResponse.status }), "Course search conducted");
 
         return success({ numberOfMatches, results });
     } catch (err) {
