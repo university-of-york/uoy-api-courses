@@ -524,7 +524,7 @@ describe("Logger output", () => {
             null,
             new FunnelbackError("There is a problem with the Funnelback search.")
         );
-        expect(logger.error).toBeCalledWith(mockEntry, "Internal Server Error");
+        expect(logger.error).toBeCalledWith(mockEntry, "There is a problem with the Funnelback search.");
     });
 
     it("logs an error when catching malformed JSON", async () => {
@@ -546,6 +546,9 @@ describe("Logger output", () => {
             null,
             new Error("invalid json response body at  reason: Unexpected end of JSON input")
         );
-        expect(logger.error).toBeCalledWith(mockEntry, "Internal Server Error");
+        expect(logger.error).toBeCalledWith(
+            mockEntry,
+            "invalid json response body at  reason: Unexpected end of JSON input"
+        );
     });
 });

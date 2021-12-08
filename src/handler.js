@@ -63,7 +63,7 @@ module.exports.courses = async (event) => {
             logger.info(logEntry(event, null, err), "No query given");
         } else {
             // Server error, error severity
-            logger.error(logEntry(event, null, err), "Internal Server Error");
+            logger.error(logEntry(event, null, err), err.message);
         }
 
         return error(err.message, err.details.status, err.details.statusText, event.path);
