@@ -499,7 +499,7 @@ describe("Logger output", () => {
             null,
             new NoQueryGivenError("The search parameter is required.")
         );
-        expect(logger.info).toBeCalledWith(mockEntry);
+        expect(logger.info).toBeCalledWith(mockEntry, "No query given");
     });
 
     it("logs a single error when there is a funnelback problem", async () => {
