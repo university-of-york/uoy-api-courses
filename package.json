@@ -33,6 +33,7 @@
     "xo": "^0.33.1"
   },
   "dependencies": {
+    "@googleapis/sheets": "^0.3.0",
     "node-fetch": "^2.6.1",
     "pino": "^7.0.2"
   },
