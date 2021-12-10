@@ -8,6 +8,21 @@ const { overrideUrls } = require("./utils/overrideUrls");
 const { HTTP_CODES } = require("./constants/constants");
 const { logger } = require("./utils/logger");
 const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
+const { getClearingCourses } = require("./utils/clearing");
+const { merger } = require("./utils/merger");
+
+let clearing = [];
+
+const prefetchClearing = async () => {
+    try {
+        clearing = await getClearingCourses();
+        console.log(clearing);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+prefetchClearing();
 
 module.exports.courses = async (event) => {
     try {
@@ -47,7 +62,7 @@ module.exports.courses = async (event) => {
 
         logger.info(logEntry(event, { numberOfMatches, statusCode: searchResponse.status }), "Course search conducted");
 
-        return success({ numberOfMatches, results });
+        return success({ numberOfMatches, results: merger(results, clearing) });
     } catch (err) {
         // When there is an unknown error it is likely there is no error details passed, so
         // we are initialising an empty error details
