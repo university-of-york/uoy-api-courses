@@ -8,20 +8,10 @@ const { overrideUrls } = require("./utils/overrideUrls");
 const { HTTP_CODES } = require("./constants/constants");
 const { logger } = require("./utils/logger");
 const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
-const { getClearingCourses } = require("./utils/clearing");
-const { merger } = require("./utils/merger");
+const { getClearingCourses, addClearingData } = require("./utils/clearing");
 
 let clearing = [];
-
-const prefetchClearing = async () => {
-    try {
-        clearing = await getClearingCourses();
-        console.log(clearing);
-    } catch (error) {
-        console.error(error);
-    }
-};
-
+const prefetchClearing = async () => (clearing = await getClearingCourses());
 prefetchClearing();
 
 module.exports.courses = async (event) => {
@@ -57,12 +47,13 @@ module.exports.courses = async (event) => {
 
         const body = await searchResponse.json();
         const numberOfMatches = body.numberOfMatches;
-        let results = transformResponse(body.results);
-        results = overrideUrls(results);
+        const courses = overrideUrls(transformResponse(body.results));
+
+        const results = addClearingData(courses, clearing);
 
         logger.info(logEntry(event, { numberOfMatches, statusCode: searchResponse.status }), "Course search conducted");
 
-        return success({ numberOfMatches, results: merger(results, clearing) });
+        return success({ numberOfMatches, results });
     } catch (err) {
         // When there is an unknown error it is likely there is no error details passed, so
         // we are initialising an empty error details
