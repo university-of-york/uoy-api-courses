@@ -34,6 +34,8 @@ package:
 functions:
   courses:
     handler: src/courses/handler.courses
+  clearing:
+    handler: src/clearing/handler.clearing
 
 plugins:
   - serverless-dotenv-plugin

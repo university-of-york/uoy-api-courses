@@ -70,6 +70,40 @@ paths:
         passthroughBehavior: "when_no_match"
         httpMethod: "POST" #This HAS to be POST for lambda integrations
         type: "aws_proxy"
+
+  /clearing:
+    get:
+      tags:
+        - courses
+      summary: Get courses on clearing and adjustment
+      operationId: clearing
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Clearing'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ':lambda:path/2015-03-31/functions/'
+              - Fn::GetAtt: ["ClearingLambdaFunction", "Arn"]
+              - '/invocations'
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST" #This HAS to be POST for lambda integrations
+        type: "aws_proxy"
+
+
 components:
   responses:
     BadRequest:
@@ -137,6 +171,24 @@ components:
         ucasCode:
           type: string
           example: VL11
+    Clearing:
+        type: object
+        properties:
+          ucasCode:
+            type: string
+            example: G400
+          inClearingOnlyHome:
+            type: boolean
+            example: true
+          inClearingOnlyInternational:
+            type: boolean
+            example: false
+          inAdjustmentOnlyHome:
+            type: boolean
+            example: false
+          inAdjustmentOnlyInternational:
+            type: boolean
+            example: false
     Error:
       type: object
       properties:
