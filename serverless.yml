@@ -33,7 +33,7 @@ package:
 
 functions:
   courses:
-    handler: src/handler.courses
+    handler: src/courses/handler.courses
 
 plugins:
   - serverless-dotenv-plugin
@@ -72,10 +72,17 @@ resources:
 
     # Grant permission for the API to call the lambda - note that lambda name "courses"
     # earlier in this file becomes "CoursesLambdaFunction" in CloudFormation
-    Permission:
+    CoursesPermission:
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName: !GetAtt CoursesLambdaFunction.Arn
+        Action: lambda:InvokeFunction
+        Principal: apigateway.amazonaws.com
+
+    ClearingPermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName: !GetAtt ClearingLambdaFunction.Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
 

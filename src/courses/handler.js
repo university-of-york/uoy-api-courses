@@ -2,12 +2,12 @@
 const fetch = require("node-fetch");
 const { coursesUrl } = require("./utils/constructFunnelbackUrls");
 const { logEntry } = require("./utils/logEntry");
-const { success, error } = require("./utils/format");
+const { success, error } = require("../response");
 const { transformResponse } = require("./utils/transformResponse");
 const { overrideUrls } = require("./utils/overrideUrls");
-const { HTTP_CODES } = require("./constants/constants");
+const { HTTP_CODES } = require("../constants/constants");
 const { logger } = require("./utils/logger");
-const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
+const { NoQueryGivenError, FunnelbackError } = require("../constants/errors");
 
 module.exports.courses = async (event) => {
     try {
