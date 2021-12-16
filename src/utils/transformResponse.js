@@ -13,15 +13,13 @@ module.exports.transformResponse = (response) => {
 
 const transformDistanceLearning = (course) => {
     let distanceLearning;
-    if (course) {
-        if (typeof course.distanceLearning === "string") {
-            distanceLearning = course.distanceLearning.toLowerCase();
-        } else {
-            distanceLearning = "no";
-        }
-
-        course.distanceLearning = distanceLearning === "yes";
+    if (typeof course.distanceLearning === "string") {
+        distanceLearning = course.distanceLearning.toLowerCase();
+    } else {
+        distanceLearning = "no";
     }
+
+    course.distanceLearning = distanceLearning === "yes";
 
     return course;
 };

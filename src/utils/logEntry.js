@@ -1,39 +1,25 @@
-module.exports.logEntry = (event, statuscode, logType, additionalDetails) => {
-    const getHeaderInfo = () => {
-        const requestHeaders = event?.headers;
-
-        const source = requestHeaders ? requestHeaders["X-Forwarded-For"] : null;
-        const sourcePort = requestHeaders ? requestHeaders["X-Forwarded-Port"] : null;
-        return {
-            source,
-            sourcePort,
-        };
+const logEntry = (event, details, error) => {
+    const entry = {
+        details,
     };
 
-    const headers = getHeaderInfo();
+    entry.details = entry.details ?? {};
 
-    return JSON.stringify({
-        timestamp: new Date().toISOString(),
-        ip: {
-            client: event?.requestContext?.identity?.sourceIp || null,
-            source: headers.source || null,
-            sourcePort: headers.sourcePort || null,
-        },
-        req: {
-            user: null,
-            service: "uoy-api-courses",
-        },
-        correlationId: event?.requestContext?.apiId || null,
-        self: {
-            application: "uoy-api-courses",
-            type: event?.httpMethod || null,
-            statusCode: statuscode,
-            version: "v1",
-        },
-        sensitive: false,
-        schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
-        type: logType,
-        queryStringParameters: event.queryStringParameters,
-        additionalDetails,
-    });
+    entry.details.application = "uoy-api-courses";
+    entry.details.parameters = event.queryStringParameters;
+    entry.details.clientIp = event?.requestContext?.identity?.sourceIp || null;
+
+    if (error) {
+        entry.error = error;
+        if (error.details && error.details.status) {
+            entry.details.statusCode = error.details.status;
+            entry.details.statusText = error.details.statusText;
+        }
+
+        entry.error.type = entry.error.type ?? entry.error.name;
+    }
+
+    return entry;
 };
+
+module.exports = { logEntry };

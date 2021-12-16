@@ -1,7 +1,8 @@
 import MockDate from "mockdate";
+import { FunnelbackError, NoQueryGivenError } from "../constants/errors";
 
 const { logEntry } = require("./logEntry");
-const { LOG_TYPES, HTTP_CODES } = require("../constants/constants.js");
+const { HTTP_CODES } = require("../constants/constants.js");
 
 test("Required data added to log when supplied in event object", () => {
     MockDate.set(new Date());
@@ -47,52 +48,28 @@ test("Required data added to log when supplied in event object", () => {
         },
     };
 
-    expect(logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT, { numberOfMatches: 66 })).toEqual(
-        JSON.stringify({
-            timestamp: new Date().toISOString(),
-            ip: {
-                client: "144.32.90.155",
-                source: "144.32.90.155, 130.176.97.157",
-                sourcePort: "443",
-            },
-            req: {
-                user: null,
-                service: "uoy-api-courses",
-            },
-            correlationId: "theApiId",
-            self: {
-                application: "uoy-api-courses",
-                type: "GET",
-                statusCode: 200,
-                version: "v1",
-            },
-            sensitive: false,
-            schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
-            type: "audit",
-            queryStringParameters: {
+    expect(logEntry(event, { numberOfMatches: 66 })).toEqual({
+        details: {
+            parameters: {
                 search: "biology",
             },
-            additionalDetails: {
-                numberOfMatches: 66,
-            },
-        })
-    );
+            numberOfMatches: 66,
+            clientIp: "144.32.90.155",
+            application: "uoy-api-courses",
+        },
+    });
 });
 
-test("Nonexistent fields are returned as null instead of skipped", () => {
+test("Client IP is returned as null instead of skipped when undefined", () => {
     const event = {
         queryStringParameters: {
             search: "biology",
         },
     };
 
-    const result = JSON.parse(logEntry(event, HTTP_CODES.OK, LOG_TYPES.AUDIT));
+    const result = logEntry(event, null);
 
-    expect(result.ip.client).toBeNull();
-    expect(result.ip.source).toBeNull();
-    expect(result.ip.sourcePort).toBeNull();
-    expect(result.correlationId).toBeNull();
-    expect(result.self.type).toBeNull();
+    expect(result.details.clientIp).toBeNull();
 });
 
 test("No search results error log is correct", () => {
@@ -113,36 +90,29 @@ test("No search results error log is correct", () => {
         },
     };
 
-    expect(
-        logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, { message: "The search parameter is required." })
-    ).toEqual(
-        JSON.stringify({
-            timestamp: new Date().toISOString(),
-            ip: {
-                client: "144.32.90.155",
-                source: "130.176.97.157",
-                sourcePort: "443",
-            },
-            req: {
-                user: null,
-                service: "uoy-api-courses",
-            },
-            correlationId: "theApiId",
-            self: {
-                application: "uoy-api-courses",
-                type: "GET",
-                statusCode: 400,
-                version: "v1",
-            },
-            sensitive: false,
-            schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
-            type: "error",
-            queryStringParameters: {},
-            additionalDetails: {
-                message: "The search parameter is required.",
-            },
-        })
-    );
+    const errDetails = {
+        funnelBackUrl: null,
+        status: HTTP_CODES.BAD_REQUEST,
+        statusText: "Bad Request",
+    };
+
+    const log = logEntry(event, null, new NoQueryGivenError("The search parameter is required.", errDetails));
+
+    expect(log).toEqual({
+        details: {
+            clientIp: "144.32.90.155",
+            parameters: {},
+            application: "uoy-api-courses",
+            statusCode: 400,
+            statusText: "Bad Request",
+        },
+        error: new NoQueryGivenError("The search parameter is required."),
+    });
+    expect(log.error.details).toEqual({
+        funnelBackUrl: null,
+        status: 400,
+        statusText: "Bad Request",
+    });
 });
 
 test("Funnelback error log is correct", () => {
@@ -169,42 +139,125 @@ test("Funnelback error log is correct", () => {
         `${process.env.BASE_URL}?collection=${process.env.COLLECTION}&form=${process.env.FORM}&profile=${process.env.PROFILE}&smeta_contentType=${process.env.SMETA_CONTENT_TYPE}` +
         "&query=maths";
 
-    expect(
-        logEntry(event, 500, LOG_TYPES.ERROR, {
-            message: "Funnelback search problem",
-            funnelBackUrl: searchUrl,
-            statusText: "Internal Server Error",
-        })
-    ).toEqual(
-        JSON.stringify({
-            timestamp: new Date().toISOString(),
-            ip: {
-                client: "144.32.90.155",
-                source: "130.176.97.157",
-                sourcePort: "443",
-            },
-            req: {
-                user: null,
-                service: "uoy-api-courses",
-            },
-            correlationId: "theApiId",
-            self: {
-                application: "uoy-api-courses",
-                type: "GET",
-                statusCode: 500,
-                version: "v1",
-            },
-            sensitive: false,
-            schemaURI: "https://university-of-york.github.io/uoy-api-courses/",
-            type: "error",
-            queryStringParameters: {
+    const errorDetails = {
+        funnelBackUrl: searchUrl,
+        status: 500,
+        statusText: "Internal Server Error",
+    };
+
+    const log = logEntry(
+        event,
+        null,
+        new FunnelbackError("There is a problem with the Funnelback search.", errorDetails)
+    );
+
+    expect(log).toEqual({
+        details: {
+            clientIp: "144.32.90.155",
+            parameters: {
                 search: "maths",
             },
-            additionalDetails: {
-                message: "Funnelback search problem",
-                funnelBackUrl: searchUrl,
-                statusText: "Internal Server Error",
+            application: "uoy-api-courses",
+            statusCode: 500,
+            statusText: "Internal Server Error",
+        },
+        error: new FunnelbackError("There is a problem with the Funnelback search."),
+    });
+    expect(log.error.details).toEqual({
+        funnelBackUrl: searchUrl,
+        status: 500,
+        statusText: "Internal Server Error",
+    });
+});
+
+test("Generic error log is correct", () => {
+    const event = {
+        queryStringParameters: {
+            search: "biology",
+        },
+        requestContext: {
+            identity: {
+                sourceIp: "144.32.100.16",
             },
-        })
-    );
+            apiId: "theApiId",
+        },
+    };
+
+    const error = new Error("test error");
+
+    const result = logEntry(event, null, error);
+
+    expect(result.error).toBe(error);
+});
+
+test("the error.details status and statusText is copied to the log details", () => {
+    const event = {
+        queryStringParameters: {
+            search: "biology",
+        },
+        requestContext: {
+            identity: {
+                sourceIp: "144.32.100.16",
+            },
+            apiId: "theApiId",
+        },
+    };
+
+    const error = new Error("test error");
+    error.details = {
+        status: 418,
+        statusText: "I'm a teapot",
+    };
+
+    const result = logEntry(event, null, error);
+
+    expect(result.error).toEqual(new Error("test error"));
+
+    expect(result.error.details).toEqual({
+        status: 418,
+        statusText: "I'm a teapot",
+    });
+});
+
+test("when no parameters are set in details, it will try to get them from the event", () => {
+    const event = {
+        queryStringParameters: {
+            search: "electronic engineering",
+        },
+        requestContext: {
+            identity: {
+                sourceIp: "144.32.100.16",
+            },
+            apiId: "theApiId",
+        },
+    };
+
+    const result = logEntry(event, null);
+
+    expect(result.details.parameters).toEqual({
+        search: "electronic engineering",
+    });
+});
+
+class DemoError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "DemoError";
+    }
+}
+
+test.each([
+    [new Error("Test Generic Error"), "Error"],
+    [new SyntaxError("Test Syntax Error"), "SyntaxError"],
+    [new DemoError("Test Demo Error"), "DemoError"],
+])("when the error type is not present, use the error name", (error, expectedType) => {
+    const event = {
+        queryStringParameters: {
+            search: "physics",
+        },
+    };
+
+    const result = logEntry(event, null, error);
+
+    expect(result.error.type).toEqual(expectedType);
 });

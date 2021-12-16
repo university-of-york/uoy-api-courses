@@ -1,11 +1,29 @@
 const { courses } = require("./handler");
-const { HTTP_CODES } = require("./constants/constants.js");
+const { HTTP_CODES } = require("./constants/constants");
 const fetch = require("jest-fetch-mock");
+const { logger } = require("./utils/logger");
+const { logEntry } = require("./utils/logEntry");
+const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
+
+jest.mock("./utils/logger");
+jest.mock("./utils/logEntry");
 
 const constantPartOfSearchUrl = `${process.env.BASE_URL}?collection=${process.env.COLLECTION}&form=${process.env.FORM}&profile=${process.env.PROFILE}&smeta_contentType=${process.env.SMETA_CONTENT_TYPE}`;
 
+const mockEntry = {
+    details: { clientIp: "144.32.100.16", parameters: { foo: "bar" }, statusCode: 418 },
+    error: {
+        details: {
+            foo: "bar",
+        },
+    },
+};
+
 beforeEach(() => {
     fetch.resetMocks();
+    logger.info.mockReset();
+    logger.error.mockReset();
+    logEntry.mockReset();
 });
 
 test("Simple query calls Funnelback", async () => {
@@ -376,13 +394,13 @@ test("Response with malformed JSON returns an error", async () => {
     };
 
     fetch.mockResponse('{"results": [', { status: HTTP_CODES.OK });
+    logEntry.mockReturnValue(mockEntry);
 
     const result = await courses(event);
 
     expect(result.statusCode).toBe(HTTP_CODES.INTERNAL_SERVER_ERROR);
     expect(result.body).toContain('"status":500');
-    expect(result.body).toContain('"error":"Internal Server Error"');
-    expect(result.body).toContain('"message":"An error has occurred."');
+    expect(result.body).toContain('"message":"invalid json response body at  reason: Unexpected end of JSON input"');
     expect(result.body).toContain('"timestamp":');
 });
 
@@ -441,4 +459,96 @@ test.each([
 
     expect(result.statusCode).toBe(200);
     expect(result.body).toEqual(JSON.stringify(expectedResult));
+});
+
+describe("Logger output", () => {
+    it("logs a single info log given a response with 200 code", async () => {
+        const event = {
+            queryStringParameters: {
+                search: "physics",
+            },
+        };
+
+        fetch.mockResponse(JSON.stringify({ results: [] }), { status: HTTP_CODES.OK });
+        logEntry.mockReturnValue({ foo: "bar" });
+
+        await courses(event);
+
+        expect(logger.error).toBeCalledTimes(0);
+        expect(logger.info).toBeCalledTimes(1);
+        expect(logEntry).toBeCalledWith(
+            { queryStringParameters: { search: "physics" } },
+            { statusCode: 200, numberOfMatches: undefined }
+        );
+        expect(logger.info).toBeCalledWith({ foo: "bar" }, "Course search conducted");
+    });
+
+    it("logs a single info if there are no search parameters given", async () => {
+        const event = {
+            queryStringParameters: {},
+        };
+
+        logEntry.mockReturnValue(mockEntry);
+
+        await courses(event);
+
+        expect(logger.error).toBeCalledTimes(0);
+        expect(logger.info).toBeCalledTimes(1);
+        expect(logEntry).toBeCalledWith(
+            { queryStringParameters: {} },
+            null,
+            new NoQueryGivenError("The search parameter is required.")
+        );
+        expect(logger.info).toBeCalledWith(mockEntry, "No query given");
+    });
+
+    it("logs a single error when there is a funnelback problem", async () => {
+        const event = {
+            queryStringParameters: {
+                search: "physics",
+            },
+        };
+
+        fetch.mockResponse(JSON.stringify({ results: [] }), {
+            status: HTTP_CODES.BAD_REQUEST,
+            statusText: "Bad Request",
+        });
+        logEntry.mockReturnValue(mockEntry);
+
+        await courses(event);
+
+        expect(logger.error).toBeCalledTimes(1);
+        expect(logger.info).toBeCalledTimes(0);
+        expect(logEntry).toBeCalledWith(
+            { queryStringParameters: { search: "physics" } },
+            null,
+            new FunnelbackError("There is a problem with the Funnelback search.")
+        );
+        expect(logger.error).toBeCalledWith(mockEntry, "There is a problem with the Funnelback search.");
+    });
+
+    it("logs an error when catching malformed JSON", async () => {
+        const event = {
+            queryStringParameters: {
+                search: "physics",
+            },
+        };
+
+        fetch.mockResponse('{"results": [', { status: HTTP_CODES.OK });
+        logEntry.mockReturnValue(mockEntry);
+
+        await courses(event);
+
+        expect(logger.error).toBeCalledTimes(1);
+        expect(logger.info).toBeCalledTimes(0);
+        expect(logEntry).toBeCalledWith(
+            { queryStringParameters: { search: "physics" } },
+            null,
+            new Error("invalid json response body at  reason: Unexpected end of JSON input")
+        );
+        expect(logger.error).toBeCalledWith(
+            mockEntry,
+            "invalid json response body at  reason: Unexpected end of JSON input"
+        );
+    });
 });

@@ -5,16 +5,21 @@ const { logEntry } = require("./utils/logEntry");
 const { success, error } = require("./utils/format");
 const { transformResponse } = require("./utils/transformResponse");
 const { overrideUrls } = require("./utils/overrideUrls");
-const { LOG_TYPES, HTTP_CODES } = require("./constants/constants.js");
+const { HTTP_CODES } = require("./constants/constants");
+const { logger } = require("./utils/logger");
+const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
 
 module.exports.courses = async (event) => {
     try {
         const requestParams = event.queryStringParameters;
 
         if (!requestParams || !requestParams.search) {
-            const errorDetails = { message: "The search parameter is required." };
-            console.warn(logEntry(event, HTTP_CODES.BAD_REQUEST, LOG_TYPES.ERROR, errorDetails));
-            return error(errorDetails.message, HTTP_CODES.BAD_REQUEST, "Bad Request", event.path);
+            const errorDetails = {
+                funnelBackUrl: null,
+                status: HTTP_CODES.BAD_REQUEST,
+                statusText: "Bad Request",
+            };
+            throw new NoQueryGivenError("The search parameter is required.", errorDetails);
         }
 
         const url = coursesUrl(requestParams);
@@ -28,17 +33,11 @@ module.exports.courses = async (event) => {
 
         if (!searchResponse.ok) {
             const errorDetails = {
-                message: "Funnelback search problem",
                 funnelBackUrl: url,
+                status: searchResponse.status,
                 statusText: searchResponse.statusText,
             };
-            console.error(logEntry(event, searchResponse.status, LOG_TYPES.ERROR, errorDetails));
-            return error(
-                "There is a problem with the Funnelback search.",
-                searchResponse.status,
-                searchResponse.statusText,
-                event.path
-            );
+            throw new FunnelbackError("There is a problem with the Funnelback search.", errorDetails);
         }
 
         const body = await searchResponse.json();
@@ -46,12 +45,27 @@ module.exports.courses = async (event) => {
         let results = transformResponse(body.results);
         results = overrideUrls(results);
 
-        const additionalDetails = { numberOfMatches };
-        console.info(logEntry(event, searchResponse.status, LOG_TYPES.AUDIT, additionalDetails));
+        logger.info(logEntry(event, { numberOfMatches, statusCode: searchResponse.status }), "Course search conducted");
 
         return success({ numberOfMatches, results });
-    } catch (e) {
-        console.error(e);
-        return error("An error has occurred.", HTTP_CODES.INTERNAL_SERVER_ERROR, "Internal Server Error", event.path);
+    } catch (err) {
+        // When there is an unknown error it is likely there is no error details passed, so
+        // we are initialising an empty error details
+        if (!err.details)
+            err.details = {
+                funnelBackUrl: null,
+                status: HTTP_CODES.INTERNAL_SERVER_ERROR,
+                statusText: "Internal Server Error",
+            };
+
+        if (err.type === "NoQueryGivenError") {
+            // User error, only an info severity
+            logger.info(logEntry(event, null, err), "No query given");
+        } else {
+            // Server error, error severity
+            logger.error(logEntry(event, null, err), err.message);
+        }
+
+        return error(err.message, err.details.status, err.details.statusText, event.path);
     }
 };
