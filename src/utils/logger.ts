@@ -1,11 +1,11 @@
-const pino = require("pino");
+import pino from "pino";
 
-module.exports.logger = pino({
+export const logger = pino({
     level: "info",
     formatters: {
         // If we don't override the default formatter for level
         // it will display a numeric value of the level instead
-        level(label) {
+        level(label: string) {
             return { level: label };
         },
     },

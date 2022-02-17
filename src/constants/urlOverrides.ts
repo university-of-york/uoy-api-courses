@@ -1,4 +1,4 @@
-const OVERRIDES = [
+export const OVERRIDES = [
     {
         courseUrl: "https://www.york.ac.uk/study/undergraduate/courses/bsc-nursing-adult/",
         overrideUrl: "https://www.york.ac.uk/study/undergraduate/subjects/nursing/",
@@ -24,5 +24,3 @@ const OVERRIDES = [
         overrideUrl: "https://www.york.ac.uk/study/undergraduate/subjects/nursing/",
     },
 ];
-
-module.exports = { OVERRIDES };
