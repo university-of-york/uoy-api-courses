@@ -1,4 +1,4 @@
-import { transformResponse } from "./transformResponse";
+import { transformResponse } from "./transformResponse.js";
 
 describe("transformer", () => {
     it("transforms the distanceLearning property of a single result", () => {

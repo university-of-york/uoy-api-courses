@@ -1,4 +1,4 @@
-import { OVERRIDES } from "../constants/urlOverrides";
+import { OVERRIDES } from "../constants/urlOverrides.js";
 
 const overrideUrl = (url) => {
     const relevantOverride = OVERRIDES.find((override) => override.courseUrl === url);

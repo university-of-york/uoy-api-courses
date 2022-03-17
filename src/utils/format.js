@@ -1,4 +1,4 @@
-import { HTTP_CODES } from "../constants/constants";
+import { HTTP_CODES } from "../constants/constants.js";
 
 const success = (body) => ({
     statusCode: HTTP_CODES.OK,

@@ -1,13 +1,12 @@
-// "use strict";
 import fetch from "node-fetch";
-import { coursesUrl } from "./utils/constructFunnelbackUrls";
-import { logEntry } from "./utils/logEntry";
-import { transformResponse } from "./utils/transformResponse";
-import { error, success } from "./utils/format";
-import { overrideUrls } from "./utils/overrideUrls";
-import { HTTP_CODES } from "./constants/constants";
-import { logger } from "./utils/logger";
-import { FunnelbackError, NoQueryGivenError } from "./constants/errors";
+import { coursesUrl } from "./utils/constructFunnelbackUrls.js";
+import { logEntry } from "./utils/logEntry.js";
+import { transformResponse } from "./utils/transformResponse.js";
+import { error, success } from "./utils/format.js";
+import { overrideUrls } from "./utils/overrideUrls.js";
+import { HTTP_CODES } from "./constants/constants.js";
+import { logger } from "./utils/logger.js";
+import { FunnelbackError, NoQueryGivenError } from "./constants/errors.js";
 
 const courses = async (event) => {
     try {

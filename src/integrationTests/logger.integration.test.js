@@ -32,15 +32,13 @@ const invokeDemoLoggerGetResult = async () => {
 
     let result;
 
-    const promise = new Promise((resolve) => {
+    await new Promise((resolve) => {
         testApp.stdout.on("data", (data) => {
             testApp.kill("SIGINT");
             result = data.toString();
             resolve();
         });
     });
-
-    await promise;
 
     return result;
 };

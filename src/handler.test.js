@@ -1,9 +1,9 @@
 import fetch from "jest-fetch-mock";
-import { courses } from "./handler";
-import { HTTP_CODES } from "./constants/constants";
-import { logger } from "./utils/logger";
-import { logEntry } from "./utils/logEntry";
-import { FunnelbackError, NoQueryGivenError } from "./constants/errors";
+import { courses } from "./handler.js";
+import { HTTP_CODES } from "./constants/constants.js";
+import { logger } from "./utils/logger.js";
+import { logEntry } from "./utils/logEntry.js";
+import { FunnelbackError, NoQueryGivenError } from "./constants/errors.js";
 
 jest.mock("./utils/logger");
 jest.mock("./utils/logEntry");

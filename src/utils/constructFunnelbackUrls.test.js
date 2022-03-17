@@ -1,4 +1,4 @@
-import { coursesUrl } from "./constructFunnelbackUrls";
+import { coursesUrl } from "./constructFunnelbackUrls.js";
 
 const constantPartOfSearchUrl = `${process.env.BASE_URL}?collection=${process.env.COLLECTION}&form=${process.env.FORM}&profile=${process.env.PROFILE}&smeta_contentType=${process.env.SMETA_CONTENT_TYPE}`;
 

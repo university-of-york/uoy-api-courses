@@ -18,13 +18,7 @@
     "import/extensions": "off",
     "import/no-unassigned-import": "off",
     "no-warning-comments": "off",
-    "node/file-extension-in-import": [
-      "error",
-      "always",
-      {
-        ".js": "never"
-      }
-    ],
+    "node/file-extension-in-import": ["error", "always"],
     "node/prefer-global/process": ["error", "always"],
     "unicorn/catch-error-name": "off",
     "unicorn/filename-case": "off",
