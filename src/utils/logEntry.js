@@ -22,4 +22,4 @@ const logEntry = (event, details, error) => {
     return entry;
 };
 
-module.exports = { logEntry };
+export { logEntry };

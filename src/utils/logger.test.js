@@ -1,4 +1,4 @@
-const { logger } = require("./logger");
+import { logger } from "./logger";
 
 describe("logger", () => {
     it("No exception is thrown when it can be invoked", () => {

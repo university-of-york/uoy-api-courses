@@ -1,4 +1,4 @@
-const { OVERRIDES } = require("../constants/urlOverrides");
+import { OVERRIDES } from "../constants/urlOverrides";
 
 const overrideUrl = (url) => {
     const relevantOverride = OVERRIDES.find((override) => override.courseUrl === url);
@@ -6,11 +6,10 @@ const overrideUrl = (url) => {
     return relevantOverride ? relevantOverride.overrideUrl : url;
 };
 
-const overrideUrls = (courses) => {
-    return courses.map((course) => {
+const overrideUrls = (courses) =>
+    courses.map((course) => {
         course.liveUrl = overrideUrl(course.liveUrl);
         return course;
     });
-};
 
-module.exports = { overrideUrls };
+export { overrideUrls };

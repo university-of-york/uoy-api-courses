@@ -1,21 +1,19 @@
-const { HTTP_CODES } = require("../constants/constants.js");
+import { HTTP_CODES } from "../constants/constants";
 
-module.exports.success = (body) => {
-    return {
-        statusCode: HTTP_CODES.OK,
-        body: JSON.stringify(body),
-    };
-};
+const success = (body) => ({
+    statusCode: HTTP_CODES.OK,
+    body: JSON.stringify(body),
+});
 
-module.exports.error = (message, status, error, path) => {
-    return {
-        statusCode: status,
-        body: JSON.stringify({
-            timestamp: new Date().toISOString(),
-            status,
-            error,
-            message,
-            path,
-        }),
-    };
-};
+const error = (message, status, error, path) => ({
+    statusCode: status,
+    body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        status,
+        error,
+        message,
+        path,
+    }),
+});
+
+export { success, error };

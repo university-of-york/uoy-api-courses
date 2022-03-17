@@ -1,9 +1,9 @@
-const { courses } = require("./handler");
-const { HTTP_CODES } = require("./constants/constants");
-const fetch = require("jest-fetch-mock");
-const { logger } = require("./utils/logger");
-const { logEntry } = require("./utils/logEntry");
-const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
+import fetch from "jest-fetch-mock";
+import { courses } from "./handler";
+import { HTTP_CODES } from "./constants/constants";
+import { logger } from "./utils/logger";
+import { logEntry } from "./utils/logEntry";
+import { FunnelbackError, NoQueryGivenError } from "./constants/errors";
 
 jest.mock("./utils/logger");
 jest.mock("./utils/logEntry");

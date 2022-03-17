@@ -4,4 +4,4 @@ const HTTP_CODES = {
     INTERNAL_SERVER_ERROR: 500,
 };
 
-module.exports = { HTTP_CODES };
+export { HTTP_CODES };
