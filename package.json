@@ -11,8 +11,9 @@
     "formatandcheck": "npm run format && npm run lint && npm run test",
     "fc": "npm run formatandcheck",
     "check": "npm run checkformat && npm run lint && npm run test",
-    "package": "serverless package",
-    "deploy": "serverless deploy",
+    "package": "serverless package --env production",
+    "deploy": "serverless deploy --env production",
+    "deploy:dev": "serverless deploy --env development",
     "undeploy": "serverless remove"
   },
   "keywords": [],
