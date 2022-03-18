@@ -15,7 +15,7 @@
   "rules": {
     "capitalized-comments": "off",
     "indent": "off",
-    "import/extensions": "off",
+    "import/extensions": ["error", "always"],
     "import/no-unassigned-import": "off",
     "no-warning-comments": "off",
     "node/file-extension-in-import": ["error", "always"],
