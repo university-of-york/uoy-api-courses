@@ -26,7 +26,6 @@
     "ajv": "^7.0.3",
     "babel-jest": "^26.3.0",
     "dotenv": "^8.2.0",
-    "eslint": "^8.11.0",
     "eslint-config-xo": "^0.40.0",
     "jest": "^26.4.2",
     "jest-fetch-mock": "^3.0.3",
