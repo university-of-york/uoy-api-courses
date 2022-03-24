@@ -14,4 +14,4 @@ class FunnelbackError extends Error {
     }
 }
 
-module.exports = { NoQueryGivenError, FunnelbackError };
+export { NoQueryGivenError, FunnelbackError };

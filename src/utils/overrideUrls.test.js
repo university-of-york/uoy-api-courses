@@ -1,4 +1,4 @@
-const { overrideUrls } = require("./overrideUrls");
+import { overrideUrls } from "./overrideUrls.js";
 
 describe("overrideUrls", () => {
     it.each`

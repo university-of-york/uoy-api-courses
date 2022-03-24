@@ -1,5 +1,7 @@
-global.fetch = require("jest-fetch-mock").enableMocks();
+import jestFetchMock from "jest-fetch-mock";
+import dotenv from "dotenv";
 
-require("dotenv").config({
+global.fetch = jestFetchMock.enableMocks();
+dotenv.config({
     path: ".env.test",
 });

@@ -25,4 +25,4 @@ const OVERRIDES = [
     },
 ];
 
-module.exports = { OVERRIDES };
+export { OVERRIDES };

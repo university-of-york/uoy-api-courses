@@ -1,15 +1,14 @@
-("use strict");
-const fetch = require("node-fetch");
-const { coursesUrl } = require("./utils/constructFunnelbackUrls");
-const { logEntry } = require("./utils/logEntry");
-const { success, error } = require("./utils/format");
-const { transformResponse } = require("./utils/transformResponse");
-const { overrideUrls } = require("./utils/overrideUrls");
-const { HTTP_CODES } = require("./constants/constants");
-const { logger } = require("./utils/logger");
-const { NoQueryGivenError, FunnelbackError } = require("./constants/errors");
+import fetch from "node-fetch";
+import { coursesUrl } from "./utils/constructFunnelbackUrls.js";
+import { logEntry } from "./utils/logEntry.js";
+import { transformResponse } from "./utils/transformResponse.js";
+import { error, success } from "./utils/format.js";
+import { overrideUrls } from "./utils/overrideUrls.js";
+import { HTTP_CODES } from "./constants/constants.js";
+import { logger } from "./utils/logger.js";
+import { FunnelbackError, NoQueryGivenError } from "./constants/errors.js";
 
-module.exports.courses = async (event) => {
+const courses = async (event) => {
     try {
         const requestParams = event.queryStringParameters;
 
@@ -69,3 +68,5 @@ module.exports.courses = async (event) => {
         return error(err.message, err.details.status, err.details.statusText, event.path);
     }
 };
+
+export { courses };

@@ -1,4 +1,4 @@
-const { transformResponse } = require("./transformResponse");
+import { transformResponse } from "./transformResponse.js";
 
 describe("transformer", () => {
     it("transforms the distanceLearning property of a single result", () => {
@@ -37,7 +37,7 @@ describe("transformer", () => {
     it("returns false for distanceLearning if the result is not expected", () => {
         const weirdInputs = [
             { distanceLearning: "Maybe, maybe not" },
-            { distanceLearning: 53478 },
+            { distanceLearning: 53_478 },
             { distanceLearning: "I am distanceLearning" },
         ];
 

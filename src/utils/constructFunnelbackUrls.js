@@ -1,6 +1,6 @@
-const { URLSearchParams } = require("url");
+import { URLSearchParams } from "url";
 
-module.exports.coursesUrl = (parameters) => {
+const coursesUrl = (parameters) => {
     const queryParams = new URLSearchParams();
 
     queryParams.append("collection", process.env.COLLECTION);
@@ -22,3 +22,5 @@ module.exports.coursesUrl = (parameters) => {
 
     return `${process.env.BASE_URL}?${queryParams.toString()}`;
 };
+
+export { coursesUrl };

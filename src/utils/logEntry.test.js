@@ -1,8 +1,7 @@
 import MockDate from "mockdate";
-import { FunnelbackError, NoQueryGivenError } from "../constants/errors";
-
-const { logEntry } = require("./logEntry");
-const { HTTP_CODES } = require("../constants/constants.js");
+import { FunnelbackError, NoQueryGivenError } from "../constants/errors.js";
+import { HTTP_CODES } from "../constants/constants.js";
+import { logEntry } from "./logEntry.js";
 
 test("Required data added to log when supplied in event object", () => {
     MockDate.set(new Date());
