@@ -32,7 +32,7 @@
     "jest-fetch-mock": "^3.0.3",
     "mockdate": "^2.0.2",
     "prettier": "2.1.2",
-    "serverless": "^2.72.3",
+    "serverless": "^3.27.0",
     "serverless-dotenv-plugin": "^3.9.0",
     "xo": "^0.48.0"
   },
