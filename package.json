@@ -34,7 +34,7 @@
     "prettier": "2.1.2",
     "serverless": "^2.72.3",
     "serverless-dotenv-plugin": "^3.9.0",
-    "xo": "^0.48.0"
+    "xo": "^0.54.1"
   },
   "dependencies": {
     "node-fetch": "^2.6.7",
