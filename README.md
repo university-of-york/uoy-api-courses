@@ -1,3 +1,6 @@
+> **Note**
+> This application was retired on 10/05/2023.
+
 # Courses API
 
 This is the University of York Courses API. Consumers can search for and retrieve a list of courses that are published on the 
